@@ -10,7 +10,7 @@ public interface OrderService {
 
     /**
      * 从数据库中读取
-     * 将订单数量存入内存库
+     * 将订单数量存入内存
      * @return 订单列表
      */
     List<OrderRecord> getOrders();
