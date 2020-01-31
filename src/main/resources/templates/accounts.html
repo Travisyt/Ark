@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>accounts</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+</head>
+<body>
+<div th:fragment="general-accounts">
+    <div class="container-fluid" id="main-table">
+        <div class="row">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>
+
+                        <div class="dropdown">
+                            <button type="button" class="btn dropdown-toggle" id="row-num" data-toggle="dropdown">行号
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="row-num">
+                                <li role="presentation">
+                                    <a role="menuitem" tabindex="-1" href="#">筛选</a>
+                                </li>
+                                <li role="presentation">
+                                    <a role="menuitem" tabindex="-1" href="#">排序</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="dropdown">
+                            <button type="button" class="btn dropdown-toggle" id="factory" data-toggle="dropdown">厂商
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="factory">
+                                <li role="presentation">
+                                    <a role="menuitem" tabindex="-1" href="#">筛选</a>
+                                </li>
+                                <li role="presentation">
+                                    <a role="menuitem" tabindex="-1" href="#">排序</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </th>
+
+                    <th>
+                        <div class="dropdown">
+                            <button type="button" class="btn dropdown-toggle" id="order-status" data-toggle="dropdown">状态
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="order-status">
+                                <li role="presentation">
+                                    <a role="menuitem" tabindex="-1" href="#">筛选</a>
+                                </li>
+                                <li role="presentation">
+                                    <a role="menuitem" tabindex="-1" href="#">排序</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </th>
+
+                    <th>
+                        <div class="dropdown">
+                            <button type="button" class="btn dropdown-toggle" id="create-time" data-toggle="dropdown">创建时间
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="create-time">
+                                <li role="presentation">
+                                    <a role="menuitem" tabindex="-1" href="#">筛选</a>
+                                </li>
+                                <li role="presentation">
+                                    <a role="menuitem" tabindex="-1" href="#">排序</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </th>
+
+                    <th>
+                        <div class="dropdown">
+                            <button type="button" class="btn dropdown-toggle" id="account-payable" data-toggle="dropdown">应付金额
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="account-payable">
+                                <li role="presentation">
+                                    <a role="menuitem" tabindex="-1" href="#">筛选</a>
+                                </li>
+                                <li role="presentation">
+                                    <a role="menuitem" tabindex="-1" href="#">排序</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </th>
+
+                    <th>
+                        <button class="btn" id="detail">详情</button>
+                    </th>
+
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row">
+            <div style="float: right;margin-right: 5%;">
+                <ul class="pagination">
+                    <li><a href="#">&laquo;</a></li>
+                    <li><a href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#">5</a></li>
+                    <li><a href="#">&raquo;</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row">
+            <div style="float: right;margin-right: 10%;">
+
+                <div class="dropdown">
+                    <span>每页</span>
+                    <a data-toggle="dropdown" href="#" id="page-size"></a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                        <li><a href="javascript:" onclick="page_size_change(20)">20</a></li>
+                        <li><a href="javascript:" onclick="page_size_change(40)">40</a></li>
+                        <li><a href="javascript:page_size_change(60)">60</a></li>
+                        <li><a href="javascript:" onclick="page_size_change(80)">80</a></li>
+                        <li><a href="javascript:" onclick="page_size_change(100)">100</a></li>
+                    </ul>
+                    <span>条数据</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        var defaultPageSize = 20;
+        $(window).ready(function () {
+            $.post('fullyMapping', function (data) {
+                localStorage.setItem('fullyMapping', JSON.stringify(data));
+            }, 'json');
+            if (sessionStorage.getItem('pageSize') == null) document.getElementById('page-size').innerText = defaultPageSize;
+            else document.getElementById('page-size').innerText = sessionStorage.getItem('pageSize');
+        });
+
+        // 切换每页显示条数
+        function page_size_change(ps) {
+            sessionStorage.setItem('pageSize', ps);
+
+            document.location.reload()
+        }
+
+
+    </script>
+
+</div>
+</body>
+</html>

@@ -2,7 +2,7 @@ package com.yu.arksys.controller;
 
 import com.yu.arksys.bean.OrderRecord;
 import com.yu.arksys.service.api.MappingService;
-import com.yu.arksys.service.api.OrderService;
+import com.yu.arksys.service.api.order.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;

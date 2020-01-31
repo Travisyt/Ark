@@ -80,7 +80,7 @@ public class OrderDaoImp implements OrderDao {
 
     @Override
     public void insert(OrderRecord orderRecord) {
-        String sql = "insert into order(order_id,factory_id,order_status_code,document_id,order_time,arrive_time,pay_time,benefit,detailed_id,accounts_payable,actual_payment) values(?,?,?,?,?,?,?,?,?,?,?)";
+        String sql = "insert into `order`(order_id,factory_id,order_status_code,document_id,order_time,arrive_time,pay_time,benefit,detailed_id,accounts_payable,actual_payment) values(?,?,?,?,?,?,?,?,?,?,?)";
         jdbcTemplate.update(sql, orderRecord.getOrderId(), orderRecord.getFactoryId(), orderRecord.getOrderStatusCode(), orderRecord.getDocumentId(), orderRecord.getOrderTime(), orderRecord.getArriveTime(), orderRecord.getPayTime(), orderRecord.getBenefit(), orderRecord.getDetailed_id(), orderRecord.getAccountsPayable(), orderRecord.getActualPayment());
     }
 }

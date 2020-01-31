@@ -6,7 +6,7 @@
 2020-01-30 15:48:51.029  INFO 8640 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
 2020-01-30 15:48:51.030  INFO 8640 --- [main] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 1161 ms
 2020-01-30 15:48:51.072  INFO 8640 --- [main] com.yu.arksys.service.api.Logger         : ======================= get logger from logger factory =========================
-2020-01-30 15:48:51.186  WARN 8640 --- [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'dataController': Unsatisfied dependency expressed through field 'orderService'; nested exception is org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'com.yu.arksys.service.api.OrderService' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+2020-01-30 15:48:51.186  WARN 8640 --- [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'dataController': Unsatisfied dependency expressed through field 'orderService'; nested exception is org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'com.yu.arksys.service.api.order.OrderService' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
 2020-01-30 15:48:51.186  INFO 8640 --- [main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-0} closing ...
 2020-01-30 15:48:51.189  INFO 8640 --- [main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
 2020-01-30 15:48:51.207  INFO 8640 --- [main] ConditionEvaluationReportLoggingListener : 
@@ -20,7 +20,7 @@ APPLICATION FAILED TO START
 
 Description:
 
-Field orderService in com.yu.arksys.controller.DataController required a bean of type 'com.yu.arksys.service.api.OrderService' that could not be found.
+Field orderService in com.yu.arksys.controller.DataController required a bean of type 'com.yu.arksys.service.api.order.OrderService' that could not be found.
 
 The injection point has the following annotations:
 	- @org.springframework.beans.factory.annotation.Autowired(required=true)
@@ -28,5 +28,5 @@ The injection point has the following annotations:
 
 Action:
 
-Consider defining a bean of type 'com.yu.arksys.service.api.OrderService' in your configuration.
+Consider defining a bean of type 'com.yu.arksys.service.api.order.OrderService' in your configuration.
 
