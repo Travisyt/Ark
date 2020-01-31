@@ -1,9 +1,11 @@
 package com.yu.arksys.controller;
 
+import com.yu.arksys.bean.OrderRecord;
 import com.yu.arksys.service.api.MappingService;
 import com.yu.arksys.service.api.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -27,8 +29,8 @@ public class DataController {
 
     @RequestMapping("/getOrders")
     @ResponseBody
-    public List<Map<String, String>> getOrders() {
-        return orderService.getOrders();
+    public List<OrderRecord> getOrders(@PathVariable Integer pageSize, @PathVariable Integer pageNum) {
+        return orderService.getOrders(pageSize, pageNum);
     }
 
 }
