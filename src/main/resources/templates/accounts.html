@@ -32,10 +32,11 @@
                     </th>
                     <th>
                         <div class="dropdown">
-                            <button type="button" class="btn dropdown-toggle" id="factory" data-toggle="dropdown">厂商
+                            <button type="button" class="btn dropdown-toggle" id="createTime" data-toggle="dropdown">
+                                记账时间
                                 <span class="caret"></span>
                             </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="factory">
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="createTime">
                                 <li role="presentation">
                                     <a role="menuitem" tabindex="-1" href="#">筛选</a>
                                 </li>
@@ -48,10 +49,10 @@
 
                     <th>
                         <div class="dropdown">
-                            <button type="button" class="btn dropdown-toggle" id="order-status" data-toggle="dropdown">状态
+                            <button type="button" class="btn dropdown-toggle" id="target" data-toggle="dropdown">单位部门
                                 <span class="caret"></span>
                             </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="order-status">
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="target">
                                 <li role="presentation">
                                     <a role="menuitem" tabindex="-1" href="#">筛选</a>
                                 </li>
@@ -64,10 +65,10 @@
 
                     <th>
                         <div class="dropdown">
-                            <button type="button" class="btn dropdown-toggle" id="create-time" data-toggle="dropdown">创建时间
+                            <button type="button" class="btn dropdown-toggle" id="account" data-toggle="dropdown">本地账户
                                 <span class="caret"></span>
                             </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="create-time">
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="account">
                                 <li role="presentation">
                                     <a role="menuitem" tabindex="-1" href="#">筛选</a>
                                 </li>
@@ -80,10 +81,10 @@
 
                     <th>
                         <div class="dropdown">
-                            <button type="button" class="btn dropdown-toggle" id="account-payable" data-toggle="dropdown">应付金额
+                            <button type="button" class="btn dropdown-toggle" id="type" data-toggle="dropdown">类型
                                 <span class="caret"></span>
                             </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="account-payable">
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="type">
                                 <li role="presentation">
                                     <a role="menuitem" tabindex="-1" href="#">筛选</a>
                                 </li>
@@ -95,17 +96,34 @@
                     </th>
 
                     <th>
-                        <button class="btn" id="detail">详情</button>
+                        <div class="dropdown">
+                            <button type="button" class="btn dropdown-toggle" id="status" data-toggle="dropdown">状态
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="status">
+                                <li role="presentation">
+                                    <a role="menuitem" tabindex="-1" href="#">筛选</a>
+                                </li>
+                                <li role="presentation">
+                                    <a role="menuitem" tabindex="-1" href="#">排序</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </th>
+
+                    <th>
+                        <button type="button" class="btn dropdown-toggle" id="detail" data-toggle="dropdown">详情
+                            <span class="caret"></span>
+                        </button>
                     </th>
 
                 </tr>
                 </thead>
 
-                <tbody>
-                <tr>
-
-                </tr>
+                <tbody id="accounts-body">
+                    <!-- 生成表格 -->
                 </tbody>
+
             </table>
         </div>
 
@@ -146,20 +164,76 @@
     </div>
 
     <script>
-        var defaultPageSize = 20;
+        const defaultPageSize = 20;
         $(window).ready(function () {
             $.post('fullyMapping', function (data) {
                 localStorage.setItem('fullyMapping', JSON.stringify(data));
             }, 'json');
-            if (sessionStorage.getItem('pageSize') == null) document.getElementById('page-size').innerText = defaultPageSize;
-            else document.getElementById('page-size').innerText = sessionStorage.getItem('pageSize');
+            // 载入记账信息，分页为默认
+            refresh_accounts_data(defaultPageSize, 1);
+
+            document.getElementById('page-size').innerText = defaultPageSize;
+            show_accounts_data();
         });
 
         // 切换每页显示条数
         function page_size_change(ps) {
             sessionStorage.setItem('pageSize', ps);
+            refresh_accounts_data(ps, 1);
+            document.getElementById('page-size').innerText = ps;
+        }
 
-            document.location.reload()
+        // 刷新记账信息
+        function refresh_accounts_data(pageSize, pageNum) {
+            var data_url = 'accountsData?pageSize=' + pageSize.toString() + '?pageNum=' + pageNum.toString();
+            $.post(data_url, function (data) {
+                localStorage.setItem('accountsData', JSON.stringify(data));
+            }, 'json');
+            data_url = 'accountsNum';
+            $.post(data_url, function (data) {
+                localStorage.setItem('accountsNum', data);
+            })
+        }
+
+        // 显示记账表
+        function show_accounts_data() {
+            const accountsData = JSON.parse(localStorage.getItem('accountsData'));
+            var count = 1;
+            for (const data in accountsData) {
+                var row = document.createElement("tr");
+                var rowNum = document.createElement("td");
+                var createTime = document.createElement("td");
+                var target = document.createElement("td");
+                var account = document.createElement("td");
+                var type = document.createElement("td");
+                var status = document.createElement("td");
+                var detail = document.createElement("td");
+
+                rowNum.innerHTML = count.toString();
+                createTime.innerHTML = data.get('createTime');
+                target.innerHTML = data.get('targetId');
+                account.innerHTML = data.get('accountId');
+                type.innerHTML = data.get('typeId');
+                status.innerHTML = data.get('statusId');
+                detail.innerHTML = '<a id="'+data.get('id')+'" href="#">详情</a>';
+
+                var accountsBody = document.getElementById("accounts-body");
+                row.appendChild(rowNum);
+                row.appendChild(createTime);
+                row.appendChild(target);
+                row.appendChild(account);
+                row.appendChild(type);
+                row.appendChild(status);
+                row.appendChild(detail);
+                accountsBody.appendChild(row);
+
+                count++;
+            }
+        }
+
+        // 鼠标移到详情上显示详情
+        function show_details(id) {
+
         }
 
 

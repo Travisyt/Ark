@@ -1,13 +1,15 @@
 package com.yu.arksys.controller;
 
+import com.yu.arksys.bean.AccountsRecord;
 import com.yu.arksys.service.api.MappingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +33,20 @@ public class TestController {
     @RequestMapping("/order")
     public ModelAndView order() {
         return new ModelAndView("main");
+    }
+
+    /**
+     *
+     * @return 返回记账信息列表
+     */
+    @RequestMapping("/accountsData")
+    @ResponseBody
+    public List<AccountsRecord> accounts(@PathVariable Integer pageSize, @PathVariable Integer pageNum) {
+        List<AccountsRecord> accountsRecords = new ArrayList<>();
+        for (int i=1;i<=10;++i) {
+            accountsRecords.add(AccountsRecord.test());
+        }
+        return accountsRecords;
     }
 
 
