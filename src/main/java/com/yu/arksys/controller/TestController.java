@@ -41,9 +41,10 @@ public class TestController {
      */
     @RequestMapping("/accountsData")
     @ResponseBody
-    public List<AccountsRecord> accounts(@PathVariable Integer pageSize, @PathVariable Integer pageNum) {
+    public List<AccountsRecord> accounts(String pageSize, String pageNum) {
         List<AccountsRecord> accountsRecords = new ArrayList<>();
-        for (int i=1;i<=10;++i) {
+        int ps = Integer.parseInt(pageSize);
+        for (int i=1;i<=ps;++i) {
             accountsRecords.add(AccountsRecord.test());
         }
         return accountsRecords;

@@ -10,6 +10,40 @@
 <body>
 <div th:fragment="general-accounts">
     <div class="container-fluid" id="main-table">
+
+        <div class="row">
+            <div class="panel panel-default"></div>
+            <div style="float: right;margin-right: 5%;">
+                <ul class="pagination">
+                    <li><a href="#">&laquo;</a></li>
+                    <li class="page_num" id="page_1"><a href="javascript:page_num_change(1)">1</a></li>
+                    <li class="page_num" id="page_2"><a href="javascript:page_num_change(2)">2</a></li>
+                    <li class="page_num" id="page_3"><a href="javascript:page_num_change(3)">3</a></li>
+                    <li class="page_num" id="page_4"><a href="javascript:page_num_change(4)">4</a></li>
+                    <li class="page_num" id="page_5"><a href="javascript:page_num_change(5)">5</a></li>
+                    <li><a href="#">&raquo;</a></li>
+                </ul>
+            </div>
+
+            <div style="float: right;margin-right: 10%;">
+
+                <div class="dropdown">
+                    <span>每页</span>
+                    <a data-toggle="dropdown" href="#" id="page-size">20</a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                        <li><a href="javascript:" onclick="page_size_change(20)">20</a></li>
+                        <li><a href="javascript:" onclick="page_size_change(40)">40</a></li>
+                        <li><a href="javascript:page_size_change(60)">60</a></li>
+                        <li><a href="javascript:" onclick="page_size_change(80)">80</a></li>
+                        <li><a href="javascript:" onclick="page_size_change(100)">100</a></li>
+                    </ul>
+                    <span>条数据</span>
+                </div>
+
+            </div>
+
+        </div>
+
         <div class="row">
             <table class="table table-striped">
                 <thead>
@@ -121,44 +155,10 @@
                 </thead>
 
                 <tbody id="accounts-body">
-                    <!-- 生成表格 -->
+                <!-- 生成表格 -->
                 </tbody>
 
             </table>
-        </div>
-
-        <div class="row">
-            <div style="float: right;margin-right: 5%;">
-                <ul class="pagination">
-                    <li><a href="#">&laquo;</a></li>
-                    <li><a href="#">1</a></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#">4</a></li>
-                    <li><a href="#">5</a></li>
-                    <li><a href="#">&raquo;</a></li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="row">
-            <div style="float: right;margin-right: 10%;">
-
-                <div class="dropdown">
-                    <span>每页</span>
-                    <a data-toggle="dropdown" href="#" id="page-size"></a>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                        <li><a href="javascript:" onclick="page_size_change(20)">20</a></li>
-                        <li><a href="javascript:" onclick="page_size_change(40)">40</a></li>
-                        <li><a href="javascript:page_size_change(60)">60</a></li>
-                        <li><a href="javascript:" onclick="page_size_change(80)">80</a></li>
-                        <li><a href="javascript:" onclick="page_size_change(100)">100</a></li>
-                    </ul>
-                    <span>条数据</span>
-                </div>
-
-            </div>
-
         </div>
 
     </div>
@@ -166,15 +166,22 @@
     <script>
         const defaultPageSize = 20;
         $(window).ready(function () {
-            $.post('fullyMapping', function (data) {
-                localStorage.setItem('fullyMapping', JSON.stringify(data));
-            }, 'json');
-            // 载入记账信息，分页为默认
-            refresh_accounts_data(defaultPageSize, 1);
-
-            document.getElementById('page-size').innerText = defaultPageSize;
-            show_accounts_data();
+            refresh_mapping();
+            if (sessionStorage.getItem('pageSize') == null) {
+                document.getElementById('page-size').innerText = defaultPageSize;
+                refresh_accounts_data(defaultPageSize, 1);
+            } else {
+                document.getElementById('page-size').innerText = sessionStorage.getItem('pageSize');
+                refresh_accounts_data(sessionStorage.getItem('pageSize'), 1);
+            }
+            document.getElementById("page_1").classList.add("active");
         });
+
+        function refresh_mapping() {
+            $.post('fullyMapping', function (data) {
+                sessionStorage.setItem('fullyMapping', JSON.stringify(data));
+            }, 'json');
+        }
 
         // 切换每页显示条数
         function page_size_change(ps) {
@@ -183,23 +190,37 @@
             document.getElementById('page-size').innerText = ps;
         }
 
+        //页码选择
+        function page_num_change(pn) {
+            var ps = sessionStorage.getItem('pageSize');
+            refresh_accounts_data(ps, pn);
+            document.getElementsByClassName("active").item(0).classList.remove("active");
+            document.getElementById("page_" + pn.toString()).classList.add("active");
+        }
+
         // 刷新记账信息
         function refresh_accounts_data(pageSize, pageNum) {
-            var data_url = 'accountsData?pageSize=' + pageSize.toString() + '?pageNum=' + pageNum.toString();
-            $.post(data_url, function (data) {
-                localStorage.setItem('accountsData', JSON.stringify(data));
+            // var data_url = 'accountsData?pageSize=' + pageSize.toString() + '&pageNum=' + pageNum.toString();
+            var data_url = 'accountsData';
+            var params = {'pageSize': pageSize, 'pageNum': pageNum};
+            $.post(data_url, params, function (data) {
+                sessionStorage.setItem('accountsData', JSON.stringify(data));
+                show_accounts_data();
             }, 'json');
             data_url = 'accountsNum';
             $.post(data_url, function (data) {
-                localStorage.setItem('accountsNum', data);
-            })
+                sessionStorage.setItem('accountsNum', data);
+                //    预留刷新
+            });
         }
 
         // 显示记账表
         function show_accounts_data() {
-            const accountsData = JSON.parse(localStorage.getItem('accountsData'));
+            var accountsData = JSON.parse(sessionStorage.getItem('accountsData'));
+            var accountsBody = document.getElementById("accounts-body");
+            accountsBody.innerHTML = "";
             var count = 1;
-            for (const data in accountsData) {
+            accountsData.forEach(function (item, index, array) {
                 var row = document.createElement("tr");
                 var rowNum = document.createElement("td");
                 var createTime = document.createElement("td");
@@ -210,14 +231,13 @@
                 var detail = document.createElement("td");
 
                 rowNum.innerHTML = count.toString();
-                createTime.innerHTML = data.get('createTime');
-                target.innerHTML = data.get('targetId');
-                account.innerHTML = data.get('accountId');
-                type.innerHTML = data.get('typeId');
-                status.innerHTML = data.get('statusId');
-                detail.innerHTML = '<a id="'+data.get('id')+'" href="#">详情</a>';
+                createTime.innerHTML = item.createTime;
+                target.innerHTML = item.targetId;
+                account.innerHTML = item.accountId;
+                type.innerHTML = item.typeId;
+                status.innerHTML = item.statusId;
+                detail.innerHTML = '<a id="' + item.id + '" href="#">详情</a>';
 
-                var accountsBody = document.getElementById("accounts-body");
                 row.appendChild(rowNum);
                 row.appendChild(createTime);
                 row.appendChild(target);
@@ -228,7 +248,7 @@
                 accountsBody.appendChild(row);
 
                 count++;
-            }
+            });
         }
 
         // 鼠标移到详情上显示详情

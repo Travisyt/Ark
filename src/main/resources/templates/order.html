@@ -151,7 +151,7 @@
         var defaultPageSize = 20;
         $(window).ready(function () {
             $.post('fullyMapping', function (data) {
-                localStorage.setItem('fullyMapping', JSON.stringify(data));
+                sessionStorage.setItem('fullyMapping', JSON.stringify(data));
             }, 'json');
             if (sessionStorage.getItem('pageSize') == null) document.getElementById('page-size').innerText = defaultPageSize;
             else document.getElementById('page-size').innerText = sessionStorage.getItem('pageSize');
