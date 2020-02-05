@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,20 +36,36 @@ public class TestController {
         return new ModelAndView("main");
     }
 
+
+
     /**
      *
      * @return 返回记账信息列表
      */
+//    @RequestMapping("/accountsData")
+//    @ResponseBody
+//    public List<AccountsRecord> accounts(String pageSize, String pageNum) {
+//        List<AccountsRecord> accountsRecords = new ArrayList<>();
+//        int ps = Integer.parseInt(pageSize);
+//        for (int i=1;i<=ps;++i) {
+//            accountsRecords.add(AccountsRecord.test());
+//        }
+//        return accountsRecords;
+//    }
     @RequestMapping("/accountsData")
     @ResponseBody
-    public List<AccountsRecord> accounts(String pageSize, String pageNum) {
+    public Map<String, Object> accounts(String pageSize, String pageNum) {
         List<AccountsRecord> accountsRecords = new ArrayList<>();
         int ps = Integer.parseInt(pageSize);
         for (int i=1;i<=ps;++i) {
             accountsRecords.add(AccountsRecord.test());
         }
-        return accountsRecords;
+        Map<String, Object> map = new HashMap<>();
+        map.put("num", 1020);
+        map.put("data", accountsRecords);
+        return map;
     }
+
 
 
 }

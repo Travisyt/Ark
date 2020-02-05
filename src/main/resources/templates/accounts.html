@@ -11,40 +11,6 @@
 <div th:fragment="general-accounts">
     <div class="container-fluid" id="main-table">
 
-                <div class="row">
-                    <div style="margin-left: 5%;">
-                        <div class="dropdown">
-                            <span>每页</span>
-                            <a data-toggle="dropdown" href="#" id="page-size">20</a>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                <li><a href="javascript:" onclick="page_size_change(20)">20</a></li>
-                                <li><a href="javascript:" onclick="page_size_change(40)">40</a></li>
-                                <li><a href="javascript:page_size_change(60)">60</a></li>
-                                <li><a href="javascript:" onclick="page_size_change(80)">80</a></li>
-                                <li><a href="javascript:" onclick="page_size_change(100)">100</a></li>
-                            </ul>
-                            <span>条数据</span>
-                        </div>
-                    </div>
-
-                <div class="row">
-
-                    <div style="margin-left: 5%;">
-                        <ul class="pagination">
-                            <li><a href="#">&laquo;</a></li>
-                            <li class="page_num" id="page_1"><a href="javascript:page_num_change(1)">1</a></li>
-                            <li class="page_num" id="page_2"><a href="javascript:page_num_change(2)">2</a></li>
-                            <li class="page_num" id="page_3"><a href="javascript:page_num_change(3)">3</a></li>
-                            <li class="page_num" id="page_4"><a href="javascript:page_num_change(4)">4</a></li>
-                            <li class="page_num" id="page_5"><a href="javascript:page_num_change(5)">5</a></li>
-                            <li><a href="#">&raquo;</a></li>
-                        </ul>
-                    </div>
-
-                </div>
-
-        </div>
-
 
         <div class="row">
             <table class="table table-striped">
@@ -163,10 +129,35 @@
             </table>
         </div>
 
+        <div>
+            <div>
+                <ul class="pagination" id="page_group">
+
+                </ul>
+            </div>
+            <div style="margin-left: 20px">
+                <div class="dropdown">
+                    <span>每页</span>
+                    <a data-toggle="dropdown" href="#" id="page-size">20</a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                        <li><a href="javascript:" onclick="page_size_change(20)">20</a></li>
+                        <li><a href="javascript:" onclick="page_size_change(40)">40</a></li>
+                        <li><a href="javascript:" onclick="page_size_change(60)">60</a></li>
+                        <li><a href="javascript:" onclick="page_size_change(80)">80</a></li>
+                        <li><a href="javascript:" onclick="page_size_change(100)">100</a></li>
+                    </ul>
+                    <span>条数据，共</span><span id="total_pages" style="font-weight: bolder"></span><span>页。</span>
+                </div>
+            </div>
+
+        </div>
+
+
     </div>
 
     <script>
         const defaultPageSize = 20;
+        const defaultPageGroupNum = 8;
         $(window).ready(function () {
             refresh_mapping();
             if (sessionStorage.getItem('pageSize') == null) {
@@ -176,7 +167,8 @@
                 document.getElementById('page-size').innerText = sessionStorage.getItem('pageSize');
                 refresh_accounts_data(sessionStorage.getItem('pageSize'), 1);
             }
-            document.getElementById("page_1").classList.add("active");
+            page_group_next(0, sessionStorage.getItem('totalPages'));
+
         });
 
         function refresh_mapping() {
@@ -188,7 +180,10 @@
         // 切换每页显示条数
         function page_size_change(ps) {
             sessionStorage.setItem('pageSize', ps);
-            refresh_accounts_data(ps, 1);
+            // 使用回调函数来同步
+            refresh_accounts_data(ps, 1, function () {
+                page_group_next(0, sessionStorage.getItem('totalPages'));
+            });
             document.getElementById('page-size').innerText = ps;
         }
 
@@ -200,24 +195,63 @@
             document.getElementById("page_" + pn.toString()).classList.add("active");
         }
 
+        function page_num_change2(pn) {
+            var ps = sessionStorage.getItem('pageSize');
+            refresh_accounts_data(ps, pn);
+            document.getElementById("page_" + pn.toString()).classList.add("active");
+        }
+
+        //页数计算显示
+        function page_group_previous(start) {
+            page_group_generate(start - defaultPageGroupNum, start - 1);
+        }
+
+        function page_group_next(end, totalPages) {
+            if ((end + 8) <= totalPages) {
+                page_group_generate(parseInt(end) + 1, parseInt(end) + defaultPageGroupNum);
+            } else {
+                page_group_generate(parseInt(end) + 1, totalPages);
+            }
+        }
+
+        function page_group_generate(start, end) {
+            var totalPages = sessionStorage.getItem('totalPages');
+            var pageGroup = document.getElementById("page_group");
+            pageGroup.innerHTML = "";
+            if (parseInt(start) > 1) {
+                var previous = document.createElement("li");
+                previous.innerHTML = '<a href="javascript:page_group_previous(' + start + ')">&laquo;</a>';
+                pageGroup.appendChild(previous);
+            }
+            for (i = start; i <= end; i++) {
+                var page = document.createElement("li");
+                page.classList.add("page_num");
+                page.id = 'page_' + i.toString();
+                page.innerHTML = '<a href="javascript:page_num_change(' + i.toString() + ')">' + i.toString() + '</a>';
+                pageGroup.appendChild(page);
+            }
+            if (end < parseInt(totalPages)) {
+                var next = document.createElement("li");
+                next.innerHTML = '<a href="javascript:page_group_next(' + end + ',' + totalPages +')">&raquo;</a>';
+                pageGroup.appendChild(next);
+            }
+            page_num_change2(start);
+        }
+
         // 刷新记账信息
-        function refresh_accounts_data(pageSize, pageNum) {
+        function refresh_accounts_data(pageSize, pageNum, f = function () { }) {
             // var data_url = 'accountsData?pageSize=' + pageSize.toString() + '&pageNum=' + pageNum.toString();
             var data_url = 'accountsData';
             var params = {'pageSize': pageSize, 'pageNum': pageNum};
             $.post(data_url, params, function (data) {
-                sessionStorage.setItem('accountsData', JSON.stringify(data));
-                show_accounts_data();
+                sessionStorage.setItem('accountsNum', data.num);
+                sessionStorage.setItem('accountsData', JSON.stringify(data.data));
+                show_accounts_data(f);
             }, 'json');
-            data_url = 'accountsNum';
-            $.post(data_url, function (data) {
-                sessionStorage.setItem('accountsNum', data);
-                //    预留刷新
-            });
         }
 
         // 显示记账表
-        function show_accounts_data() {
+        function show_accounts_data(f = function () { }) {
             var accountsData = JSON.parse(sessionStorage.getItem('accountsData'));
             var accountsBody = document.getElementById("accounts-body");
             accountsBody.innerHTML = "";
@@ -238,7 +272,7 @@
                 account.innerHTML = item.accountId;
                 type.innerHTML = item.typeId;
                 status.innerHTML = item.statusId;
-                detail.innerHTML = '<a id="' + item.id + '" href="#">详情</a>';
+                detail.innerHTML = '<a id="' + item.id + '" href="javascript:show_details(' + item.id + ')">详情</a>';
 
                 row.appendChild(rowNum);
                 row.appendChild(createTime);
@@ -251,6 +285,11 @@
 
                 count++;
             });
+            var totalPages = parseInt(sessionStorage.getItem("accountsNum") / sessionStorage.getItem("pageSize")) + 1;
+            sessionStorage.setItem('totalPages', totalPages);
+            document.getElementById("total_pages").innerHTML = totalPages;
+            // 回调函数
+            f();
         }
 
         // 鼠标移到详情上显示详情
