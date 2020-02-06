@@ -66,6 +66,20 @@ public class TestController {
         return map;
     }
 
+    @RequestMapping("/deleteAccountsRecord")
+    @ResponseBody
+    public String deleteAccountsRecord(Integer id) {
+        System.out.println("deleted where id = " + id.toString());
+        return "200";
+    }
+
+    @RequestMapping("/checkAccountsRecord")
+    @ResponseBody
+    public String checkAccountsRecord(Integer id) {
+        System.out.println("checked where id = " + id.toString());
+        return "200";
+    }
+
 
 
 }

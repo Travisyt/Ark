@@ -18,7 +18,7 @@
                 <tr>
                     <th>
 
-                        <div class="dropdown">
+                        <div class="dropdown" style="position: relative; right: 5px">
                             <button type="button" class="btn dropdown-toggle" id="row-num" data-toggle="dropdown">行号
                                 <span class="caret"></span>
                             </button>
@@ -33,7 +33,7 @@
                         </div>
                     </th>
                     <th>
-                        <div class="dropdown">
+                        <div class="dropdown" style="position: relative; right: 5px">
                             <button type="button" class="btn dropdown-toggle" id="createTime" data-toggle="dropdown">
                                 记账时间
                                 <span class="caret"></span>
@@ -50,7 +50,23 @@
                     </th>
 
                     <th>
-                        <div class="dropdown">
+                        <div class="dropdown" style="position: relative; right: 5px">
+                            <button type="button" class="btn dropdown-toggle" id="checkTime" data-toggle="dropdown">过账时间
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="checkTime">
+                                <li role="presentation">
+                                    <a role="menuitem" tabindex="-1" href="#">筛选</a>
+                                </li>
+                                <li role="presentation">
+                                    <a role="menuitem" tabindex="-1" href="#">排序</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </th>
+
+                    <th>
+                        <div class="dropdown" style="position: relative; right: 5px">
                             <button type="button" class="btn dropdown-toggle" id="target" data-toggle="dropdown">单位部门
                                 <span class="caret"></span>
                             </button>
@@ -66,8 +82,24 @@
                     </th>
 
                     <th>
-                        <div class="dropdown">
-                            <button type="button" class="btn dropdown-toggle" id="account" data-toggle="dropdown">本地账户
+                        <div class="dropdown" style="position: relative; right: 5px">
+                            <button type="button" class="btn dropdown-toggle" id="value" data-toggle="dropdown">本地账户
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="value">
+                                <li role="presentation">
+                                    <a role="menuitem" tabindex="-1" href="#">筛选</a>
+                                </li>
+                                <li role="presentation">
+                                    <a role="menuitem" tabindex="-1" href="#">排序</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </th>
+
+                    <th>
+                        <div class="dropdown" style="position: relative; right: 5px">
+                            <button type="button" class="btn dropdown-toggle" id="account" data-toggle="dropdown">金额
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="account">
@@ -82,7 +114,7 @@
                     </th>
 
                     <th>
-                        <div class="dropdown">
+                        <div class="dropdown" style="position: relative; right: 5px">
                             <button type="button" class="btn dropdown-toggle" id="type" data-toggle="dropdown">类型
                                 <span class="caret"></span>
                             </button>
@@ -98,7 +130,7 @@
                     </th>
 
                     <th>
-                        <div class="dropdown">
+                        <div class="dropdown" style="position: relative; right: 5px">
                             <button type="button" class="btn dropdown-toggle" id="status" data-toggle="dropdown">状态
                                 <span class="caret"></span>
                             </button>
@@ -114,8 +146,14 @@
                     </th>
 
                     <th>
-                        <button type="button" class="btn dropdown-toggle" id="detail" data-toggle="dropdown">详情
-                            <span class="caret"></span>
+                        <button type="button" class="btn" id="detail" style="position: relative; right: 5px">
+                            备注
+                        </button>
+                    </th>
+
+                    <th>
+                        <button type="button" class="btn" id="action" style="position: relative; left: 5px">
+                            操作
                         </button>
                     </th>
 
@@ -161,15 +199,22 @@
         $(window).ready(function () {
             refresh_mapping();
             if (sessionStorage.getItem('pageSize') == null) {
-                document.getElementById('page-size').innerText = defaultPageSize;
-                refresh_accounts_data(defaultPageSize, 1);
+                sessionStorage.setItem('pageSize', defaultPageSize);
+                document.getElementById('page-size').innerHTML = defaultPageSize;
+                refresh_accounts_data(defaultPageSize, 1, function () {
+                    page_group_next(0, sessionStorage.getItem('totalPages'));
+                });
             } else {
-                document.getElementById('page-size').innerText = sessionStorage.getItem('pageSize');
-                refresh_accounts_data(sessionStorage.getItem('pageSize'), 1);
+                document.getElementById('page-size').innerHTML = sessionStorage.getItem('pageSize');
+                refresh_accounts_data(sessionStorage.getItem('pageSize'), 1, function () {
+                    page_group_next(0, sessionStorage.getItem('totalPages'));
+                });
             }
-            page_group_next(0, sessionStorage.getItem('totalPages'));
-
         });
+
+        function log(msg) {
+            console.log(msg);
+        }
 
         function refresh_mapping() {
             $.post('fullyMapping', function (data) {
@@ -177,6 +222,8 @@
             }, 'json');
         }
 
+
+        // ======================== 分页以及数据显示功能 ======================== //
         // 切换每页显示条数
         function page_size_change(ps) {
             sessionStorage.setItem('pageSize', ps);
@@ -201,12 +248,14 @@
             document.getElementById("page_" + pn.toString()).classList.add("active");
         }
 
-        //页数计算显示
+        // 向前滑动页面分组
         function page_group_previous(start) {
             page_group_generate(start - defaultPageGroupNum, start - 1);
         }
 
+        // 向后滑动页面分组
         function page_group_next(end, totalPages) {
+            log('page_group_next( ' + end + ' ,  ' + totalPages + ' )');
             if ((end + 8) <= totalPages) {
                 page_group_generate(parseInt(end) + 1, parseInt(end) + defaultPageGroupNum);
             } else {
@@ -214,9 +263,12 @@
             }
         }
 
+        // 生成分页切换组
         function page_group_generate(start, end) {
+            log('page_group_generate ( ' + start + ' ,  ' + end + ' )');
             var totalPages = sessionStorage.getItem('totalPages');
             var pageGroup = document.getElementById("page_group");
+            // 先将原先的分页清空
             pageGroup.innerHTML = "";
             if (parseInt(start) > 1) {
                 var previous = document.createElement("li");
@@ -229,18 +281,22 @@
                 page.id = 'page_' + i.toString();
                 page.innerHTML = '<a href="javascript:page_num_change(' + i.toString() + ')">' + i.toString() + '</a>';
                 pageGroup.appendChild(page);
+                log('generated: page_' + i);
             }
             if (end < parseInt(totalPages)) {
                 var next = document.createElement("li");
-                next.innerHTML = '<a href="javascript:page_group_next(' + end + ',' + totalPages +')">&raquo;</a>';
+                next.innerHTML = '<a href="javascript:page_group_next(' + end + ',' + totalPages + ')">&raquo;</a>';
                 pageGroup.appendChild(next);
             }
+            log('prepare to call page_num_change ...');
             page_num_change2(start);
         }
 
         // 刷新记账信息
-        function refresh_accounts_data(pageSize, pageNum, f = function () { }) {
-            // var data_url = 'accountsData?pageSize=' + pageSize.toString() + '&pageNum=' + pageNum.toString();
+        // 将数据和数据条数写入sessionStorage
+        function refresh_accounts_data(pageSize, pageNum, f = function () {
+        }) {
+            sessionStorage.setItem('pageNum', pageNum);
             var data_url = 'accountsData';
             var params = {'pageSize': pageSize, 'pageNum': pageNum};
             $.post(data_url, params, function (data) {
@@ -251,7 +307,8 @@
         }
 
         // 显示记账表
-        function show_accounts_data(f = function () { }) {
+        function show_accounts_data(callback = function () {
+        }) {
             var accountsData = JSON.parse(sessionStorage.getItem('accountsData'));
             var accountsBody = document.getElementById("accounts-body");
             accountsBody.innerHTML = "";
@@ -260,41 +317,80 @@
                 var row = document.createElement("tr");
                 var rowNum = document.createElement("td");
                 var createTime = document.createElement("td");
+                var value = document.createElement("td");
                 var target = document.createElement("td");
                 var account = document.createElement("td");
                 var type = document.createElement("td");
                 var status = document.createElement("td");
                 var detail = document.createElement("td");
+                var checkTime = document.createElement("td");
+                var action = document.createElement("td");
 
                 rowNum.innerHTML = count.toString();
                 createTime.innerHTML = item.createTime;
+                value.innerHTML = item.value;
                 target.innerHTML = item.targetId;
                 account.innerHTML = item.accountId;
                 type.innerHTML = item.typeId;
                 status.innerHTML = item.statusId;
-                detail.innerHTML = '<a id="' + item.id + '" href="javascript:show_details(' + item.id + ')">详情</a>';
+                checkTime.innerHTML = item.checkTime;
+                detail.innerHTML = '<a id="id_' + item.id + '" href="#" ' +
+                    'data-toggle="popover" title="备注" data-trigger="hover" data-placement="bottom"' +
+                    'data-html="true" data-content="<b>' + item.note + '</b>">备注</a>';
+                action.innerHTML = '<span><a href="javascript:check_record(' + item.id + ',' + count + ')">过账</a></span>' +
+                    '<span>  </span><span><a href="javascript:delete_record(' + item.id + ',' + count + ')">删除</a></span>';
 
                 row.appendChild(rowNum);
                 row.appendChild(createTime);
+                row.appendChild(checkTime);
                 row.appendChild(target);
                 row.appendChild(account);
+                row.appendChild(value);
                 row.appendChild(type);
                 row.appendChild(status);
                 row.appendChild(detail);
+                row.appendChild(action);
                 accountsBody.appendChild(row);
 
                 count++;
             });
+            log('calculate: totalPages = ' + sessionStorage.getItem("accountsNum") + '/' + sessionStorage.getItem("pageSize") + '+1');
             var totalPages = parseInt(sessionStorage.getItem("accountsNum") / sessionStorage.getItem("pageSize")) + 1;
+            log('prepare to insert into sessionStorage: totalPages = ' + totalPages);
             sessionStorage.setItem('totalPages', totalPages);
             document.getElementById("total_pages").innerHTML = totalPages;
             // 回调函数
-            f();
+            callback();
+            log('jquery func');
+            $("[data-toggle='popover']").popover();
         }
 
-        // 鼠标移到详情上显示详情
-        function show_details(id) {
+        // 删除记录
+        function delete_record(id, num) {
+            alert('确定要删除第 ' + num + ' 行数据？');
+            var params = {'id': id};
+            $.post('deleteAccountsRecord', params, function (data) {
+                if (data === '200') {
+                    alert('删除成功');
+                    page_num_change(sessionStorage.getItem('pageNum'));
+                } else {
+                    alert('删除失败，错误码：' + data.status);
+                }
+            });
+        }
 
+        // 过账
+        function check_record(id, num) {
+            alert('确定要将第 ' + num + ' 行过账？');
+            var params = {'id': id};
+            $.post('checkAccountsRecord', params, function (data) {
+                if (data === '200') {
+                    alert('过账成功');
+                    page_num_change(sessionStorage.getItem('pageNum'));
+                } else {
+                    alert('过账失败，错误码：' + data.status);
+                }
+            });
         }
 
 

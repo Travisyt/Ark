@@ -10,11 +10,12 @@ public class AccountsRecord {
 
     public AccountsRecord() { };
 
-    public AccountsRecord(Integer id, Date createTime, Integer targetId, Integer accountId, Integer typeId, Integer statusId, Integer wayId, Date checkTime, String note) {
+    public AccountsRecord(Integer id, Date createTime, Integer targetId, Integer accountId, Float value, Integer typeId, Integer statusId, Integer wayId, Date checkTime, String note) {
         this.id = id;
         this.createTime = createTime;
         this.targetId = targetId;
         this.accountId = accountId;
+        this.value = value;
         this.typeId = typeId;
         this.statusId = statusId;
         this.wayId = wayId;
@@ -28,11 +29,11 @@ public class AccountsRecord {
                 new Date(System.currentTimeMillis()),
                 RandomUtils.randomInteger(100),
                 RandomUtils.randomInteger(5),
-                RandomUtils.randomInteger(5),
+                Float.parseFloat(RandomUtils.randomInteger(999999).toString()), RandomUtils.randomInteger(5),
                 RandomUtils.randomInteger(5),
                 RandomUtils.randomInteger(10),
                 new Date(System.currentTimeMillis()+1000000L),
-                RandomUtils.randomString(15)
+                RandomUtils.randomString(180)
         );
     }
 
@@ -45,6 +46,8 @@ public class AccountsRecord {
     private Integer targetId;
 
     private Integer accountId;
+
+    private Float value;
 
     private Integer typeId;
 
@@ -128,6 +131,14 @@ public class AccountsRecord {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public Float getValue() {
+        return value;
+    }
+
+    public void setValue(Float value) {
+        this.value = value;
     }
 
 }
