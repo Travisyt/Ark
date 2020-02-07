@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,8 +24,11 @@ public class DataController {
 
     @RequestMapping("/fullyMapping")
     @ResponseBody
-    public Map<String, List<Map<String, String>>> getFullyMapping() {
-        return mappingService.getFullyMapping();
+    public Map<String, Object> getFullyMapping() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("data", mappingService.getFullyMapping());
+        map.put("status", "200");
+        return map;
     }
 
     @RequestMapping("/getOrders")

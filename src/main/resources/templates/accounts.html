@@ -216,12 +216,6 @@
             console.log(msg);
         }
 
-        function refresh_mapping() {
-            $.post('fullyMapping', function (data) {
-                sessionStorage.setItem('fullyMapping', JSON.stringify(data));
-            }, 'json');
-        }
-
 
         // ======================== 分页以及数据显示功能 ======================== //
         // 切换每页显示条数
@@ -300,9 +294,13 @@
             var data_url = 'accountsData';
             var params = {'pageSize': pageSize, 'pageNum': pageNum};
             $.post(data_url, params, function (data) {
-                sessionStorage.setItem('accountsNum', data.num);
-                sessionStorage.setItem('accountsData', JSON.stringify(data.data));
-                show_accounts_data(f);
+                if (data.status === '200') {
+                    sessionStorage.setItem('accountsNum', data.num);
+                    sessionStorage.setItem('accountsData', JSON.stringify(data.data));
+                    show_accounts_data(f);
+                } else {
+                    alert('获取数据失败');
+                }
             }, 'json');
         }
 
@@ -391,6 +389,18 @@
                     alert('过账失败，错误码：' + data.status);
                 }
             });
+        }
+
+        // ========================= 映射 ========================= //\
+        function refresh_mapping(callback = function () {
+        }) {
+            $.post('fullyMapping', function (data) {
+                if (data.status === '200') {
+                    sessionStorage.setItem('fullyMapping', JSON.stringify(data.data));
+                } else {
+                    alert('获取总账映射失败');
+                }
+            }, 'json')
         }
 
 

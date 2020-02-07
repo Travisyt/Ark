@@ -1,14 +1,12 @@
 package com.yu.arksys.service;
 
 import com.yu.arksys.configure.Properties;
-import com.yu.arksys.dao.MappingDao;
 import com.yu.arksys.dao.MappingDaoNew;
 import com.yu.arksys.service.api.MappingService;
 import com.yu.arksys.service.api.MemoryDataBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +37,7 @@ public class MappingServiceImp implements MappingService {
     @Override
     public Map<String, List<Map<String, String>>> getFullyMapping() {
         properties.load();
-        List<String> tables = (List<String>) memoryDataBase.get(memoryDataBase.MAPPING_TABLE_NAMESPACE, Properties.ALL_MAPPING_TABLE_NAMES);
+        List<String> tables = (List<String>) memoryDataBase.get(memoryDataBase.MAPPING_TABLE_NAMESPACE, Properties.ALL_MAPPING_TABLE_NAME);
         Map<String, List<Map<String, String>>> fullyMapping = new HashMap<>();
         for (String table : tables) {
             fullyMapping.put(table, mappingDao.getMapping(table));

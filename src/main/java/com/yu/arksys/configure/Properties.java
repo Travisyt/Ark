@@ -16,7 +16,7 @@ public class Properties {
 
     }
 
-    public static final String ALL_MAPPING_TABLE_NAMES = "all";
+    public static final String ALL_MAPPING_TABLE_NAME = "all";
 
     @Autowired
     Logger logger;
@@ -43,7 +43,7 @@ public class Properties {
         if (loaded) return;
         // 未载入则全部载入
         List<String> mappingNames = StringUtils.splitAsList(environment.getProperty("ark.mapping.tables"), ",");
-        memoryDataBase.insert(memoryDataBase.MAPPING_TABLE_NAMESPACE, ALL_MAPPING_TABLE_NAMES, mappingNames, 0);
+        memoryDataBase.insert(memoryDataBase.MAPPING_TABLE_NAMESPACE, ALL_MAPPING_TABLE_NAME, mappingNames, 0);
         for (String mappingName : mappingNames) {
             memoryDataBase.insert(memoryDataBase.MAPPING_TABLE_NAMESPACE, mappingName, environment.getProperty(PREFIX + mappingName + TABLE_SUFFIX), 0);
             logger.info("environment get property name: " + PREFIX + mappingName + FIELD_SUFFIX);
