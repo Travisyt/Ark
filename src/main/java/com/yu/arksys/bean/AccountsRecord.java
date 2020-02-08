@@ -1,12 +1,13 @@
 package com.yu.arksys.bean;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.yu.arksys.bean.api.DataBean;
 import com.yu.arksys.utils.RandomUtils;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
-public class AccountsRecord {
+public class AccountsRecord implements DataBean {
 
     public AccountsRecord() { };
 
@@ -35,6 +36,25 @@ public class AccountsRecord {
                 new Date(System.currentTimeMillis()+1000000L),
                 RandomUtils.randomString(180)
         );
+    }
+
+    @Override
+    public String getFieldsString() {
+        return "id,create_time,target_id,account_id,value,type_id,status_id,way_id,check_time,note";
+    }
+
+    @Override
+    public String getValuesString() {
+        return this.getId()+D+
+                this.getCreateTime()+D+
+                this.getTargetId()+D+
+                this.getAccountId()+D+
+                this.getValue()+D+
+                this.getTypeId()+D+
+                this.getStatusId()+D+
+                this.getWayId()+D+
+                this.getCheckTime()+D+
+                this.getNote();
     }
 
     private Integer id;
