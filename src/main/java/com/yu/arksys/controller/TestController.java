@@ -52,20 +52,20 @@ public class TestController {
 //        }
 //        return accountsRecords;
 //    }
-    @RequestMapping("/accountsData")
-    @ResponseBody
-    public Map<String, Object> accounts(String pageSize, String pageNum) {
-        List<AccountsRecord> accountsRecords = new ArrayList<>();
-        int ps = Integer.parseInt(pageSize);
-        for (int i=1;i<=ps;++i) {
-            accountsRecords.add(AccountsRecord.test());
-        }
-        Map<String, Object> map = new HashMap<>();
-        map.put("num", 1020);
-        map.put("data", accountsRecords);
-        map.put("status", "200");
-        return map;
-    }
+//    @RequestMapping("/accountsData")
+//    @ResponseBody
+//    public Map<String, Object> accounts(String pageSize, String pageNum) {
+//        List<AccountsRecord> accountsRecords = new ArrayList<>();
+//        int ps = Integer.parseInt(pageSize);
+//        for (int i=1;i<=ps;++i) {
+//            accountsRecords.add(AccountsRecord.test());
+//        }
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("num", 1020);
+//        map.put("data", accountsRecords);
+//        map.put("status", "200");
+//        return map;
+//    }
 
     @RequestMapping("/deleteAccountsRecord")
     @ResponseBody

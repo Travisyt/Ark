@@ -1,15 +1,16 @@
 package com.yu.arksys.bean;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.yu.arksys.bean.api.DataBean;
+import com.yu.arksys.bean.api.AccountsDataBean;
 import com.yu.arksys.utils.RandomUtils;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
-public class AccountsRecord implements DataBean {
+public class AccountsRecord extends AccountsDataBean {
 
-    public AccountsRecord() { };
+    public AccountsRecord() {
+    }
 
     public AccountsRecord(Integer id, Date createTime, Integer targetId, Integer accountId, Float value, Integer typeId, Integer statusId, Integer wayId, Date checkTime, String note) {
         this.id = id;
@@ -33,27 +34,22 @@ public class AccountsRecord implements DataBean {
                 Float.parseFloat(RandomUtils.randomInteger(999999).toString()), RandomUtils.randomInteger(5),
                 RandomUtils.randomInteger(5),
                 RandomUtils.randomInteger(10),
-                new Date(System.currentTimeMillis()+1000000L),
+                new Date(System.currentTimeMillis() + 1000000L),
                 RandomUtils.randomString(180)
         );
     }
 
     @Override
-    public String getFieldsString() {
-        return "id,create_time,target_id,account_id,value,type_id,status_id,way_id,check_time,note";
-    }
-
-    @Override
     public String getValuesString() {
-        return this.getId()+D+
-                this.getCreateTime()+D+
-                this.getTargetId()+D+
-                this.getAccountId()+D+
-                this.getValue()+D+
-                this.getTypeId()+D+
-                this.getStatusId()+D+
-                this.getWayId()+D+
-                this.getCheckTime()+D+
+        return this.getId() + D +
+                this.getCreateTime() + D +
+                this.getTargetId() + D +
+                this.getAccountId() + D +
+                this.getValue() + D +
+                this.getTypeId() + D +
+                this.getStatusId() + D +
+                this.getWayId() + D +
+                this.getCheckTime() + D +
                 this.getNote();
     }
 

@@ -13,6 +13,8 @@ public interface AccountsDataDao {
 
     List<AccountsRecord> get(Integer pageSize, Integer pageNum);
 
+    Integer getNum();
+
     List<AccountsRecord> getOrderBy(Integer pageSize, Integer pageNum, String orderBy);
 
     /**
@@ -20,6 +22,8 @@ public interface AccountsDataDao {
      * @param conditions where 条件的键值对
      */
     List<AccountsRecord> getWithConditions(Integer pageSize, Integer pageNum, Map<String, String> conditions);
+
+    Integer getNumWithConditions(Map<String, String> conditions);
 
     List<AccountsRecord> getWithConditionsOrderBy(Integer pageSize, Integer pageNum, Map<String, String> conditions, String orderBy);
 

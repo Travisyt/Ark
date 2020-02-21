@@ -17,24 +17,15 @@
                 <thead>
                 <tr>
                     <th>
-
-                        <div class="dropdown" style="position: relative; right: 5px">
-                            <button type="button" class="btn dropdown-toggle" id="row-num" data-toggle="dropdown">行号
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="row-num">
-                                <li role="presentation">
-                                    <a role="menuitem" tabindex="-1" href="#">筛选</a>
-                                </li>
-                                <li role="presentation">
-                                    <a role="menuitem" tabindex="-1" href="#">排序</a>
-                                </li>
-                            </ul>
-                        </div>
+                        <button type="button" class="btn dropdown-toggle" id="row-num" data-toggle="dropdown">
+                            行号
+                            <span class="caret"></span>
+                        </button>
                     </th>
                     <th>
                         <div class="dropdown" style="position: relative; right: 5px">
-                            <button type="button" class="btn dropdown-toggle" id="createTime" data-toggle="dropdown">
+                            <button type="button" class="btn dropdown-toggle" id="createTime" data-toggle="dropdown"
+                                    ondblclick="order_by('create_time')">
                                 记账时间
                                 <span class="caret"></span>
                             </button>
@@ -42,106 +33,118 @@
                                 <li role="presentation">
                                     <a role="menuitem" tabindex="-1" href="#">筛选</a>
                                 </li>
-                                <li role="presentation">
-                                    <a role="menuitem" tabindex="-1" href="#">排序</a>
-                                </li>
                             </ul>
+                            <span id="create_time_order_icon_desc" class="glyphicon glyphicon-chevron-down"
+                                  style="display: none"></span>
+                            <span id="create_time_order_icon" class="glyphicon glyphicon-chevron-up"
+                                  style="display: none"></span>
+                            <span id="create_time_filter_icon" class="glyphicon glyphicon-filter"
+                                  style="display: none"></span>
                         </div>
                     </th>
 
                     <th>
                         <div class="dropdown" style="position: relative; right: 5px">
-                            <button type="button" class="btn dropdown-toggle" id="checkTime" data-toggle="dropdown">过账时间
+                            <button type="button" class="btn dropdown-toggle" id="checkTime" data-toggle="dropdown"
+                                    ondblclick="order_by('check_time')">
+                                过账时间
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="checkTime">
                                 <li role="presentation">
                                     <a role="menuitem" tabindex="-1" href="#">筛选</a>
                                 </li>
-                                <li role="presentation">
-                                    <a role="menuitem" tabindex="-1" href="#">排序</a>
-                                </li>
                             </ul>
+                            <span id="check_time_order_icon_desc" class="glyphicon glyphicon-chevron-down"
+                                  style="display: none"></span>
+                            <span id="check_time_order_icon" class="glyphicon glyphicon-chevron-up"
+                                  style="display: none"></span>
+                            <span id="check_time_filter_icon" class="glyphicon glyphicon-filter"
+                                  style="display: none"></span>
                         </div>
                     </th>
 
                     <th>
                         <div class="dropdown" style="position: relative; right: 5px">
-                            <button type="button" class="btn dropdown-toggle" id="target" data-toggle="dropdown">单位部门
+                            <button type="button" class="btn dropdown-toggle" id="target" data-toggle="dropdown"
+                                    ondblclick="order_by('target_id')">
+                                单位部门
                                 <span class="caret"></span>
                             </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="target">
-                                <li role="presentation">
-                                    <a role="menuitem" tabindex="-1" href="#">筛选</a>
-                                </li>
-                                <li role="presentation">
-                                    <a role="menuitem" tabindex="-1" href="#">排序</a>
-                                </li>
+                            <ul id="target_id_options" class="dropdown-menu" role="menu" aria-labelledby="target">
+
                             </ul>
+                            <span id="target_id_order_icon_desc" class="glyphicon glyphicon-chevron-down"
+                                  style="display: none"></span>
+                            <span id="target_id_order_icon" class="glyphicon glyphicon-chevron-up"
+                                  style="display: none"></span>
+                            <span id="target_id_filter_icon" class="glyphicon glyphicon-filter"
+                                  style="display: none"></span>
                         </div>
                     </th>
 
                     <th>
                         <div class="dropdown" style="position: relative; right: 5px">
-                            <button type="button" class="btn dropdown-toggle" id="value" data-toggle="dropdown">本地账户
+                            <button type="button" class="btn dropdown-toggle" id="value" data-toggle="dropdown"
+                                    ondblclick="order_by('account_id')">
+                                本地账户
                                 <span class="caret"></span>
                             </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="value">
-                                <li role="presentation">
-                                    <a role="menuitem" tabindex="-1" href="#">筛选</a>
-                                </li>
-                                <li role="presentation">
-                                    <a role="menuitem" tabindex="-1" href="#">排序</a>
-                                </li>
+                            <ul id="account_id_options" class="dropdown-menu" role="menu" aria-labelledby="value">
+
                             </ul>
+                            <span id="account_id_order_icon_desc" class="glyphicon glyphicon-chevron-down"
+                                  style="display: none"></span>
+                            <span id="account_id_order_icon" class="glyphicon glyphicon-chevron-up"
+                                  style="display: none"></span>
+                            <span id="account_id_filter_icon" class="glyphicon glyphicon-filter"
+                                  style="display: none"></span>
                         </div>
                     </th>
 
                     <th>
                         <div class="dropdown" style="position: relative; right: 5px">
-                            <button type="button" class="btn dropdown-toggle" id="account" data-toggle="dropdown">金额
-                                <span class="caret"></span>
+                            <button type="button" class="btn dropdown-toggle" id="account" data-toggle="dropdown">
+                                金额
                             </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="account">
-                                <li role="presentation">
-                                    <a role="menuitem" tabindex="-1" href="#">筛选</a>
-                                </li>
-                                <li role="presentation">
-                                    <a role="menuitem" tabindex="-1" href="#">排序</a>
-                                </li>
-                            </ul>
                         </div>
                     </th>
 
                     <th>
                         <div class="dropdown" style="position: relative; right: 5px">
-                            <button type="button" class="btn dropdown-toggle" id="type" data-toggle="dropdown">类型
+                            <button type="button" class="btn dropdown-toggle" id="type" data-toggle="dropdown"
+                                    ondblclick="order_by('type_id')">
+                                类型
                                 <span class="caret"></span>
                             </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="type">
-                                <li role="presentation">
-                                    <a role="menuitem" tabindex="-1" href="#">筛选</a>
-                                </li>
-                                <li role="presentation">
-                                    <a role="menuitem" tabindex="-1" href="#">排序</a>
-                                </li>
+                            <ul id="type_id_options" class="dropdown-menu" role="menu" aria-labelledby="type">
+
                             </ul>
+                            <span id="type_id_order_icon_desc" class="glyphicon glyphicon-chevron-down"
+                                  style="display: none"></span>
+                            <span id="type_id_order_icon" class="glyphicon glyphicon-chevron-up"
+                                  style="display: none"></span>
+                            <span id="type_id_filter_icon" class="glyphicon glyphicon-filter"
+                                  style="display: none"></span>
                         </div>
                     </th>
 
                     <th>
                         <div class="dropdown" style="position: relative; right: 5px">
-                            <button type="button" class="btn dropdown-toggle" id="status" data-toggle="dropdown">状态
+                            <button type="button" class="btn dropdown-toggle" id="status" data-toggle="dropdown"
+                                    ondblclick="order_by('status_id')">
+                                状态
                                 <span class="caret"></span>
                             </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="status">
-                                <li role="presentation">
-                                    <a role="menuitem" tabindex="-1" href="#">筛选</a>
-                                </li>
-                                <li role="presentation">
-                                    <a role="menuitem" tabindex="-1" href="#">排序</a>
-                                </li>
+                            <ul id="status_id_options" class="dropdown-menu" role="menu" aria-labelledby="status">
+
                             </ul>
+                            <span id="status_id_order_icon_desc" class="glyphicon glyphicon-chevron-down"
+                                  style="display: none"></span>
+                            <span id="status_id_order_icon" class="glyphicon glyphicon-chevron-up"
+                                  style="display: none"></span>
+                            <span id="status_id_filter_icon" class="glyphicon glyphicon-filter"
+                                  style="display: none"></span>
                         </div>
                     </th>
 
@@ -190,26 +193,36 @@
 
         </div>
 
-
     </div>
 
     <script>
         const defaultPageSize = 20;
         const defaultPageGroupNum = 8;
+        const defaultOrderBy = 'create_time';
+
+        sessionStorage.setItem('orderBy', defaultOrderBy);
+
+
+        sessionStorage.setItem('conditions', JSON.stringify({}));
+
+
+        sessionStorage.setItem('orderByDesc', 'true');
+
         $(window).ready(function () {
-            refresh_mapping();
-            if (sessionStorage.getItem('pageSize') == null) {
-                sessionStorage.setItem('pageSize', defaultPageSize);
-                document.getElementById('page-size').innerHTML = defaultPageSize;
-                refresh_accounts_data(defaultPageSize, 1, function () {
-                    page_group_next(0, sessionStorage.getItem('totalPages'));
-                });
-            } else {
-                document.getElementById('page-size').innerHTML = sessionStorage.getItem('pageSize');
-                refresh_accounts_data(sessionStorage.getItem('pageSize'), 1, function () {
-                    page_group_next(0, sessionStorage.getItem('totalPages'));
-                });
-            }
+            refresh_mapping(function () {
+                if (sessionStorage.getItem('pageSize') == null) {
+                    sessionStorage.setItem('pageSize', defaultPageSize);
+                    document.getElementById('page-size').innerHTML = defaultPageSize;
+                    refresh_accounts_data(defaultPageSize, 1, function () {
+                        page_group_next(0, sessionStorage.getItem('totalPages'));
+                    });
+                } else {
+                    document.getElementById('page-size').innerHTML = sessionStorage.getItem('pageSize');
+                    refresh_accounts_data(sessionStorage.getItem('pageSize'), 1, function () {
+                        page_group_next(0, sessionStorage.getItem('totalPages'));
+                    });
+                }
+            });
         });
 
         function log(msg) {
@@ -238,7 +251,7 @@
 
         function page_num_change2(pn) {
             var ps = sessionStorage.getItem('pageSize');
-            refresh_accounts_data(ps, pn);
+            // refresh_accounts_data(ps, pn);
             document.getElementById("page_" + pn.toString()).classList.add("active");
         }
 
@@ -289,10 +302,15 @@
         // 刷新记账信息
         // 将数据和数据条数写入sessionStorage
         function refresh_accounts_data(pageSize, pageNum, f = function () {
+        }, params = {
+            'conditions': sessionStorage.getItem('conditions'),
+            'orderBy': sessionStorage.getItem('orderBy')
         }) {
             sessionStorage.setItem('pageNum', pageNum);
             var data_url = 'accountsData';
-            var params = {'pageSize': pageSize, 'pageNum': pageNum};
+            log('refresh_accounts_data--params: ' + params['conditions']);
+            params['pageSize'] = pageSize;
+            params['pageNum'] = pageNum;
             $.post(data_url, params, function (data) {
                 if (data.status === '200') {
                     sessionStorage.setItem('accountsNum', data.num);
@@ -307,6 +325,7 @@
         // 显示记账表
         function show_accounts_data(callback = function () {
         }) {
+            var mapping = JSON.parse(sessionStorage.getItem('fullyMapping'));
             var accountsData = JSON.parse(sessionStorage.getItem('accountsData'));
             var accountsBody = document.getElementById("accounts-body");
             accountsBody.innerHTML = "";
@@ -327,10 +346,10 @@
                 rowNum.innerHTML = count.toString();
                 createTime.innerHTML = item.createTime;
                 value.innerHTML = item.value;
-                target.innerHTML = item.targetId;
-                account.innerHTML = item.accountId;
-                type.innerHTML = item.typeId;
-                status.innerHTML = item.statusId;
+                target.innerHTML = mapping['accounts_target'][item.targetId]['target_name'];
+                account.innerHTML = mapping['accounts_account'][item.accountId]['account_name'];
+                type.innerHTML = mapping['accounts_type'][item.typeId]['type_name'];
+                status.innerHTML = mapping['accounts_status'][item.statusId]['status_name'];
                 checkTime.innerHTML = item.checkTime;
                 detail.innerHTML = '<a id="id_' + item.id + '" href="#" ' +
                     'data-toggle="popover" title="备注" data-trigger="hover" data-placement="bottom"' +
@@ -391,16 +410,181 @@
             });
         }
 
-        // ========================= 映射 ========================= //\
+        // ========================= 映射 ========================= //
         function refresh_mapping(callback = function () {
         }) {
+            var mapping = {};
             $.post('fullyMapping', function (data) {
                 if (data.status === '200') {
-                    sessionStorage.setItem('fullyMapping', JSON.stringify(data.data));
+                    var res = {};
+                    $.each(data.data, function (key, value) {
+                        var temp = {};
+                        // log('key: ' + key);
+                        if (key.indexOf("proto") !== -1 || key.indexOf("length") !== -1) {
+                            return true;
+                        }
+                        $.each(value, function (key, item) {
+                            // log('item key: ' + key);
+                            // log('item: ' + item);
+                            if (typeof key !== typeof 1) {
+                                return true;
+                            }
+                            $.each(item, function (key, value) {
+                                // log('inside-key: ' + key);
+                                if (key.indexOf("proto") !== -1 || key.indexOf("length") !== -1) {
+                                    return true;
+                                }
+                                if (key.indexOf("id") !== -1 || key.indexOf("code") !== -1) {
+                                    temp[value] = item;
+                                    return false;
+                                }
+                            })
+                        });
+                        res[key] = temp;
+                    });
+                    sessionStorage.setItem('fullyMapping', JSON.stringify(res));
+                    remove_all_filter_icon();
+                    filter_options_generate(res);
+
+                    callback();
                 } else {
                     alert('获取总账映射失败');
                 }
-            }, 'json')
+            }, 'json');
+        }
+
+        // ==================================== 筛选 ==================================== //
+        function refresh_conditions_data(conditions) {
+            var params = {};
+            params['conditions'] = JSON.stringify(conditions);
+            params['orderBy'] = sessionStorage.getItem('orderBy');
+            refresh_accounts_data(sessionStorage.getItem('pageSize'), sessionStorage.getItem('pageNum'), function () {
+                page_group_next(0, sessionStorage.getItem('totalPages'));
+            }, params);
+        }
+
+        function add_filter(condition_key, condition_value) {
+            var conditions = JSON.parse(sessionStorage.getItem('conditions'));
+            conditions[condition_key] = condition_value;
+            sessionStorage.setItem('conditions', JSON.stringify(conditions));
+            log('conditions changed: ' + conditions);
+            refresh_conditions_data(conditions);
+        }
+
+        function remove_filter(condition_key) {
+            var conditions = JSON.parse(sessionStorage.getItem('conditions'));
+            delete conditions[condition_key];
+            sessionStorage.setItem('conditions', JSON.stringify(conditions));
+            log('conditions changed: ' + conditions);
+            refresh_conditions_data(conditions);
+        }
+
+        /**
+         * 添加或删除筛选图标
+         * @param filter
+         * @param flag 是否增删，增加true，删除false
+         * @param value
+         */
+        function filter_action(filter, flag, value) {
+            sessionStorage.setItem('pageNum', '1');
+            var icon_id = filter + '_filter_icon';
+            var option_icon_id = filter + '_' + value + '_icon';
+            var option_id = filter + '_' + value;
+            var current_conditions = JSON.parse(sessionStorage.getItem('conditions'));
+            if (flag) {
+                if (current_conditions.hasOwnProperty(filter)) {
+                    var current_value = current_conditions[filter].substring(1, current_conditions[filter].length);
+                    log('already exists filter: ' + current_value);
+                    $('#' + filter + '_' + current_value + '_icon').css('display', 'none');
+                    $('#' + filter + '_' + current_value).attr('onclick', 'filter_action("' + filter + '", true, ' + current_value + ')');
+                }
+                $('#' + icon_id).css('display', 'inline');
+                $('#' + option_icon_id).css('display', 'inline');
+                add_filter(filter, '=' + value);
+                $('#' + option_id).attr('onclick', 'filter_action("' + filter + '", false, ' + value + ')');
+            } else {
+                $('#' + icon_id).css('display', 'none');
+                $('#' + option_icon_id).css('display', 'none');
+                remove_filter(filter);
+                $('#' + option_id).attr('onclick', 'filter_action("' + filter + '", true, ' + value + ')');
+            }
+
+        }
+
+        function remove_all_filter_icon() {
+            $(".glyphicon-filter").css('display', 'none');
+        }
+
+        function filter_options_generate(mapping) {
+            $("#status_id_options").html("");
+            $("#target_id_options").html("");
+            $("#way_id_options").html("");
+            $("#type_id_options").html("");
+            $("#account_id_options").html("");
+
+            log('----- filter_options_generate () -----');
+            $.each(mapping['accounts_status'], function (key, value) {
+                log('generate option: ' + key + ', ' + value['status_name']);
+                $("#status_id_options").append("<li role=\"presentation\"><a id=\"" + "status_id_" + key + "\" role=\"menuitem\" onclick='filter_action(\"status_id\", true, " + key + ")'>" + value['status_name'] + "<span id=\"status_id_" + key + "_icon" + "\" class='glyphicon glyphicon-ok' style='display:none;'></span></a></li>")
+            });
+            $.each(mapping['accounts_target'], function (key, value) {
+                $("#target_id_options").append("<li role=\"presentation\"><a id=\"" + "target_id_" + key + "\" role=\"menuitem\" onclick='filter_action(\"target_id\", true, " + key + ")'>" + value['target_name'] + "<span id=\"target_id_" + key + "_icon" + "\" class='glyphicon glyphicon-ok' style='display:none;'></span></a></li>")
+            });
+            $.each(mapping['accounts_way'], function (key, value) {
+                $("#way_id_options").append("<li role=\"presentation\"><a id=\"" + "way_id_" + key + "\" role=\"menuitem\" onclick='filter_action(\"way_id\", true, " + key + ")'>" + value['way_name'] + "<span id=\"way_id_" + key + "_icon" + "\" class='glyphicon glyphicon-ok' style='display:none;'></span></a></li>")
+            });
+            $.each(mapping['accounts_type'], function (key, value) {
+                $("#type_id_options").append("<li role=\"presentation\"><a id=\"" + "type_id_" + key + "\" role=\"menuitem\" onclick='filter_action(\"type_id\", true, " + key + ")'>" + value['type_name'] + "<span id=\"type_id_" + key + "_icon" + "\" class='glyphicon glyphicon-ok' style='display:none;'></span></a></li>")
+            });
+            $.each(mapping['accounts_account'], function (key, value) {
+                $("#account_id_options").append("<li role=\"presentation\"><a id=\"" + "account_id_" + key + "\" role=\"menuitem\" onclick='filter_action(\"account_id\", true, " + key + ")'>" + value['account_name'] + "<span id=\"account_id_" + key + "_icon" + "\" class='glyphicon glyphicon-ok' style='display:none;'></span></a></li>")
+            });
+        }
+
+        // ==================================== 排序 ==================================== //
+        function show_order_icon(orderBy, desc) {
+            log('show_order_icon (' + orderBy + ', ' + desc + ')');
+            $(".glyphicon-chevron-down").css('display', 'none');
+            $(".glyphicon-chevron-up").css('display', 'none');
+            var id_desc = orderBy + '_order_icon_desc';
+            var id = orderBy + '_order_icon';
+            if (desc) {
+                $("#" + id_desc).css('display', 'inline');
+            } else {
+                $("#" + id).css('display', 'inline');
+            }
+        }
+
+        function refresh_order_data(orderBy) {
+            var params = {};
+            params['orderBy'] = orderBy;
+            params['conditions'] = sessionStorage.getItem('conditions');
+            refresh_accounts_data(sessionStorage.getItem('pageSize'), sessionStorage.getItem('pageNum'), function () {
+                page_group_next(0, sessionStorage.getItem('totalPages'));
+            }, params)
+        }
+
+        function order_by(orderBy) {
+            var desc = ' desc';
+            sessionStorage.setItem('orderBy', orderBy);
+            var current_order_by = sessionStorage.getItem('orderBy');
+            var current_desc = eval(sessionStorage.getItem('orderByDesc'));
+            if (current_order_by === orderBy) {
+                if (current_desc) {
+                    log('the same order_by: ' + current_order_by + ', desc: ' + current_desc);
+                    desc = '';
+                    sessionStorage.setItem('orderByDesc', 'false');
+                } else {
+                    sessionStorage.setItem('orderByDesc', 'true');
+                }
+                current_desc = !current_desc;
+            } else {
+                log('the different order_by: ' + current_order_by + ', desc: ' + current_desc);
+                sessionStorage.setItem('orderByDesc', 'true');
+                current_desc = true;
+            }
+            refresh_order_data(orderBy + desc);
+            show_order_icon(orderBy, current_desc);
         }
 
 

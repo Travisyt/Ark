@@ -8,9 +8,9 @@
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
 </head>
 <body style="padding-top: 50px; padding-bottom: 50px">
-<div th:replace="navbar::navbar"></div>
-
-<div th:replace="accounts::general-accounts"></div>
+<div id="navbar" th:replace="navbar::navbar"></div>
+<!--<div id="body" th:replace="accounts::general-accounts"></div>-->
+<div id="body" th:replace="${page}::${content}"></div>
 
 </body>
 </html>
