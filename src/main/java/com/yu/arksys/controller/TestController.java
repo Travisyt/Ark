@@ -1,6 +1,8 @@
 package com.yu.arksys.controller;
 
 import com.yu.arksys.bean.AccountsRecord;
+import com.yu.arksys.bean.LoginUser;
+import com.yu.arksys.master.dao.Test;
 import com.yu.arksys.service.api.MappingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -81,6 +83,13 @@ public class TestController {
         return "200";
     }
 
+    @Autowired
+    Test test;
 
+    @RequestMapping("/mybatisTest")
+    @ResponseBody
+    public List<LoginUser> mybatisTest() {
+        return test.get();
+    }
 
 }
