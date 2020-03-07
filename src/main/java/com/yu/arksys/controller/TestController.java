@@ -1,18 +1,12 @@
 package com.yu.arksys.controller;
 
-import com.yu.arksys.bean.AccountsRecord;
-import com.yu.arksys.bean.LoginUser;
-import com.yu.arksys.master.dao.Test;
 import com.yu.arksys.service.api.MappingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -83,13 +77,5 @@ public class TestController {
         return "200";
     }
 
-    @Autowired
-    Test test;
-
-    @RequestMapping("/mybatisTest")
-    @ResponseBody
-    public List<LoginUser> mybatisTest() {
-        return test.get();
-    }
 
 }
