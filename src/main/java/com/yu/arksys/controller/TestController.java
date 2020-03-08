@@ -1,5 +1,7 @@
 package com.yu.arksys.controller;
 
+import com.yu.arksys.bean.EmployeeRecord;
+import com.yu.arksys.grasp.dao.EmployeeDao;
 import com.yu.arksys.service.api.MappingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -75,6 +77,20 @@ public class TestController {
     public String checkAccountsRecord(Integer id) {
         System.out.println("checked where id = " + id.toString());
         return "200";
+    }
+
+    @Autowired
+    EmployeeDao employeeDao;
+
+    @RequestMapping("/employee")
+    @ResponseBody
+    public List<EmployeeRecord> employee() {
+        return employeeDao.getEmployeeList();
+    }
+
+    @RequestMapping("/testPage")
+    public ModelAndView testPage() {
+        return new ModelAndView("test");
     }
 
 
