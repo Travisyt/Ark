@@ -160,7 +160,8 @@
                             <li><a href="javascript:" @click="pageSize = 80">80</a></li>
                             <li><a href="javascript:" @click="pageSize = 100">100</a></li>
                         </ul>
-                        <span>条数据，共</span><span style="font-weight: bolder">{{ Math.ceil(totalDataNum / pageSize) }}</span><span>页。</span>
+                        <span>条数据，共</span><span
+                            style="font-weight: bolder">{{ Math.ceil(totalDataNum / pageSize) }}</span><span>页。</span>
                     </div>
                 </div>
             </div>
@@ -173,6 +174,7 @@
         $(window).ready(function () {
             refreshActionInfos();
         });
+        //===================================== Vue对象 =======================================//
         var actOper_Icon = new Vue({el: '#actOper_Icon', data: {status: 'none'}});
         var actDate_Icon = new Vue({el: '#actDate_Icon', data: {status: 'none'}});
         var funName_Icon = new Vue({el: '#funName_Icon', data: {status: 'none'}});
@@ -203,6 +205,7 @@
                 ]
             }
         });
+        //===================================== 事件驱动 =======================================//
         actionWatchInfos.$watch('actionWatchChange', function (nval, oval) {
             actionWatchInfos.$data.actionWatchInfos = [];
             var infos = JSON.parse(sessionStorage.getItem('actionWatchInfos'));
@@ -219,18 +222,45 @@
             })
         });
         pageSizeTable.$watch('pageSize', function (nval, oval) {
-
+            refreshActionInfos({'pageSize': nval});
         });
 
-        function actionWatchInfosChange() {
+        //===================================== 函数 =======================================//
+        function actionWatchInfosChange(params) {
             actionWatchInfos.$data.actionWatchChange = !actionWatchInfos.$data.actionWatchChange;
+            pageSizeTable.$data.totalDataNum = params['totalDataNum'];
         }
 
-        function refreshActionInfos(params, callback = actionWatchInfosChange) {
-            $.post('/actionInfos', params, function (res) {
-                sessionStorage.setItem('employeeInfos', JSON.stringify(res));
+        function refreshActionInfos(params, callback = function () {
+        }) {
+            var postParams = {
+                'pageSize': sessionStorage.getItem('pageSize'),
+                'pageNum': sessionStorage.getItem('pageNum'),
+                'orderBy': sessionStorage.getItem('orderBy'),
+                'conditions': JSON.parse(sessionStorage.getItem('conditions'))
+            };
+            $.each(params, function (key, value) {
+                postParams[key] = value;
+                sessionStorage.setItem(key, value);
+            });
+            $.post('/actionInfos', postParams, function (res) {
+                if (res.status === '200') {
+                    sessionStorage.setItem('actionWatchInfos', JSON.stringify(res['data']));
+                    sessionStorage.setItem('totalDataNum', res['totalDataNum']);
+                    actionWatchInfosChange({'totalDataNum': res['totalDataNum']});
+                } else {
+                    errHandler('信息获取失败');
+                }
             }, 'json');
             callback();
+        }
+
+
+        //===================================== 异常处理 =======================================//
+        function errHandler(msg, callback = function () {
+        }) {
+            alert(msg);
+            callback(msg);
         }
 
     </script>
