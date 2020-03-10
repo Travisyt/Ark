@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>actionwatch</title>
@@ -10,8 +10,231 @@
     <script type="text/javascript" src="js/vue.js"></script>
 </head>
 <body>
+<div th:fragment="actionWatch">
 
+    <div class="container-fluid" id="main-table">
 
+        <button type="button" onclick="refresh_employee_infos(function() {
+          employeeInfo.$data.employeeChange = !employeeInfo.$data.employeeChange;
+        })">LOAD
+        </button>
 
+        <div class="row">
+
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>
+                        <div class="dropdown" style="position: relative; right: 5px">
+                            <button type="button" class="btn dropdown-toggle" id="rowNum">
+                                行号
+                            </button>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="dropdown">
+                            <button type="button" class="btn dropdown-toggle" id="actOper" data-toggle="dropdown"
+                                    ondblclick="">
+                                操作员<span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="actOper">
+                                <li role="presentation">
+                                    <a role="menuitem" tabindex="-1" href="#"></a>
+                                </li>
+                            </ul>
+                            <span id="actOper_Icon"
+                                  v-bind:class="{'glyphicon': status==='none', 'glyphicon-chevron-down': status==='down', 'glyphicon-chevron-up': status==='up', 'glyphicon-filter': status==='filter'}"></span>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="dropdown">
+                            <button type="button" class="btn dropdown-toggle" id="actDate" data-toggle="dropdown"
+                                    ondblclick="">
+                                操作时间<span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="actDate">
+                                <li role="presentation">
+                                    <a role="menuitem" tabindex="-1" href="#"></a>
+                                </li>
+                            </ul>
+                            <span id="actDate_Icon"
+                                  v-bind:class="{'glyphicon': status==='none', 'glyphicon-chevron-down': status==='down', 'glyphicon-chevron-up': status==='up', 'glyphicon-filter': status==='filter'}"></span>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="dropdown">
+                            <button type="button" class="btn dropdown-toggle" id="funName" data-toggle="dropdown"
+                                    ondblclick="">
+                                单据类型<span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="funName">
+                                <li role="presentation">
+                                    <a role="menuitem" tabindex="-1" href="#"></a>
+                                </li>
+                            </ul>
+                            <span id="funName_Icon"
+                                  v-bind:class="{'glyphicon': status==='none', 'glyphicon-chevron-down': status==='down', 'glyphicon-chevron-up': status==='up', 'glyphicon-filter': status==='filter'}"></span>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="dropdown">
+                            <button type="button" class="btn dropdown-toggle" id="actName" data-toggle="dropdown"
+                                    ondblclick="">
+                                操作<span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="actName">
+                                <li role="presentation">
+                                    <a role="menuitem" tabindex="-1" href="#"></a>
+                                </li>
+                            </ul>
+                            <span id="actName_Icon"
+                                  v-bind:class="{'glyphicon': status==='none', 'glyphicon-chevron-down': status==='down', 'glyphicon-chevron-up': status==='up', 'glyphicon-filter': status==='filter'}"></span>
+                        </div>
+                    </th>
+
+                    <th>
+                        <div class="dropdown">
+                            <button type="button" class="btn dropdown-toggle" id="comName" data-toggle="dropdown"
+                                    ondblclick="">
+                                计算机名<span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="comName">
+                                <li role="presentation">
+                                    <a role="menuitem" tabindex="-1" href="#"></a>
+                                </li>
+                            </ul>
+                            <span id="comName_Icon"
+                                  v-bind:class="{'glyphicon': status==='none', 'glyphicon-chevron-down': status==='down', 'glyphicon-chevron-up': status==='up', 'glyphicon-filter': status==='filter'}"></span>
+                        </div>
+                    </th>
+
+                    <th>
+                        <div class="dropdown">
+                            <button type="button" class="btn dropdown-toggle" id="actorIp" data-toggle="dropdown"
+                                    ondblclick="">
+                                IP地址<span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="actorIp">
+                                <li role="presentation">
+                                    <a role="menuitem" tabindex="-1" href="#"></a>
+                                </li>
+                            </ul>
+                            <span id="actorIp_Icon"
+                                  v-bind:class="{'glyphicon': status==='none', 'glyphicon-chevron-down': status==='down', 'glyphicon-chevron-up': status==='up', 'glyphicon-filter': status==='filter'}"></span>
+                        </div>
+                    </th>
+                </tr>
+                </thead>
+
+                <tbody id="actionWatchInfos">
+                <tr v-for="info in actionWatchInfos">
+                    <td>{{ info.rowNum }}</td>
+                    <td>{{ info.actOper }}</td>
+                    <td>{{ info.actDate }}</td>
+                    <td>{{ info.funName }}</td>
+                    <td>{{ info.actName }}</td>
+                    <td>{{ info.comName }}</td>
+                    <td>{{ info.actorIp }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row">
+            <div>
+
+                <div>
+                    <ul class="pagination" id="page_group">
+
+                    </ul>
+                </div>
+
+                <div style="margin-left: 20px">
+                    <div id="pageSizeTable" class="dropdown">
+                        <span>每页</span>
+                        <a data-toggle="dropdown" href="#" id="pageSize"></a>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                            <li><a href="javascript:" @click="pageSize = 20">20</a></li>
+                            <li><a href="javascript:" @click="pageSize = 40">40</a></li>
+                            <li><a href="javascript:" @click="pageSize = 60">60</a></li>
+                            <li><a href="javascript:" @click="pageSize = 80">80</a></li>
+                            <li><a href="javascript:" @click="pageSize = 100">100</a></li>
+                        </ul>
+                        <span>条数据，共</span><span style="font-weight: bolder">{{ Math.ceil(totalDataNum / pageSize) }}</span><span>页。</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        $(window).ready(function () {
+            refreshActionInfos();
+        });
+        var actOper_Icon = new Vue({el: '#actOper_Icon', data: {status: 'none'}});
+        var actDate_Icon = new Vue({el: '#actDate_Icon', data: {status: 'none'}});
+        var funName_Icon = new Vue({el: '#funName_Icon', data: {status: 'none'}});
+        var actName_Icon = new Vue({el: '#actName_Icon', data: {status: 'none'}});
+        var comName_Icon = new Vue({el: '#comName_Icon', data: {status: 'none'}});
+        var actorIp_Icon = new Vue({el: '#actorIp_Icon', data: {status: 'none'}});
+        var pageSizeTable = new Vue({
+            el: '#pageSizeTable',
+            data: {
+                totalDataNum: 0,
+                pageSize: 20,
+            }
+        });
+        var actionWatchInfos = new Vue({
+            el: '#actionWatchInfos',
+            data: {
+                actionWatchChange: false,
+                actionWatchInfos: [
+                    {
+                        rowNum: '--',
+                        actOper: '--',
+                        actDate: '--',
+                        funName: '--',
+                        actName: '--',
+                        comName: '--',
+                        actorIp: '--'
+                    }
+                ]
+            }
+        });
+        actionWatchInfos.$watch('actionWatchChange', function (nval, oval) {
+            actionWatchInfos.$data.actionWatchInfos = [];
+            var infos = JSON.parse(sessionStorage.getItem('actionWatchInfos'));
+            $.each(infos, function (key, value) {
+                actionWatchInfos.$data.actionWatchInfos.push({
+                    rowNum: value.rowNum,
+                    actOper: value.actOper,
+                    actDate: value.actDate,
+                    funName: value.funName,
+                    actName: value.actName,
+                    comName: value.comName,
+                    actorIp: value.actorIp
+                });
+            })
+        });
+        pageSizeTable.$watch('pageSize', function (nval, oval) {
+
+        });
+
+        function actionWatchInfosChange() {
+            actionWatchInfos.$data.actionWatchChange = !actionWatchInfos.$data.actionWatchChange;
+        }
+
+        function refreshActionInfos(params, callback = actionWatchInfosChange) {
+            $.post('/actionInfos', params, function (res) {
+                sessionStorage.setItem('employeeInfos', JSON.stringify(res));
+            }, 'json');
+            callback();
+        }
+
+    </script>
+
+</div>
 </body>
 </html>

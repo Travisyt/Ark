@@ -1,18 +1,21 @@
 package com.yu.arksys.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class EmployeeAction {
 
-    private Integer ID;
+    private Integer ID;//
 
-    private String FUNNAME;
+    private String FUNNAME;//
 
-    private String ACTNAME;
+    private String ACTNAME;//
 
-    private String ACTDATE;
+    private String ACTDATE;//
 
-    private String ACTORIP;
+    private String ACTORIP;//
 
-    private String ACTOROPER;
+    private String ACTOROPER;//
 
     private String COMNAME;
 
