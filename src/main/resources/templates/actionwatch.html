@@ -141,18 +141,18 @@
         </div>
 
         <div class="row">
-            <div>
+            <div id="pageSizeTable">
 
                 <div>
-                    <ul class="pagination" id="page_group">
+                    <ul class="pagination" v-for="">
 
                     </ul>
                 </div>
 
                 <div style="margin-left: 20px">
-                    <div id="pageSizeTable" class="dropdown">
+                    <div class="dropdown">
                         <span>每页</span>
-                        <a data-toggle="dropdown" href="#" id="pageSize"></a>
+                        <a data-toggle="dropdown" href="#" id="pageSize">{{ pageSize }}</a>
                         <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                             <li><a href="javascript:" @click="pageSize = 20">20</a></li>
                             <li><a href="javascript:" @click="pageSize = 40">40</a></li>
@@ -184,8 +184,9 @@
         var pageSizeTable = new Vue({
             el: '#pageSizeTable',
             data: {
-                totalDataNum: 0,
-                pageSize: 20,
+                totalDataNum: sessionStorage.getItem('totalDataNum')===null?20:sessionStorage.getItem('totalDataNum'),
+                pageSize: sessionStorage.getItem('pageSize')===null?20:sessionStorage.getItem('pageSize'),
+                pageNum: 1
             }
         });
         var actionWatchInfos = new Vue({
@@ -209,17 +210,17 @@
         actionWatchInfos.$watch('actionWatchChange', function (nval, oval) {
             actionWatchInfos.$data.actionWatchInfos = [];
             var infos = JSON.parse(sessionStorage.getItem('actionWatchInfos'));
-            $.each(infos, function (key, value) {
+            for (var i = 0; i < infos.length; i++) {
                 actionWatchInfos.$data.actionWatchInfos.push({
-                    rowNum: value.rowNum,
-                    actOper: value.actOper,
-                    actDate: value.actDate,
-                    funName: value.funName,
-                    actName: value.actName,
-                    comName: value.comName,
-                    actorIp: value.actorIp
+                    rowNum: infos[i].id,
+                    actOper: infos[i]['actOper'.toLowerCase()],
+                    actDate: infos[i]['actDate'.toLowerCase()],
+                    funName: infos[i]['funName'.toLowerCase()],
+                    actName: infos[i]['actName'.toLowerCase()],
+                    comName: infos[i]['comName'.toLowerCase()],
+                    actorIp: infos[i]['actorIp'.toLowerCase()]
                 });
-            })
+            }
         });
         pageSizeTable.$watch('pageSize', function (nval, oval) {
             refreshActionInfos({'pageSize': nval});
@@ -243,7 +244,7 @@
                 postParams[key] = value;
                 sessionStorage.setItem(key, value);
             });
-            $.post('/actionInfos', postParams, function (res) {
+            $.post('/actionWatchInfos', postParams, function (res) {
                 if (res.status === '200') {
                     sessionStorage.setItem('actionWatchInfos', JSON.stringify(res['data']));
                     sessionStorage.setItem('totalDataNum', res['totalDataNum']);
@@ -253,6 +254,11 @@
                 }
             }, 'json');
             callback();
+        }
+
+        function calculatePageGroup(pageSize, pageNum, totalPageNum, callback = function () {
+        }) {
+            var
         }
 
 

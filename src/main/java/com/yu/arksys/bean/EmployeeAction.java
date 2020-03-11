@@ -1,8 +1,5 @@
 package com.yu.arksys.bean;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
-
 public class EmployeeAction {
 
     private Integer ID;//
@@ -15,7 +12,7 @@ public class EmployeeAction {
 
     private String ACTORIP;//
 
-    private String ACTOROPER;//
+    private String ACTOPER;//
 
     private String COMNAME;
 
@@ -59,12 +56,12 @@ public class EmployeeAction {
         this.ACTORIP = ACTORIP;
     }
 
-    public String getACTOROPER() {
-        return ACTOROPER;
+    public String getACTOPER() {
+        return ACTOPER;
     }
 
-    public void setACTOROPER(String ACTOROPER) {
-        this.ACTOROPER = ACTOROPER;
+    public void setACTOPER(String ACTOPER) {
+        this.ACTOPER = ACTOPER;
     }
 
     public String getCOMNAME() {

@@ -93,5 +93,8 @@ public class TestController {
         return new ModelAndView("test");
     }
 
+    @RequestMapping("actionWatch")
+    public ModelAndView actionWatch() { return new ModelAndView("actionwatch"); }
+
 
 }

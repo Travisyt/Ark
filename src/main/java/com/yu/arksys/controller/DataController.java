@@ -4,6 +4,7 @@ import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
 import com.yu.arksys.bean.AccountsRecord;
 import com.yu.arksys.bean.OrderRecord;
+import com.yu.arksys.grasp.service.ActionLogService;
 import com.yu.arksys.service.api.MappingService;
 import com.yu.arksys.service.api.accounts.AccountsService;
 import com.yu.arksys.service.api.order.OrderService;
@@ -19,6 +20,8 @@ import java.util.Map;
 
 @Controller
 public class DataController {
+
+    public static final Integer DEFAULT_PAGE_SIZE = 20;
 
     @Autowired
     MappingService mappingService;
@@ -70,6 +73,34 @@ public class DataController {
             }
         }
         map.put("status", "200");
+        return map;
+    }
+
+    @Autowired
+    ActionLogService actionLogService;
+
+    @RequestMapping("/actionWatchInfos")
+    @ResponseBody
+    public Map<String, Object> actionWatchInfos(Integer pageSize, Integer pageNum, String orderBy, Map<String, String> conditions) {
+        Map<String, Object> map = new HashMap<>();
+        System.out.println("=============================================");
+        System.out.println("/actionWatchInfos parameters:");
+        System.out.println("pageSize: " + pageSize);
+        System.out.println("pageNum: " + pageNum);
+        System.out.println("orderBy: " + orderBy);
+        System.out.println("conditions: " + conditions);
+        System.out.println("=============================================");
+        try {
+            map.put("data", actionLogService.getEmployeeAction(
+                    pageSize==null?DEFAULT_PAGE_SIZE:pageSize,
+                    pageNum==null?1:pageNum,
+                    orderBy, conditions));
+            map.put("totalDataNum", actionLogService.getActionCount(conditions));
+            map.put("status", "200");
+        } catch (Exception e) {
+            map.put("status", "404");
+            e.printStackTrace();
+        }
         return map;
     }
 

@@ -18,7 +18,11 @@ public class ActionLogServiceImp implements ActionLogService {
 
     @Override
     public List<EmployeeAction> getEmployeeAction(Integer pageSize, Integer pageNum, String orderBy) {
-        return actionLogDao.getActionLogWithOrder(pageSize.toString(), Integer.toString(pageSize * (pageNum - 1)), orderBy);
+        if (orderBy == null || orderBy.equals("")) {
+            return getEmployeeAction(pageSize, pageNum);
+        } else {
+            return actionLogDao.getActionLogWithOrder(pageSize.toString(), Integer.toString(pageSize * (pageNum - 1)), orderBy);
+        }
     }
 
     @Override
@@ -28,7 +32,11 @@ public class ActionLogServiceImp implements ActionLogService {
 
     @Override
     public List<EmployeeAction> getEmployeeAction(Integer pageSize, Integer pageNum, String orderBy, Map<String, String> conditions) {
-        return actionLogDao.getActionLogWithConditionsAndOrder(pageSize.toString(), Integer.toString(pageSize * (pageNum - 1)), SQLUtils.getConditionString(conditions), orderBy);
+        if (orderBy == null || orderBy.equals("")) {
+            return getEmployeeAction(pageSize, pageNum, conditions);
+        } else {
+            return actionLogDao.getActionLogWithConditionsAndOrder(pageSize.toString(), Integer.toString(pageSize * (pageNum - 1)), SQLUtils.getConditionString(conditions), orderBy);
+        }
     }
 
     @Override

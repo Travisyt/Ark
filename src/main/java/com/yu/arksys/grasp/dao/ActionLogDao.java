@@ -18,11 +18,13 @@ public interface ActionLogDao {
     List<EmployeeAction> getActionLogWithOrder(@Param("pageSize") String pageSize, @Param("frontPageNum") String frontPageNum, @Param("orderBy") String orderBy);
 
     @Select("select top ${pageSize} ID,FUNNAME,ACTNAME,ACTDATE,ACTORIP,ACTOPER,COMNAME from BR_ACTIONLOG " +
-            "where ID not in (select top ${frontPageNum} ID from BR_ACTIONLOG)")
+            "where ID not in (select top ${frontPageNum} ID from BR_ACTIONLOG order by ACTDATE desc) " +
+            "order by ACTDATE desc")
     List<EmployeeAction> getActionLog(@Param("pageSize") String pageSize, @Param("frontPageNum") String frontPageNum);
 
     @Select("select top ${pageSize} ID,FUNNAME,ACTNAME,ACTDATE,ACTORIP,ACTOPER,COMNAME from BR_ACTIONLOG " +
-            "where ID not in (select top ${frontPageNum} ID from BR_ACTIONLOG ${conditions}) ${conditions}")
+            "where ID not in (select top ${frontPageNum} ID from BR_ACTIONLOG ${conditions} order by ACTDATE " +
+            "desc) ${conditions} order by ACTDATE desc")
     List<EmployeeAction> getActionLogWithConditions(@Param("pageSize") String pageSize, @Param("frontPageNum") String frontPageNum, @Param("conditions") String conditions);
 
     @Select("select top ${pageSize} ID,FUNNAME,ACTNAME,ACTDATE,ACTORIP,ACTOPER,COMNAME from BR_ACTIONLOG " +
@@ -31,6 +33,6 @@ public interface ActionLogDao {
     List<EmployeeAction> getActionLogWithConditionsAndOrder(@Param("pageSize") String pageSize, @Param("frontPageNum") String frontPageNum, @Param("conditions") String conditions, @Param("orderBy") String orderBy);
 
     @Select("select count(*) from BR_ACTIONLOG ${conditions}")
-    Integer getActionCount(String conditions);
+    Integer getActionCount(@Param("conditions") String conditions);
 
 }
