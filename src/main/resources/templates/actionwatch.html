@@ -144,8 +144,17 @@
             <div id="pageSizeTable">
 
                 <div>
-                    <ul class="pagination" v-for="">
-
+                    <ul class="pagination" v-for="page in pagination">
+                        <li v-if="page.type===0">
+                            <a @click="pageGroupChange(page.action)">&laquo;</a>
+                        </li>
+                        <li v-else-if="page.type===1">
+                            <a @click="pageNumChange(page.pageNum)" v-bind:class="{'active': pageNum===page.pageNum}">
+                                {{ page.pageNum }}</a>
+                        </li>
+                        <li v-else="page.type===2">
+                            <a @click="pageGroupChange(page.action)">&raquo;</a>
+                        </li>
                     </ul>
                 </div>
 
@@ -154,7 +163,7 @@
                         <span>每页</span>
                         <a data-toggle="dropdown" href="#" id="pageSize">{{ pageSize }}</a>
                         <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                            <li><a href="javascript:" @click="pageSize = 20">20</a></li>
+                            <li><a href="javascript:" @click="pageSize">20</a></li>
                             <li><a href="javascript:" @click="pageSize = 40">40</a></li>
                             <li><a href="javascript:" @click="pageSize = 60">60</a></li>
                             <li><a href="javascript:" @click="pageSize = 80">80</a></li>
@@ -171,6 +180,7 @@
     </div>
 
     <script>
+        const pageGroupSize=10;
         $(window).ready(function () {
             refreshActionInfos();
         });
@@ -184,10 +194,28 @@
         var pageSizeTable = new Vue({
             el: '#pageSizeTable',
             data: {
-                totalDataNum: sessionStorage.getItem('totalDataNum')===null?20:sessionStorage.getItem('totalDataNum'),
-                pageSize: sessionStorage.getItem('pageSize')===null?20:sessionStorage.getItem('pageSize'),
-                pageNum: 1
+                totalDataNum: sessionStorage.getItem('totalDataNum') === null ? 20 : sessionStorage.getItem('totalDataNum'),
+                pageSize: sessionStorage.getItem('pageSize') === null ? 20 : sessionStorage.getItem('pageSize'),
+                pageNum: 1,
+                pagination: [
+                    {pageNum: '<-', type: 0, action: ''},
+                    {pageNum: '-', type: 1, action: ''},
+                    {pageNum: '->', type: 2, action: ''}
+                ]
+            },
+            methods: {
+                pageGroupChange: function (action) {
+                    refreshActionInfos({pageNum: action})
+                },
+                pageNumChange: function (pageNum) {
+                    refreshActionInfos({pageNum: pageNum}, function (params) {
+                        pageSizeTable.$data.pageNum = params['pageNum'];
+                    })
+                }
             }
+        });
+        pageSizeTable.$watch('pageSize', function () {
+            refreshActionInfos({'pageSize': pageSizeTable.$data.pageSize});
         });
         var actionWatchInfos = new Vue({
             el: '#actionWatchInfos',
@@ -222,22 +250,20 @@
                 });
             }
         });
-        pageSizeTable.$watch('pageSize', function (nval, oval) {
-            refreshActionInfos({'pageSize': nval});
-        });
 
         //===================================== 函数 =======================================//
-        function actionWatchInfosChange(params) {
+        function actionWatchInfosChange(params, action = calculatePageGroup) {
             actionWatchInfos.$data.actionWatchChange = !actionWatchInfos.$data.actionWatchChange;
             pageSizeTable.$data.totalDataNum = params['totalDataNum'];
+            action(params);
         }
 
-        function refreshActionInfos(params, callback = function () {
+        function refreshActionInfos(params, action = calculatePageGroup, callback = function () {
         }) {
             var postParams = {
                 'pageSize': sessionStorage.getItem('pageSize'),
-                'pageNum': sessionStorage.getItem('pageNum'),
                 'orderBy': sessionStorage.getItem('orderBy'),
+                'pageNum': 1,
                 'conditions': JSON.parse(sessionStorage.getItem('conditions'))
             };
             $.each(params, function (key, value) {
@@ -248,7 +274,12 @@
                 if (res.status === '200') {
                     sessionStorage.setItem('actionWatchInfos', JSON.stringify(res['data']));
                     sessionStorage.setItem('totalDataNum', res['totalDataNum']);
-                    actionWatchInfosChange({'totalDataNum': res['totalDataNum']});
+                    actionWatchInfosChange({
+                        totalDataNum: res['totalDataNum'],
+                        pageSize: postParams['pageSize'],
+                        pageNum: postParams['pageNum'],
+                        totalPageNum: Math.ceil(parseInt(res['totalDataNum'])/parseInt(postParams['pageSize']))
+                    }, action);
                 } else {
                     errHandler('信息获取失败');
                 }
@@ -256,9 +287,29 @@
             callback();
         }
 
-        function calculatePageGroup(pageSize, pageNum, totalPageNum, callback = function () {
+        function calculatePageGroup(params, callback = function () {
         }) {
-            var
+            let hasPre = false;
+            let hasNext = false;
+            if (1 <= params['pageNum'] <= pageGroupSize) {
+                hasPre = true;
+            }
+            if (Math.ceil(params['totalPageNum'] / pageGroupSize) - Math.floor(params['pageNum'] / pageGroupSize) <= 1) {
+                hasNext = true;
+            }
+            const start = Math.floor(params['pageNum'] / pageGroupSize) * pageGroupSize + 1;
+            const end = hasNext ? (start + pageGroupSize - 1) : params['totalPageNum'];
+            let pagination = [];
+            hasPre ? pagination.push({pageNum: 0, type: 0, action: start - 1}) : 0;
+            for (let i = start; i <= end; i++) {
+                pagination.push({pageNum: i, type: 1, action: ''});
+            }
+            console.log('start: ', start);
+            console.log('end: ', end);
+            console.log('params: ', params);
+            hasPre ? pagination.push({pageNum: 0, type: 2, action: end + 1}) : 0;
+            pageSizeTable.$data.pagination = pagination;
+            pageSizeTable.$data.pageNum = start;
         }
 
 
