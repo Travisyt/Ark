@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>actionwatch</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/elements.css" rel="stylesheet">
     <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/echarts.js"></script>
@@ -140,20 +141,20 @@
             </table>
         </div>
 
-        <div class="row">
+        <div class="row" style="margin-bottom: 150px">
             <div id="pageSizeTable">
 
                 <div>
                     <ul class="pagination" v-for="page in pagination">
                         <li v-if="page.type===0">
-                            <a @click="pageGroupChange(page.action)">&laquo;</a>
+                            <a href="#" @click="pageGroupChange(page.action)">&laquo;</a>
                         </li>
                         <li v-else-if="page.type===1">
-                            <a @click="pageNumChange(page.pageNum)" v-bind:class="{'active': pageNum===page.pageNum}">
+                            <a href="#" @click="pageNumChange(page.pageNum)" v-bind:class="{'active': pageNum===page.pageNum}">
                                 {{ page.pageNum }}</a>
                         </li>
                         <li v-else="page.type===2">
-                            <a @click="pageGroupChange(page.action)">&raquo;</a>
+                            <a href="#" @click="pageGroupChange(page.action)">&raquo;</a>
                         </li>
                     </ul>
                 </div>
@@ -163,7 +164,7 @@
                         <span>每页</span>
                         <a data-toggle="dropdown" href="#" id="pageSize">{{ pageSize }}</a>
                         <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                            <li><a href="javascript:" @click="pageSize">20</a></li>
+                            <li><a href="javascript:" @click="pageSize = 20">20</a></li>
                             <li><a href="javascript:" @click="pageSize = 40">40</a></li>
                             <li><a href="javascript:" @click="pageSize = 60">60</a></li>
                             <li><a href="javascript:" @click="pageSize = 80">80</a></li>
@@ -178,6 +179,9 @@
         </div>
 
     </div>
+
+    <!-- loading -->
+    <div class="loading-default" id="loading"></div>
 
     <script>
         const pageGroupSize=10;
@@ -214,9 +218,6 @@
                 }
             }
         });
-        pageSizeTable.$watch('pageSize', function () {
-            refreshActionInfos({'pageSize': pageSizeTable.$data.pageSize});
-        });
         var actionWatchInfos = new Vue({
             el: '#actionWatchInfos',
             data: {
@@ -250,8 +251,24 @@
                 });
             }
         });
+        pageSizeTable.$watch('pageSize', function () {
+            refreshActionInfos({'pageSize': pageSizeTable.$data.pageSize});
+        });
+        pageSizeTable.$watch('pageNum', function () {
+
+        });
 
         //===================================== 函数 =======================================//
+        function loading(isLoading) {
+            if (isLoading) {
+                $("#loading").css('display', 'inline');
+                $('#main-table').addClass("depth-of-focus");
+            } else {
+                $("#loading").css('display', 'none');
+                $('#main-table').removeClass("depth-of-focus");
+            }
+        }
+
         function actionWatchInfosChange(params, action = calculatePageGroup) {
             actionWatchInfos.$data.actionWatchChange = !actionWatchInfos.$data.actionWatchChange;
             pageSizeTable.$data.totalDataNum = params['totalDataNum'];
@@ -270,6 +287,7 @@
                 postParams[key] = value;
                 sessionStorage.setItem(key, value);
             });
+            loading(true);
             $.post('/actionWatchInfos', postParams, function (res) {
                 if (res.status === '200') {
                     sessionStorage.setItem('actionWatchInfos', JSON.stringify(res['data']));
@@ -280,10 +298,13 @@
                         pageNum: postParams['pageNum'],
                         totalPageNum: Math.ceil(parseInt(res['totalDataNum'])/parseInt(postParams['pageSize']))
                     }, action);
+                    loading(false);
                 } else {
+                    loading(false);
                     errHandler('信息获取失败');
                 }
             }, 'json');
+
             callback();
         }
 
@@ -291,25 +312,25 @@
         }) {
             let hasPre = false;
             let hasNext = false;
-            if (1 <= params['pageNum'] <= pageGroupSize) {
+            if (pageGroupSize < params['pageNum']) {
                 hasPre = true;
             }
-            if (Math.ceil(params['totalPageNum'] / pageGroupSize) - Math.floor(params['pageNum'] / pageGroupSize) <= 1) {
+            if (Math.ceil(params['totalPageNum'] / pageGroupSize) !== Math.ceil(params['pageNum'] / pageGroupSize)) {
                 hasNext = true;
             }
             const start = Math.floor(params['pageNum'] / pageGroupSize) * pageGroupSize + 1;
             const end = hasNext ? (start + pageGroupSize - 1) : params['totalPageNum'];
             let pagination = [];
-            hasPre ? pagination.push({pageNum: 0, type: 0, action: start - 1}) : 0;
+            hasPre ? pagination.push({pageNum: 0, type: 0, action: start - pageGroupSize}) : 0;
             for (let i = start; i <= end; i++) {
                 pagination.push({pageNum: i, type: 1, action: ''});
             }
             console.log('start: ', start);
             console.log('end: ', end);
             console.log('params: ', params);
-            hasPre ? pagination.push({pageNum: 0, type: 2, action: end + 1}) : 0;
-            pageSizeTable.$data.pagination = pagination;
+            hasNext ? pagination.push({pageNum: 0, type: 2, action: start + pageGroupSize}) : 0;
             pageSizeTable.$data.pageNum = start;
+            pageSizeTable.$data.pagination = pagination;
         }
 
 
