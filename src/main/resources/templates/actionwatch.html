@@ -15,15 +15,10 @@
 
     <div class="container-fluid" id="main-table">
 
-        <button type="button" onclick="refresh_employee_infos(function() {
-          employeeInfo.$data.employeeChange = !employeeInfo.$data.employeeChange;
-        })">LOAD
-        </button>
-
         <div class="row">
 
             <table class="table table-striped">
-                <thead>
+                <thead id="actionWatchFields">
                 <tr>
                     <th>
                         <div class="dropdown" style="position: relative; right: 5px">
@@ -35,7 +30,7 @@
                     <th>
                         <div class="dropdown">
                             <button type="button" class="btn dropdown-toggle" id="actOper" data-toggle="dropdown"
-                                    ondblclick="">
+                                    @dblclick="orderBy = actOper">
                                 操作员<span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="actOper">
@@ -43,14 +38,16 @@
                                     <a role="menuitem" tabindex="-1" href="#"></a>
                                 </li>
                             </ul>
-                            <span id="actOper_Icon"
-                                  v-bind:class="{'glyphicon': status==='none', 'glyphicon-chevron-down': status==='down', 'glyphicon-chevron-up': status==='up', 'glyphicon-filter': status==='filter'}"></span>
+                            <span id="actOper_Icon">
+                                <span v-bind:class="{'glyphicon': true, 'glyphicon-chevron-down': down, 'glyphicon-chevron-up': up}"></span>
+                                <span v-bind:class="{'glyphicon': true, 'glyphicon-filter': hasFilter}"></span>
+                            </span>
                         </div>
                     </th>
                     <th>
                         <div class="dropdown">
                             <button type="button" class="btn dropdown-toggle" id="actDate" data-toggle="dropdown"
-                                    ondblclick="">
+                                    @dblclick="orderBy = actDate">
                                 操作时间<span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="actDate">
@@ -58,14 +55,16 @@
                                     <a role="menuitem" tabindex="-1" href="#"></a>
                                 </li>
                             </ul>
-                            <span id="actDate_Icon"
-                                  v-bind:class="{'glyphicon': status==='none', 'glyphicon-chevron-down': status==='down', 'glyphicon-chevron-up': status==='up', 'glyphicon-filter': status==='filter'}"></span>
+                            <span id="actDate_Icon">
+                                <span v-bind:class="{'glyphicon': true, 'glyphicon-chevron-down': down, 'glyphicon-chevron-up': up}"></span>
+                                <span v-bind:class="{'glyphicon': true, 'glyphicon-filter': hasFilter}"></span>
+                            </span>
                         </div>
                     </th>
                     <th>
                         <div class="dropdown">
                             <button type="button" class="btn dropdown-toggle" id="funName" data-toggle="dropdown"
-                                    ondblclick="">
+                                    @dblclick="orderBy = funName">
                                 单据类型<span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="funName">
@@ -73,14 +72,16 @@
                                     <a role="menuitem" tabindex="-1" href="#"></a>
                                 </li>
                             </ul>
-                            <span id="funName_Icon"
-                                  v-bind:class="{'glyphicon': status==='none', 'glyphicon-chevron-down': status==='down', 'glyphicon-chevron-up': status==='up', 'glyphicon-filter': status==='filter'}"></span>
+                            <span id="funName_Icon">
+                                <span v-bind:class="{'glyphicon': true, 'glyphicon-chevron-down': down, 'glyphicon-chevron-up': up}"></span>
+                                <span v-bind:class="{'glyphicon': true, 'glyphicon-filter': hasFilter}"></span>
+                            </span>
                         </div>
                     </th>
                     <th>
                         <div class="dropdown">
                             <button type="button" class="btn dropdown-toggle" id="actName" data-toggle="dropdown"
-                                    ondblclick="">
+                                    @dblclick="orderBy = actName">
                                 操作<span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="actName">
@@ -88,15 +89,17 @@
                                     <a role="menuitem" tabindex="-1" href="#"></a>
                                 </li>
                             </ul>
-                            <span id="actName_Icon"
-                                  v-bind:class="{'glyphicon': status==='none', 'glyphicon-chevron-down': status==='down', 'glyphicon-chevron-up': status==='up', 'glyphicon-filter': status==='filter'}"></span>
+                            <span id="actName_Icon">
+                                <span v-bind:class="{'glyphicon': true, 'glyphicon-chevron-down': orderBy===actName, 'glyphicon-chevron-up': orderBy}"></span>
+                                <span v-bind:class="{'glyphicon': true, 'glyphicon-filter': hasFilter}"></span>
+                            </span>
                         </div>
                     </th>
 
                     <th>
                         <div class="dropdown">
                             <button type="button" class="btn dropdown-toggle" id="comName" data-toggle="dropdown"
-                                    ondblclick="">
+                                    @dblclick="orderBy = comName">
                                 计算机名<span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="comName">
@@ -104,15 +107,17 @@
                                     <a role="menuitem" tabindex="-1" href="#"></a>
                                 </li>
                             </ul>
-                            <span id="comName_Icon"
-                                  v-bind:class="{'glyphicon': status==='none', 'glyphicon-chevron-down': status==='down', 'glyphicon-chevron-up': status==='up', 'glyphicon-filter': status==='filter'}"></span>
+                            <span id="comName_Icon">
+                                <span v-bind:class="{'glyphicon': true, 'glyphicon-chevron-down': desc===true&&orderBy===comName, 'glyphicon-chevron-up': desc === false&&orderBy===comName}"></span>
+                                <span v-bind:class="{'glyphicon': true, 'glyphicon-filter': hasFilter}"></span>
+                            </span>
                         </div>
                     </th>
 
                     <th>
                         <div class="dropdown">
                             <button type="button" class="btn dropdown-toggle" id="actorIp" data-toggle="dropdown"
-                                    ondblclick="">
+                                    @dblclick="orderBy = actorIp">
                                 IP地址<span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="actorIp">
@@ -120,8 +125,11 @@
                                     <a role="menuitem" tabindex="-1" href="#"></a>
                                 </li>
                             </ul>
-                            <span id="actorIp_Icon"
-                                  v-bind:class="{'glyphicon': status==='none', 'glyphicon-chevron-down': status==='down', 'glyphicon-chevron-up': status==='up', 'glyphicon-filter': status==='filter'}"></span>
+                            <span id="actorIp_Icon">
+                                <span v-if="orderBy===actorIp"
+                                <span v-bind:class="{'glyphicon': true, 'glyphicon-chevron-down': desc === true&&orderBy===actorIp, 'glyphicon-chevron-up': desc === false&&orderBy===actorIp}"></span>
+                                <span v-bind:class="{'glyphicon': true, 'glyphicon-filter': hasFilter}"></span>
+                            </span>
                         </div>
                     </th>
                 </tr>
@@ -149,8 +157,8 @@
                         <li v-if="page.type===0">
                             <a href="#" @click="pageGroupChange(page.action)">&laquo;</a>
                         </li>
-                        <li v-else-if="page.type===1">
-                            <a href="#" @click="pageNumChange(page.pageNum)" v-bind:class="{'active': pageNum===page.pageNum}">
+                        <li v-else-if="page.type===1" v-bind:class="{'active': pageNum===page.pageNum}">
+                            <a href="#" @click="pageNumChange(page.pageNum)">
                                 {{ page.pageNum }}</a>
                         </li>
                         <li v-else="page.type===2">
@@ -184,17 +192,41 @@
     <div class="loading-default" id="loading"></div>
 
     <script>
-        const pageGroupSize=10;
+        const pageGroupSize = 10;
+        const fieldNames = [
+            'actOper',
+            'actDate',
+            'funName',
+            'actName',
+            'comName',
+            'actorIp'
+        ];
         $(window).ready(function () {
             refreshActionInfos();
         });
         //===================================== Vue对象 =======================================//
-        var actOper_Icon = new Vue({el: '#actOper_Icon', data: {status: 'none'}});
-        var actDate_Icon = new Vue({el: '#actDate_Icon', data: {status: 'none'}});
-        var funName_Icon = new Vue({el: '#funName_Icon', data: {status: 'none'}});
-        var actName_Icon = new Vue({el: '#actName_Icon', data: {status: 'none'}});
-        var comName_Icon = new Vue({el: '#comName_Icon', data: {status: 'none'}});
-        var actorIp_Icon = new Vue({el: '#actorIp_Icon', data: {status: 'none'}});
+        var actionWatchFields = new Vue({
+            el: '#actionWatchFields',
+            data: {
+                orderBy: '',
+                desc: true,
+                filters: {}
+            }
+        });
+
+        actionWatchFields.$watch('orderBy', function (nval, oval) {
+            if (nval === oval) {
+                actionWatchFields.$data.desc = !actionWatchFields.$data.desc;
+            } else {
+                actionWatchFields.$data.desc = true;
+            }
+            refreshActionInfos({orderBy: nval + ' ' + actionWatchFields.$data.desc?'desc':''})
+        });
+
+        actionWatchFields.$watch('filters', function (nval, oval) {
+            if
+        });
+
         var pageSizeTable = new Vue({
             el: '#pageSizeTable',
             data: {
@@ -254,9 +286,6 @@
         pageSizeTable.$watch('pageSize', function () {
             refreshActionInfos({'pageSize': pageSizeTable.$data.pageSize});
         });
-        pageSizeTable.$watch('pageNum', function () {
-
-        });
 
         //===================================== 函数 =======================================//
         function loading(isLoading) {
@@ -296,7 +325,7 @@
                         totalDataNum: res['totalDataNum'],
                         pageSize: postParams['pageSize'],
                         pageNum: postParams['pageNum'],
-                        totalPageNum: Math.ceil(parseInt(res['totalDataNum'])/parseInt(postParams['pageSize']))
+                        totalPageNum: Math.ceil(parseInt(res['totalDataNum']) / parseInt(postParams['pageSize']))
                     }, action);
                     loading(false);
                 } else {
@@ -319,6 +348,7 @@
                 hasNext = true;
             }
             const start = Math.floor(params['pageNum'] / pageGroupSize) * pageGroupSize + 1;
+            pageSizeTable.$data.pageNum = start;
             const end = hasNext ? (start + pageGroupSize - 1) : params['totalPageNum'];
             let pagination = [];
             hasPre ? pagination.push({pageNum: 0, type: 0, action: start - pageGroupSize}) : 0;
@@ -329,10 +359,13 @@
             console.log('end: ', end);
             console.log('params: ', params);
             hasNext ? pagination.push({pageNum: 0, type: 2, action: start + pageGroupSize}) : 0;
-            pageSizeTable.$data.pageNum = start;
             pageSizeTable.$data.pagination = pagination;
         }
 
+        function orderBy(fieldName, isDesc) {
+            refreshActionInfos({'orderBy': isDesc ? (fieldName + ' desc') : fieldName});
+            fieldIcons[fieldName].$data.status = 'down';
+        }
 
         //===================================== 异常处理 =======================================//
         function errHandler(msg, callback = function () {
