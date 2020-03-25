@@ -30,7 +30,7 @@
                     <th>
                         <div class="dropdown">
                             <button type="button" class="btn dropdown-toggle" id="actOper" data-toggle="dropdown"
-                                    @dblclick="orderBy = actOper">
+                                    @dblclick="newOrderBy('actOper')">
                                 操作员<span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="actOper">
@@ -38,16 +38,20 @@
                                     <a role="menuitem" tabindex="-1" href="#"></a>
                                 </li>
                             </ul>
-                            <span id="actOper_Icon">
-                                <span v-bind:class="{'glyphicon': true, 'glyphicon-chevron-down': down, 'glyphicon-chevron-up': up}"></span>
-                                <span v-bind:class="{'glyphicon': true, 'glyphicon-filter': hasFilter}"></span>
+                            <span v-if="orderBy==='actOper'">
+                                <span v-if="desc"><span class="glyphicon glyphicon-chevron-down"></span></span>
+                                <span v-else><span class="glyphicon glyphicon-chevron-up"></span></span>
                             </span>
+                            <span v-else></span>
+                            <span v-if="filters.hasOwnProperty('actOper')"><span
+                                    class="glyphicon glyphicon-filter"></span></span>
+                            <span v-else></span>
                         </div>
                     </th>
                     <th>
                         <div class="dropdown">
                             <button type="button" class="btn dropdown-toggle" id="actDate" data-toggle="dropdown"
-                                    @dblclick="orderBy = actDate">
+                                    @dblclick="newOrderBy('actDate')">
                                 操作时间<span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="actDate">
@@ -55,16 +59,20 @@
                                     <a role="menuitem" tabindex="-1" href="#"></a>
                                 </li>
                             </ul>
-                            <span id="actDate_Icon">
-                                <span v-bind:class="{'glyphicon': true, 'glyphicon-chevron-down': down, 'glyphicon-chevron-up': up}"></span>
-                                <span v-bind:class="{'glyphicon': true, 'glyphicon-filter': hasFilter}"></span>
+                            <span v-if="orderBy==='actDate'">
+                                <span v-if="desc"><span class="glyphicon glyphicon-chevron-down"></span></span>
+                                <span v-else><span class="glyphicon glyphicon-chevron-up"></span></span>
                             </span>
+                            <span v-else></span>
+                            <span v-if="filters.hasOwnProperty('actDate')"><span
+                                    class="glyphicon glyphicon-filter"></span></span>
+                            <span v-else></span>
                         </div>
                     </th>
                     <th>
                         <div class="dropdown">
                             <button type="button" class="btn dropdown-toggle" id="funName" data-toggle="dropdown"
-                                    @dblclick="orderBy = funName">
+                                    @dblclick="newOrderBy('funName')">
                                 单据类型<span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="funName">
@@ -72,16 +80,20 @@
                                     <a role="menuitem" tabindex="-1" href="#"></a>
                                 </li>
                             </ul>
-                            <span id="funName_Icon">
-                                <span v-bind:class="{'glyphicon': true, 'glyphicon-chevron-down': down, 'glyphicon-chevron-up': up}"></span>
-                                <span v-bind:class="{'glyphicon': true, 'glyphicon-filter': hasFilter}"></span>
+                            <span v-if="orderBy==='funName'">
+                                <span v-if="desc"><span class="glyphicon glyphicon-chevron-down"></span></span>
+                                <span v-else><span class="glyphicon glyphicon-chevron-up"></span></span>
                             </span>
+                            <span v-else></span>
+                            <span v-if="filters.hasOwnProperty('funName')"><span
+                                    class="glyphicon glyphicon-filter"></span></span>
+                            <span v-else></span>
                         </div>
                     </th>
                     <th>
                         <div class="dropdown">
                             <button type="button" class="btn dropdown-toggle" id="actName" data-toggle="dropdown"
-                                    @dblclick="orderBy = actName">
+                                    @dblclick="newOrderBy('actName')">
                                 操作<span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="actName">
@@ -89,17 +101,21 @@
                                     <a role="menuitem" tabindex="-1" href="#"></a>
                                 </li>
                             </ul>
-                            <span id="actName_Icon">
-                                <span v-bind:class="{'glyphicon': true, 'glyphicon-chevron-down': orderBy===actName, 'glyphicon-chevron-up': orderBy}"></span>
-                                <span v-bind:class="{'glyphicon': true, 'glyphicon-filter': hasFilter}"></span>
+                            <span v-if="orderBy==='actName'">
+                                <span v-if="desc"><span class="glyphicon glyphicon-chevron-down"></span></span>
+                                <span v-else><span class="glyphicon glyphicon-chevron-up"></span></span>
                             </span>
+                            <span v-else></span>
+                            <span v-if="filters.hasOwnProperty('actName')"><span
+                                    class="glyphicon glyphicon-filter"></span></span>
+                            <span v-else></span>
                         </div>
                     </th>
 
                     <th>
                         <div class="dropdown">
                             <button type="button" class="btn dropdown-toggle" id="comName" data-toggle="dropdown"
-                                    @dblclick="orderBy = comName">
+                                    @dblclick="newOrderBy('comName')">
                                 计算机名<span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="comName">
@@ -107,17 +123,21 @@
                                     <a role="menuitem" tabindex="-1" href="#"></a>
                                 </li>
                             </ul>
-                            <span id="comName_Icon">
-                                <span v-bind:class="{'glyphicon': true, 'glyphicon-chevron-down': desc===true&&orderBy===comName, 'glyphicon-chevron-up': desc === false&&orderBy===comName}"></span>
-                                <span v-bind:class="{'glyphicon': true, 'glyphicon-filter': hasFilter}"></span>
+                            <span v-if="orderBy==='comName'">
+                                <span v-if="desc"><span class="glyphicon glyphicon-chevron-down"></span></span>
+                                <span v-else><span class="glyphicon glyphicon-chevron-up"></span></span>
                             </span>
+                            <span v-else></span>
+                            <span v-if="filters.hasOwnProperty('comName')"><span
+                                    class="glyphicon glyphicon-filter"></span></span>
+                            <span v-else></span>
                         </div>
                     </th>
 
                     <th>
                         <div class="dropdown">
                             <button type="button" class="btn dropdown-toggle" id="actorIp" data-toggle="dropdown"
-                                    @dblclick="orderBy = actorIp">
+                                    @dblclick="newOrderBy('actorIp')">
                                 IP地址<span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="actorIp">
@@ -125,11 +145,14 @@
                                     <a role="menuitem" tabindex="-1" href="#"></a>
                                 </li>
                             </ul>
-                            <span id="actorIp_Icon">
-                                <span v-if="orderBy===actorIp"
-                                <span v-bind:class="{'glyphicon': true, 'glyphicon-chevron-down': desc === true&&orderBy===actorIp, 'glyphicon-chevron-up': desc === false&&orderBy===actorIp}"></span>
-                                <span v-bind:class="{'glyphicon': true, 'glyphicon-filter': hasFilter}"></span>
+                            <span v-if="orderBy==='actorIp'">
+                                <span v-if="desc"><span class="glyphicon glyphicon-chevron-down"></span></span>
+                                <span v-else><span class="glyphicon glyphicon-chevron-up"></span></span>
                             </span>
+                            <span v-else></span>
+                            <span v-if="filters.hasOwnProperty('actorIp')"><span
+                                    class="glyphicon glyphicon-filter"></span></span>
+                            <span v-else></span>
                         </div>
                     </th>
                 </tr>
@@ -211,21 +234,40 @@
                 orderBy: '',
                 desc: true,
                 filters: {}
+            },
+            methods: {
+                newOrderBy: function (orderBy) {
+                    if(orderBy === this.orderBy) {
+                        this.desc = !this.desc;
+                    } else {
+                        this.orderBy = orderBy;
+                    }
+                }
+            },
+            computed: {
+                orderFlag: function () {
+                    return this.orderBy + ' ' + this.desc;
+                }
             }
         });
 
-        actionWatchFields.$watch('orderBy', function (nval, oval) {
-            if (nval === oval) {
+        actionWatchFields.$watch('orderFlag', function (nval, oval) {
+            const nv = nval.split(' ')[0];
+            const ov = oval.split(' ')[0];
+            let desc = nval.split(' ')[1];
+            if (nv === ov) {
                 actionWatchFields.$data.desc = !actionWatchFields.$data.desc;
+                desc = !eval(desc);
             } else {
                 actionWatchFields.$data.desc = true;
             }
-            refreshActionInfos({orderBy: nval + ' ' + actionWatchFields.$data.desc?'desc':''})
+            log('nval: ' + nv);
+            refreshActionInfos({orderBy: nv + ' ' + (desc ? 'desc' : '')})
         });
 
-        actionWatchFields.$watch('filters', function (nval, oval) {
-            if
-        });
+        // actionWatchFields.$watch('filters', function (nval, oval) {
+        //     if
+        //         });
 
         var pageSizeTable = new Vue({
             el: '#pageSizeTable',
@@ -267,7 +309,12 @@
                 ]
             }
         });
+
         //===================================== 事件驱动 =======================================//
+        function log(msg) {
+            console.log(msg);
+        }
+
         actionWatchInfos.$watch('actionWatchChange', function (nval, oval) {
             actionWatchInfos.$data.actionWatchInfos = [];
             var infos = JSON.parse(sessionStorage.getItem('actionWatchInfos'));
