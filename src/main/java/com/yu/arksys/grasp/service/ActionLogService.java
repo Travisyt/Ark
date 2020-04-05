@@ -17,4 +17,6 @@ public interface ActionLogService {
 
     Integer getActionCount(Map<String, String> conditions);
 
+    List<String> getFieldEnum(String field, String keyword);
+
 }

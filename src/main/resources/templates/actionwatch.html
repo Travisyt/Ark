@@ -30,12 +30,20 @@
                     <th>
                         <div class="dropdown">
                             <button type="button" class="btn dropdown-toggle" id="actOper" data-toggle="dropdown"
-                                    @dblclick="newOrderBy('actOper')">
+                                    @dblclick="newOrderBy('actOper')" @click="filterDropdown('actOper')">
                                 操作员<span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="actOper">
+                                <li role="presentation" class="dropdown-header">查询关键字</li>
                                 <li role="presentation">
-                                    <a role="menuitem" tabindex="-1" href="#"></a>
+                                    <input v-model="inputValue" class="input-sm" style="width: 80%; margin-left: 10%" role="menuitem"/>
+                                </li>
+                                <li role="presentation" class="divider"></li>
+                                <li role="presentation"><a role="menuitem" @click="removeFilter('actOper')">删除条件</a></li>
+                                <li role="presentation" class="divider"></li>
+                                <li role="presentation" class="dropdown-header">模糊查询</li>
+                                <li role="presentation" v-for="e in enums">
+                                    <a role="menuitem" @click="addFilter('actOper', e)">{{ e }}</a>
                                 </li>
                             </ul>
                             <span v-if="orderBy==='actOper'">
@@ -55,9 +63,7 @@
                                 操作时间<span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="actDate">
-                                <li role="presentation">
-                                    <a role="menuitem" tabindex="-1" href="#"></a>
-                                </li>
+                                <li role="presentation" class="dropdown-header">查询关键字</li>
                             </ul>
                             <span v-if="orderBy==='actDate'">
                                 <span v-if="desc"><span class="glyphicon glyphicon-chevron-down"></span></span>
@@ -72,12 +78,19 @@
                     <th>
                         <div class="dropdown">
                             <button type="button" class="btn dropdown-toggle" id="funName" data-toggle="dropdown"
-                                    @dblclick="newOrderBy('funName')">
+                                    @dblclick="newOrderBy('funName')" @click="filterDropdown('funName')">
                                 单据类型<span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="funName">
+                                <li role="presentation" class="dropdown-header">查询关键字</li>
                                 <li role="presentation">
-                                    <a role="menuitem" tabindex="-1" href="#"></a>
+                                    <input v-model="inputValue" class="input-sm" style="width: 80%; margin-left: 10%" role="menuitem"/>
+                                </li>
+                                <li role="presentation"><a role="menuitem" @click="removeFilter('funName')">删除条件</a></li>
+                                <li role="presentation" class="divider"></li>
+                                <li role="presentation" class="dropdown-header">模糊查询</li>
+                                <li role="presentation" v-for="e in enums">
+                                    <a role="menuitem" @click="addFilter('funName', e)">{{ e }}</a>
                                 </li>
                             </ul>
                             <span v-if="orderBy==='funName'">
@@ -93,12 +106,19 @@
                     <th>
                         <div class="dropdown">
                             <button type="button" class="btn dropdown-toggle" id="actName" data-toggle="dropdown"
-                                    @dblclick="newOrderBy('actName')">
+                                    @dblclick="newOrderBy('actName')" @click="filterDropdown('actName')">
                                 操作<span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="actName">
+                                <li role="presentation" class="dropdown-header">查询关键字</li>
                                 <li role="presentation">
-                                    <a role="menuitem" tabindex="-1" href="#"></a>
+                                    <input v-model="inputValue" class="input-sm" style="width: 80%; margin-left: 10%" role="menuitem"/>
+                                </li>
+                                <li role="presentation"><a role="menuitem" @click="removeFilter('actName')">删除条件</a></li>
+                                <li role="presentation" class="divider"></li>
+                                <li role="presentation" class="dropdown-header">模糊查询</li>
+                                <li role="presentation" v-for="e in enums">
+                                    <a role="menuitem" @click="addFilter('actName', e)">{{ e }}</a>
                                 </li>
                             </ul>
                             <span v-if="orderBy==='actName'">
@@ -115,12 +135,19 @@
                     <th>
                         <div class="dropdown">
                             <button type="button" class="btn dropdown-toggle" id="comName" data-toggle="dropdown"
-                                    @dblclick="newOrderBy('comName')">
+                                    @dblclick="newOrderBy('comName')" @click="filterDropdown('comName')">
                                 计算机名<span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="comName">
+                                <li role="presentation" class="dropdown-header">查询关键字</li>
                                 <li role="presentation">
-                                    <a role="menuitem" tabindex="-1" href="#"></a>
+                                    <input v-model="inputValue" class="input-sm" style="width: 80%; margin-left: 10%" role="menuitem"/>
+                                </li>
+                                <li role="presentation"><a role="menuitem" @click="removeFilter('comName')">删除条件</a></li>
+                                <li role="presentation" class="divider"></li>
+                                <li role="presentation" class="dropdown-header">模糊查询</li>
+                                <li role="presentation" v-for="e in enums">
+                                    <a role="menuitem" @click="addFilter('comName', e)">{{ e }}</a>
                                 </li>
                             </ul>
                             <span v-if="orderBy==='comName'">
@@ -137,12 +164,19 @@
                     <th>
                         <div class="dropdown">
                             <button type="button" class="btn dropdown-toggle" id="actorIp" data-toggle="dropdown"
-                                    @dblclick="newOrderBy('actorIp')">
+                                    @dblclick="newOrderBy('actorIp')" @click="filterDropdown('actorIp')">
                                 IP地址<span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="actorIp">
+                                <li role="presentation" class="dropdown-header">查询关键字</li>
                                 <li role="presentation">
-                                    <a role="menuitem" tabindex="-1" href="#"></a>
+                                    <input v-model="inputValue" class="input-sm" style="width: 80%; margin-left: 10%" role="menuitem"/>
+                                </li>
+                                <li role="presentation"><a role="menuitem" @click="removeFilter('actorIp')">删除条件</a></li>
+                                <li role="presentation" class="divider"></li>
+                                <li role="presentation" class="dropdown-header">模糊查询</li>
+                                <li role="presentation" v-for="e in enums">
+                                    <a role="menuitem" @click="addFilter('actorIp', e)">{{ e }}</a>
                                 </li>
                             </ul>
                             <span v-if="orderBy==='actorIp'">
@@ -233,41 +267,61 @@
             data: {
                 orderBy: '',
                 desc: true,
-                filters: {}
+                filters: {},
+                currentInputField: '', // 当前输入框所在的字段
+                inputValue: '',
+                enums: [''], // 当前字段的所有枚举值（condition条件下）
+                filterFlag: true
             },
             methods: {
                 newOrderBy: function (orderBy) {
                     if(orderBy === this.orderBy) {
                         this.desc = !this.desc;
                     } else {
+                        this.desc = true;
                         this.orderBy = orderBy;
                     }
+                },
+                filterDropdown: function (field) {
+                    if (this.currentInputField !== field) {
+                        this.enums = [''];
+                        this.currentInputField = field;
+                    }
+                    this.inputValue = '';
+                },
+                addFilter: function (field, condition, prefix="=") {
+                    this.filters[field] = prefix + condition;
+                    this.filterFlag = !this.filterFlag;
+                },
+                removeFilter: function (field) {
+                    delete this.filters[field];
+                    this.filterFlag = !this.filterFlag;
                 }
             },
             computed: {
                 orderFlag: function () {
                     return this.orderBy + ' ' + this.desc;
+                },
+                fieldDropdownFlag: function () {
+                    return this.inputValue + ' ' + this.currentInputField;
                 }
             }
         });
 
-        actionWatchFields.$watch('orderFlag', function (nval, oval) {
-            const nv = nval.split(' ')[0];
-            const ov = oval.split(' ')[0];
-            let desc = nval.split(' ')[1];
-            if (nv === ov) {
-                actionWatchFields.$data.desc = !actionWatchFields.$data.desc;
-                desc = !eval(desc);
-            } else {
-                actionWatchFields.$data.desc = true;
-            }
-            log('nval: ' + nv);
-            refreshActionInfos({orderBy: nv + ' ' + (desc ? 'desc' : '')})
+        actionWatchFields.$watch('orderFlag', function (nval) {
+            let params = nval.split(' ');
+            refreshActionInfos({orderBy: params[0] + ' ' + (params[1] ? 'desc' : '')})
         });
 
-        // actionWatchFields.$watch('filters', function (nval, oval) {
-        //     if
-        //         });
+        actionWatchFields.$watch('filterFlag', function (nval) {
+            let nv = this.filters;
+            refreshActionInfos({conditions: nv})
+        });
+
+        actionWatchFields.$watch('fieldDropdownFlag', delayer(function (nval) {
+            let params = nval.split(' ');
+            getConditionEnums(params[1], params[0]);
+        }));
 
         var pageSizeTable = new Vue({
             el: '#pageSizeTable',
@@ -357,11 +411,16 @@
                 'pageSize': sessionStorage.getItem('pageSize'),
                 'orderBy': sessionStorage.getItem('orderBy'),
                 'pageNum': 1,
-                'conditions': JSON.parse(sessionStorage.getItem('conditions'))
+                'conditions': sessionStorage.hasOwnProperty('conditions')?sessionStorage.getItem('conditions'):"{}"
             };
             $.each(params, function (key, value) {
-                postParams[key] = value;
-                sessionStorage.setItem(key, value);
+                if (typeof value === "object") {
+                    sessionStorage.setItem(key, JSON.stringify(value));
+                    postParams[key] = JSON.stringify(value);
+                } else {
+                    sessionStorage.setItem(key, value);
+                    postParams[key] = value;
+                }
             });
             loading(true);
             $.post('/actionWatchInfos', postParams, function (res) {
@@ -414,11 +473,34 @@
             fieldIcons[fieldName].$data.status = 'down';
         }
 
-        //===================================== 异常处理 =======================================//
+        function getConditionEnums(field, keyword) {
+            let postParam = {field: field, keyword: keyword};
+            $.post('/conditions', postParam, function (data) {
+                if (data.status === '200') {
+                    actionWatchFields.$data.enums = data.data;
+                } else {
+                    errHandler('获取字段枚举值失败');
+                }
+            }, 'json');
+        }
+
+        //===================================== 功能函数 =======================================//
         function errHandler(msg, callback = function () {
         }) {
             alert(msg);
             callback(msg);
+        }
+
+        function delayer(action=function () {
+            console.log('delayFunctionDefault');
+        }, delay=1000) {
+            let timer = -1;
+            return function (param) {
+                clearTimeout(timer);
+                timer = setTimeout(function () {
+                    action(param);
+                }, delay)
+            }
         }
 
     </script>

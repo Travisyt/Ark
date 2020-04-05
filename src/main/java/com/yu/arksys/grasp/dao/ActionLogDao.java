@@ -23,16 +23,22 @@ public interface ActionLogDao {
     List<EmployeeAction> getActionLog(@Param("pageSize") String pageSize, @Param("frontPageNum") String frontPageNum);
 
     @Select("select top ${pageSize} ID,FUNNAME,ACTNAME,ACTDATE,ACTORIP,ACTOPER,COMNAME from BR_ACTIONLOG " +
-            "where ID not in (select top ${frontPageNum} ID from BR_ACTIONLOG ${conditions} order by ACTDATE " +
-            "desc) ${conditions} order by ACTDATE desc")
+            "where ID not in (select top ${frontPageNum} ID from BR_ACTIONLOG where ${conditions} order by ACTDATE " +
+            "desc) and ${conditions} order by ACTDATE desc")
     List<EmployeeAction> getActionLogWithConditions(@Param("pageSize") String pageSize, @Param("frontPageNum") String frontPageNum, @Param("conditions") String conditions);
 
     @Select("select top ${pageSize} ID,FUNNAME,ACTNAME,ACTDATE,ACTORIP,ACTOPER,COMNAME from BR_ACTIONLOG " +
-            "where ID not in (select top ${frontPageNum} ID from BR_ACTIONLOG ${conditions} order by ${orderBy})" +
-            " ${conditions} order by ${orderBy}")
+            "where ID not in (select top ${frontPageNum} ID from BR_ACTIONLOG where ${conditions} order by ${orderBy})" +
+            " and ${conditions} order by ${orderBy}")
     List<EmployeeAction> getActionLogWithConditionsAndOrder(@Param("pageSize") String pageSize, @Param("frontPageNum") String frontPageNum, @Param("conditions") String conditions, @Param("orderBy") String orderBy);
 
-    @Select("select count(*) from BR_ACTIONLOG ${conditions}")
+    @Select("select count(*) from BR_ACTIONLOG where ${conditions}")
     Integer getActionCount(@Param("conditions") String conditions);
+
+    @Select("select distinct ${field} from BR_ACTIONLOG where ${conditions}")
+    List<String> getFieldEnumWithConditions(@Param("field") String field, @Param("conditions") String conditions);
+
+    @Select("select distinct ${field} from BR_ACTIONLOG")
+    List<String> getFieldEnum(@Param("field") String field);
 
 }

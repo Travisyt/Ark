@@ -81,21 +81,25 @@ public class DataController {
 
     @RequestMapping("/actionWatchInfos")
     @ResponseBody
-    public Map<String, Object> actionWatchInfos(Integer pageSize, Integer pageNum, String orderBy, Map<String, String> conditions) {
+    public Map<String, Object> actionWatchInfos(Integer pageSize, Integer pageNum, String orderBy, String conditions) {
         Map<String, Object> map = new HashMap<>();
+        Map<String, String> parsedConditions = new HashMap<>();
+        if (conditions != null && !conditions.equals("{}")) {
+            parsedConditions = JSON.parseObject(conditions, Map.class);
+        }
         System.out.println("=============================================");
         System.out.println("/actionWatchInfos parameters:");
         System.out.println("pageSize: " + pageSize);
         System.out.println("pageNum: " + pageNum);
         System.out.println("orderBy: " + orderBy);
-        System.out.println("conditions: " + conditions);
+        System.out.println("conditions: " + parsedConditions);
         System.out.println("=============================================");
         try {
             map.put("data", actionLogService.getEmployeeAction(
                     pageSize==null?DEFAULT_PAGE_SIZE:pageSize,
                     pageNum==null?1:pageNum,
-                    orderBy, conditions));
-            map.put("totalDataNum", actionLogService.getActionCount(conditions));
+                    orderBy, parsedConditions));
+            map.put("totalDataNum", actionLogService.getActionCount(parsedConditions));
             map.put("status", "200");
         } catch (Exception e) {
             map.put("status", "404");

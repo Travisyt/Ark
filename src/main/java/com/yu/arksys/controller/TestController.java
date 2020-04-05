@@ -2,6 +2,7 @@ package com.yu.arksys.controller;
 
 import com.yu.arksys.bean.EmployeeRecord;
 import com.yu.arksys.grasp.dao.EmployeeDao;
+import com.yu.arksys.grasp.service.ActionLogService;
 import com.yu.arksys.service.api.MappingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,8 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class TestController {
@@ -93,8 +93,25 @@ public class TestController {
         return new ModelAndView("test");
     }
 
-    @RequestMapping("actionWatch")
+    @RequestMapping("/actionWatch")
     public ModelAndView actionWatch() { return new ModelAndView("actionwatch"); }
+
+    @Autowired
+    ActionLogService actionLogService;
+
+    @RequestMapping("/conditions")
+    @ResponseBody
+    public Map<String, Object> conditions(String field, String keyword) {
+        Map<String, Object> map = new HashMap<>();
+        if (field==null||field.equals("")) {
+            map.put("status", "302");
+        } else {
+            List<String> list = actionLogService.getFieldEnum(field, keyword!=null?keyword:"");
+            map.put("status", "200");
+            map.put("data", list);
+        }
+        return map;
+    }
 
 
 }
