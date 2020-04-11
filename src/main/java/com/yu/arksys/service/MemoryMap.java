@@ -24,6 +24,10 @@ public class MemoryMap implements MemoryDataBase {
         this.namespaceMap = new HashMap<>();
     }
 
+    public static final int FOREVER = 0;
+
+    public static final int ONE_HOUR = 3600;
+
     @Bean
     public static MemoryMap getInstance() {
         if (memoryMap == null)

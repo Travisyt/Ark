@@ -10,72 +10,89 @@
 </head>
 <body>
 <div th:fragment="navbar">
-<nav class="navbar navbar-default navbar-fixed-top navbar-inner" role="navigation">
-    <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#" style="color: #761c19; font-weight: bold; font-size: xx-large">ARK </a>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-inner" role="navigation">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#" style="color: #761c19; font-weight: bold; font-size: xx-large">ARK </a>
 
-        </div>
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <!--/*@thymesVar id="userName" type="java.lang.String"*/-->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" th:switch="${userName}">
-
-            <!-- 登录状态 -->
-            <div class="nav navbar-nav navbar-left" th:case="null">
-                <p class="navbar-text" th:text="'未登录 '"></p>
-                <a href="/tologin"><button type="button" class="btn navbar-btn">登录</button></a>
             </div>
-            <div class="nav navbar-nav navbar-left" th:case="*">
-                <p class="navbar-text" th:text="'当前用户：' + ${userName} "></p>
-                <button type="button" class="btn navbar-btn">注销</button>
-            </div>
-            <p class="navbar-text">    </p>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <!--/*@thymesVar id="userName" type="java.lang.String"*/-->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" th:switch="${userName}">
 
-            <div class="nav navbar-nav navbar-left">
-                <button class="btn navbar-btn" type="button" id="test-btn">TEST</button>
-            </div>
-
-            <ul class="nav navbar-nav navbar-left">
-                <li><a href="#">Link</a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">账目管理 <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="/main?page=accounts&content=general-accounts">账目列表</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li><a href="#">Something else here</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="#">Separated link</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">进货管理 <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="/main?page=order&content=general-order">订单列表</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li><a href="#">Something else here</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="#">Separated link</a></li>
-                    </ul>
-                </li>
-            </ul>
-
-            <form class="navbar-form navbar-right">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Search">
+                <!-- 登录状态 -->
+                <div class="nav navbar-nav navbar-left" th:case="null">
+                    <p class="navbar-text" th:text="'未登录 '"></p>
+                    <a href="/tologin">
+                        <button type="button" class="btn navbar-btn">登录</button>
+                    </a>
                 </div>
-                <button type="submit" class="btn btn-default">搜索 </button>
-            </form>
+                <div class="nav navbar-nav navbar-left" th:case="*">
+                    <p class="navbar-text" th:text="'当前用户：' + ${userName} "></p>
+                    <button type="button" class="btn navbar-btn">注销</button>
+                </div>
+                <p class="navbar-text"></p>
 
-        </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
-</nav>
+                <div class="nav navbar-nav navbar-left">
+                    <button class="btn navbar-btn" type="button" id="test-btn">TEST</button>
+                </div>
+
+                <ul class="nav navbar-nav navbar-left">
+                    <li><a href="#">Link</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">账目管理 <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/main?page=accounts&content=general-accounts">账目列表</a></li>
+                            <li><a href="#">Another action</a></li>
+                            <li><a href="#">Something else here</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#">Separated link</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">进货管理 <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="javascript:changeContentPage('order', 'general-order')">订单列表</a></li>
+                            <li><a href="#">Another action</a></li>
+                            <li><a href="#">Something else here</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#">Separated link</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">监控 <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="javascript:changeContentPage('orderDrafts', 'orderDrafts')">实时销售草稿</a></li>
+                            <li><a href="javascript:changeContentPage('actionWatch', 'actionWatch')">操作日志</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <form class="navbar-form navbar-right">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search">
+                    </div>
+                    <button type="submit" class="btn btn-default">搜索</button>
+                </form>
+
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
     <script>
         $("#test-btn").click(function () {
             $.post('/json', {}, function (data) {
                 alert(data.totalNum)
             }, 'json')
         });
+
+        function changeContentPage(page, content) {
+            sessionStorage.clear();
+            window.location.href = '/main?page=' + page + '&content=' + content;
+        }
     </script>
 </div>
 </body>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>orderDrafts</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/elements.css" rel="stylesheet">
+    <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/echarts.js"></script>
+    <script type="text/javascript" src="js/vue.js"></script>
+</head>
+<body>
+<div th:fragment="orderDrafts">
+<div class="container-fluid" id="orderDraftsFrame">
+
+    <div class="row">
+        <div id="selection" class="col-md-3">
+            Area-A
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            Table-A
+        </div>
+        <div class="col-md-6">
+            Table-B
+        </div>
+    </div>
+
+    <script>
+        // Vue Object
+        var selection = new Vue({
+            el: "#selection",
+            data: {
+                
+            }
+        });
+    </script>
+
+</div>
+</div>
+</body>
+</html>

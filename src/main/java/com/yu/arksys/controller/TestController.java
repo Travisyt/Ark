@@ -1,8 +1,16 @@
 package com.yu.arksys.controller;
 
+import com.yu.arksys.bean.DetailedBillDraft;
+import com.yu.arksys.bean.DetailedBillDraftResponse;
 import com.yu.arksys.bean.EmployeeRecord;
+import com.yu.arksys.bean.RecordTuple;
+import com.yu.arksys.bean.api.ResponseBean;
+import com.yu.arksys.grasp.dao.DetailedBillDraftDao;
 import com.yu.arksys.grasp.dao.EmployeeDao;
+import com.yu.arksys.grasp.dao.MapperDao;
 import com.yu.arksys.grasp.service.ActionLogService;
+import com.yu.arksys.grasp.service.BeanMappingService;
+import com.yu.arksys.grasp.service.DetailedBillDraftService;
 import com.yu.arksys.service.api.MappingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -111,6 +119,16 @@ public class TestController {
             map.put("data", list);
         }
         return map;
+    }
+
+
+    @Autowired
+    DetailedBillDraftService detailedBillDraftService;
+
+    @RequestMapping("/getDetailedBillDraft")
+    @ResponseBody
+    public List<ResponseBean> getDetailedBillDraft() {
+        return detailedBillDraftService.getCurrentBillDraft(new HashMap<>());
     }
 
 
