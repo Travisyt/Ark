@@ -1,6 +1,7 @@
 package com.yu.arksys.grasp.dao;
 
 import com.yu.arksys.bean.EmployeeRecord;
+import com.yu.arksys.bean.RecordTuple;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,5 +18,8 @@ public interface EmployeeDao {
 
     @Select("select efullname from employee where etypeid = ${id}")
     String findFullNameById(@Param("id") String id);
+
+    @Select("select etypeid as id,efullname as name from employee")
+    List<RecordTuple> getEmployeeMap();
 
 }

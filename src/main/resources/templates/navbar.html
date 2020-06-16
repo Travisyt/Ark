@@ -10,7 +10,8 @@
 </head>
 <body>
 <div th:fragment="navbar">
-    <nav class="navbar navbar-default navbar-fixed-top navbar-inner" role="navigation">
+    <nav class="navbar navbar-default navbar-fixed-top navbar-inner" role="navigation"
+         style="border-top: 2px solid #761c19; border-bottom: 3px solid #761c19">
         <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
@@ -22,33 +23,23 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" th:switch="${userName}">
 
                 <!-- 登录状态 -->
-                <div class="nav navbar-nav navbar-left" th:case="null">
+                <div class="nav navbar-nav navbar-left" th:case="null" style="width: 200px">
                     <p class="navbar-text" th:text="'未登录 '"></p>
                     <a href="/tologin">
                         <button type="button" class="btn navbar-btn">登录</button>
                     </a>
                 </div>
-                <div class="nav navbar-nav navbar-left" th:case="*">
+                <div class="nav navbar-nav navbar-left" th:case="*" style="width: 200px">
                     <p class="navbar-text" th:text="'当前用户：' + ${userName} "></p>
                     <button type="button" class="btn navbar-btn">注销</button>
                 </div>
-                <p class="navbar-text"></p>
-
-                <div class="nav navbar-nav navbar-left">
-                    <button class="btn navbar-btn" type="button" id="test-btn">TEST</button>
-                </div>
 
                 <ul class="nav navbar-nav navbar-left">
-                    <li><a href="#">Link</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                            aria-expanded="false">账目管理 <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="/main?page=accounts&content=general-accounts">账目列表</a></li>
-                            <li><a href="#">Another action</a></li>
-                            <li><a href="#">Something else here</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="#">Separated link</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
@@ -56,10 +47,6 @@
                            aria-expanded="false">进货管理 <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="javascript:changeContentPage('order', 'general-order')">订单列表</a></li>
-                            <li><a href="#">Another action</a></li>
-                            <li><a href="#">Something else here</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="#">Separated link</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
@@ -72,6 +59,13 @@
                     </li>
                 </ul>
 
+                <div class="nav navbar-nav navbar-left">
+                    <p class="navbar-text">
+                        当前页面:
+                        <span id="currentPage"></span>
+                    </p>
+                </div>
+
                 <form class="navbar-form navbar-right">
                     <div class="form-group">
                         <input type="text" class="form-control" placeholder="Search">
@@ -82,7 +76,18 @@
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
     </nav>
-    <script>
+    <script th:inline="javascript">
+
+        let pageMap = {
+            'orderDrafts': '实时订单',
+            'actionWatch': '操作日志'
+        };
+
+        $(window).ready(function () {
+            var currentPage = [[${param.content}]];
+            $("#currentPage").html(pageMap[currentPage[0]]);
+        });
+
         $("#test-btn").click(function () {
             $.post('/json', {}, function (data) {
                 alert(data.totalNum)

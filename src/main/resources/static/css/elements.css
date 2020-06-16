@@ -12,6 +12,7 @@
     border-radius: 50%;
     border: 10px dashed #000000;
     animation: loading-animation 5s 1ms infinite;
+    display: none;
 }
 
 .depth-of-focus {

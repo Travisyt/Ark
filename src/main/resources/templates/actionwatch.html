@@ -33,11 +33,13 @@
                                     @dblclick="newOrderBy('actOper')" @click="filterDropdown('actOper')">
                                 操作员<span class="caret"></span>
                             </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="actOper" style="height: 500px;overflow: scroll">
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="actOper"
+                                style="max-height: 400px;overflow-y: scroll">
                                 <li role="presentation" class="dropdown-header">查询关键字</li>
                                 <li role="presentation">
                                     <label>
-                                        <input v-model="inputValue" class="input-sm" style="width: 80%; margin-left: 10%"
+                                        <input v-model="inputValue" class="input-sm"
+                                               style="width: 80%; margin-left: 10%"
                                                role="menuitem"/>
                                     </label>
                                 </li>
@@ -66,8 +68,23 @@
                                     @dblclick="newOrderBy('actDate')">
                                 操作时间<span class="caret"></span>
                             </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="actDate" style="height: 500px;overflow: scroll">
-                                <li role="presentation" class="dropdown-header">查询关键字</li>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="actDate"
+                                style="max-height: 400px;overflow-y: scroll">
+                                <li role="presentation"><label style="margin-left: 8%">
+                                    开始日期
+                                    <br/>
+                                    <input role="menuitem" type="date" v-model="startDate">
+                                </label></li>
+                                <li role="presentation"><label style="margin-left: 8%">
+                                    结束日期
+                                    <br/>
+                                    <input role="menuitem" type="date" v-model="endDate">
+                                </label></li>
+                                <li role="presentation" class="divider"></li>
+                                <li role="presentation"><a role="menuitem" @click="timeChange()">添加条件</a>
+                                <li role="presentation" class="divider"></li>
+                                <li role="presentation"><a role="menuitem" @click="removeFilter('actDate')">删除条件</a>
+                                </li>
                             </ul>
                             <span v-if="orderBy==='actDate'">
                                 <span v-if="desc"><span class="glyphicon glyphicon-chevron-down"></span></span>
@@ -85,11 +102,13 @@
                                     @dblclick="newOrderBy('funName')" @click="filterDropdown('funName')">
                                 单据类型<span class="caret"></span>
                             </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="funName" style="height: 500px;overflow: scroll">
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="funName"
+                                style="max-height: 400px;overflow-y: scroll">
                                 <li role="presentation" class="dropdown-header">查询关键字</li>
                                 <li role="presentation">
                                     <label>
-                                        <input v-model="inputValue" class="input-sm" style="width: 80%; margin-left: 10%"
+                                        <input v-model="inputValue" class="input-sm"
+                                               style="width: 80%; margin-left: 10%"
                                                role="menuitem"/>
                                     </label>
                                 </li>
@@ -117,11 +136,13 @@
                                     @dblclick="newOrderBy('actName')" @click="filterDropdown('actName')">
                                 操作<span class="caret"></span>
                             </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="actName" style="height: 500px;overflow: scroll">
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="actName"
+                                style="max-height: 400px;overflow-y: scroll">
                                 <li role="presentation" class="dropdown-header">查询关键字</li>
                                 <li role="presentation">
                                     <label>
-                                        <input v-model="inputValue" class="input-sm" style="width: 80%; margin-left: 10%"
+                                        <input v-model="inputValue" class="input-sm"
+                                               style="width: 80%; margin-left: 10%"
                                                role="menuitem"/>
                                     </label>
                                 </li>
@@ -150,11 +171,13 @@
                                     @dblclick="newOrderBy('comName')" @click="filterDropdown('comName')">
                                 计算机名<span class="caret"></span>
                             </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="comName" style="height: 500px;overflow: scroll">
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="comName"
+                                style="max-height: 400px;overflow-y: scroll">
                                 <li role="presentation" class="dropdown-header">查询关键字</li>
                                 <li role="presentation">
                                     <label>
-                                        <input v-model="inputValue" class="input-sm" style="width: 80%; margin-left: 10%"
+                                        <input v-model="inputValue" class="input-sm"
+                                               style="width: 80%; margin-left: 10%"
                                                role="menuitem"/>
                                     </label>
                                 </li>
@@ -183,11 +206,13 @@
                                     @dblclick="newOrderBy('actorIp')" @click="filterDropdown('actorIp')">
                                 IP地址<span class="caret"></span>
                             </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="actorIp" style="height: 500px;overflow: scroll">
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="actorIp"
+                                style="max-height: 400px;overflow-y: scroll">
                                 <li role="presentation" class="dropdown-header">查询关键字</li>
                                 <li role="presentation">
                                     <label>
-                                        <input v-model="inputValue" class="input-sm" style="width: 80%; margin-left: 10%"
+                                        <input v-model="inputValue" class="input-sm"
+                                               style="width: 80%; margin-left: 10%"
                                                role="menuitem"/>
                                     </label>
                                 </li>
@@ -226,8 +251,9 @@
             </table>
         </div>
 
-<!--        <div class="row" style="margin-bottom: 150px">-->
-        <div class="navbar navbar-default navbar-fixed-bottom navbar-inner" style="height: 50px">
+        <!--        <div class="row" style="margin-bottom: 150px">-->
+        <div class="navbar navbar-default navbar-fixed-bottom navbar-inner"
+             style="height: 50px; border-top: 1px solid green;">
             <div id="pageSizeTable" style="height: 100%; padding: 15px 0;">
 
                 <div style="margin-left: 15%; float: left; height: 20px;">
@@ -293,7 +319,9 @@
                 currentInputField: '', // 当前输入框所在的字段
                 inputValue: '',
                 enums: [''], // 当前字段的所有枚举值（condition条件下）
-                filterFlag: true
+                filterFlag: true,
+                startDate: '',
+                endDate: ''
             },
             methods: {
                 newOrderBy: function (orderBy) {
@@ -317,9 +345,25 @@
                     this.$forceUpdate();
                 },
                 removeFilter: function (field) {
+                    if (field === 'actDate') {
+                        this.startDate = '';
+                        this.endDate = '';
+                    }
                     delete this.filters[field];
                     this.filterFlag = !this.filterFlag;
                     this.$forceUpdate();
+                },
+                timeChange: function () {
+                    if (this.startDate !== '' && this.endDate !== '') {
+                        this.filters['actDate'] = '@' + this.startDate + ',' + this.endDate;
+                        this.filterFlag = !this.filterFlag;
+                    } else if (this.startDate !== '') {
+                        this.filters['actDate'] = '>' + this.startDate;
+                        this.filterFlag = !this.filterFlag;
+                    } else {
+                        this.filters['actDate'] = '<' + this.endDate;
+                        this.filterFlag = !this.filterFlag;
+                    }
                 }
             },
             computed: {
@@ -517,7 +561,7 @@
 
         function delayer(action = function () {
             console.log('delayFunctionDefault');
-        }, delay = 1000, callback = function () {
+        }, delay = 800, callback = function () {
 
         }) {
             let timer = -1;

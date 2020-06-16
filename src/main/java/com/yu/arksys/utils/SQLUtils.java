@@ -32,6 +32,15 @@ public class SQLUtils {
         date = new SimpleDateFormat("yyyy-MM-dd").format(d);
     }
 
+    /**
+     *
+     * @param conditions 以HashMap存储条件
+     *                   规则如下：
+     *                      条件为'='、'<'、'>'，以符号加值的格式传递。例如：key, >value
+     *                      条件为'between ... and ...'，以'@min,max'的格式传递
+     *
+     * @return 返回SQL条件语句
+     */
     public static String getConditionString(Map<String, String> conditions) {
 
         if (conditions.isEmpty()) {
@@ -40,9 +49,17 @@ public class SQLUtils {
         StringBuilder stringBuilder = new StringBuilder();
         conditions.forEach((key, value) -> {
             String val = value.substring(1);
+            String head = value.substring(0, 1);
+            // between
+            if (head.equals("@")) {
+                String[] vals = val.split(",");
+                stringBuilder.append(key).append(">=").append("'").append(vals[0]).append("'").append(" and ")
+                        .append(key).append("<=").append("'").append(vals[1]).append("'").append(" and ");
+            }
             // "="、"<"、">"
-            String condition = value.substring(0, 1);
-            stringBuilder.append(key).append(condition).append("'").append(val).append("'").append(" and ");
+            else {
+                stringBuilder.append(key).append(head).append("'").append(val).append("'").append(" and ");
+            }
         });
         return stringBuilder.substring(0, stringBuilder.lastIndexOf(" and "));
     }

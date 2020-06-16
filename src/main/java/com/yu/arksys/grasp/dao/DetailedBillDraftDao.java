@@ -1,6 +1,7 @@
 package com.yu.arksys.grasp.dao;
 
 import com.yu.arksys.bean.DetailedBillDraft;
+import com.yu.arksys.bean.RecordTuple;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,6 +13,8 @@ import java.util.Map;
 @Qualifier("graspSqlSessionTemplate")
 @Component(value = "DetailedBillDraftDao")
 public interface DetailedBillDraftDao {
+
+    public static final String SALE_TYPE = "11";
 
     @Select("select top ${pageSize} Vchcode,atypeid,btypeid,etypeid,ktypeid,PtypeId,Qty,price,total,date,Vchtype from " +
             "BakDly where ID not in (select top ${frontPageNum} ID from BakDly where ${conditions} order by ${orderBy}) " +
@@ -49,5 +52,8 @@ public interface DetailedBillDraftDao {
     @Select("select Vchcode,atypeid,btypeid,etypeid,ktypeid,PtypeId,Qty,price,total,date,Vchtype from BakDly where " +
             "date=${date} and ${conditions}")
     List<DetailedBillDraft> getDailyRecordsWithConditions(@Param("conditions") String conditions,@Param("date") String date);
+
+    @Select("select distinct btypeid from BakDly where date=${date} and etypeid='${etypeid}'")
+    List<String> getCurrentBtypeIdList(@Param("etypeid") String etypeid, @Param("date") String date);
 
 }

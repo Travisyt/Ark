@@ -12,34 +12,207 @@
 </head>
 <body>
 <div th:fragment="orderDrafts">
-<div class="container-fluid" id="orderDraftsFrame">
+    <div class="container-fluid" id="orderDraftsFrame">
 
-    <div class="row">
-        <div id="selection" class="col-md-3">
-            Area-A
+        <div class="row" id="employeeSelection">
+            <div class="col-md-3" style="height: 50px; padding: 20px 0 0 20px;">
+                <span>经手人： </span>
+                <span class="dropdown">
+                    <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" id="employee"
+                            @click="getEmployees()">
+                        {{ currentEmployee }}  <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="employee" style="max-height: 400px;overflow-y: scroll">
+                        <li role="presentation" v-for="employee in employees">
+                            <a @click="changeInfos(employee)">{{ employee.name }}</a>
+                        </li>
+                    </ul>
+                </span>
+            </div>
+            <div class="col-md-3" style="height: 50px; padding: 20px 0 0 20px;">
+                <span>客户: </span>
+                <span class="dropdown">
+                    <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" id="btype"
+                            @click="getBtype()">
+                        {{ currentBtypeName }}  <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="btype" style="max-height: 400px;overflow-y: scroll">
+                        <li role="presentation" v-for="btype in btypes">
+                            <a @click="changeBtype(btype)">{{ btype.name }}</a>
+                        </li>
+                    </ul>
+                </span>
+            </div>
         </div>
+        <hr/>
+        <div class="row" id="saleDrafts">
+            <div class="col-md-6" style="border-right: 2px solid #9d9d9d;">
+                <div>
+                    <table class="table table-hover table-striped" style="table-layout: fixed">
+                        <thead>
+                        <tr>
+                            <th style="width: 15%">客户</th>
+                            <th style="width: 45%">商品名称</th>
+                            <th style="width: 20%">数量</th>
+                            <th style="width: 20%">单价</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div style="overflow-y: scroll; max-height: 600px">
+                    <table class="table table-hover table-striped" style="table-layout: fixed">
+<!--                        <thead>-->
+<!--                        <tr>-->
+<!--                            <th>客户</th>-->
+<!--                            <th>商品名称</th>-->
+<!--                            <th>数量</th>-->
+<!--                            <th>单价</th>-->
+<!--                        </tr>-->
+<!--                        </thead>-->
+                        <tbody>
+                        <tr v-for="saleDraft in saleDrafts">
+                            <td style="width: 15%">{{ saleDraft.btype }}</td>
+                            <td style="width: 45%">{{ saleDraft.ptype }}</td>
+                            <td style="width: 20%">{{ saleDraft.qty }}</td>
+                            <td style="width: 20%">{{ saleDraft.price }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <table class="table table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th>商品名称</th>
+                        <th>数量</th>
+                        <th>单价</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="saleDraft in saleDraftsWithBtype">
+                        <td>{{ saleDraft.ptype }}</td>
+                        <td>{{ saleDraft.qty }}</td>
+                        <td>{{ saleDraft.price }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 
-    <div class="row">
-        <div class="col-md-6">
-            Table-A
-        </div>
-        <div class="col-md-6">
-            Table-B
-        </div>
-    </div>
+    <!--        loading        -->
+    <div class="loading-default" id="loading"></div>
+
+    <script type="text/javascript" src="js/utils.js"></script>
 
     <script>
         // Vue Object
-        var selection = new Vue({
-            el: "#selection",
+        var employeeSelection = new Vue({
+            el: "#employeeSelection",
             data: {
-                
+                employees: [{}],
+                currentEmployee: '选择经手人...',
+                btypes: [{}],
+                currentBtypeName: '选择客户...',
+                currentBtypeId: 0
+            },
+            methods: {
+                changeInfos: function (employee) {
+                    self.autoRefresh ? self.clearInterval(self.autoRefresh) : true;
+                    this.currentEmployee = employee.name;
+                    this.currentBtypeName = '选择客户...';
+                    refreshData({etypeid: employee.id});
+                    self.autoRefresh = self.setInterval(function () {
+                        refreshData({etypeid: employee.id});
+                    }, 5000);
+                },
+                getEmployees: function () {
+                    $.post('/getEmployeeMap', function (res) {
+                        if (res.status === '200') {
+                            employeeSelection.$data.employees = res.data;
+                        } else {
+                            errHandler('获取信息失败');
+                        }
+                    }, 'json');
+                },
+                getBtype: function () {
+                    if (!sessionStorage.getItem('etypeid')) {
+                        errHandler('先选择经手人');
+                    }
+                    let params = { etypeid: sessionStorage.getItem('etypeid') };
+                    $.post('/getBtypeMap', params, function (res) {
+                        if (res.status === '200') {
+                            employeeSelection.$data.btypes = res.data;
+                        } else {
+                            errHandler('获取信息失败');
+                        }
+                    }, 'json');
+                },
+                changeBtype: function (btype) {
+                    this.currentBtypeName = btype.name;
+                    this.currentBtypeId = btype.id;
+                    refreshData();
+                }
             }
         });
+
+        var saleDrafts = new Vue({
+            el: "#saleDrafts",
+            data: {
+                saleDraftsChanged: false,
+                saleDrafts: [],
+                saleDraftsWithBtype: []
+            },
+            computed: {}
+        });
+
+        saleDrafts.$watch('saleDraftsChanged', function () {
+            saleDrafts.$data.saleDraftsWithBtype = [];
+            let res = [];
+            console.log('-------- foreach');
+            saleDrafts.$data.saleDrafts.forEach(function (item) {
+                if (item.btype === employeeSelection.$data.currentBtypeName) {
+                    res.push(item);
+                }
+            });
+            saleDrafts.$data.saleDraftsWithBtype = res;
+        });
+
+        // functions
+
+        function draftInfoChanged(draftInfos, callback = function () {
+        }) {
+            saleDrafts.$data.saleDrafts = draftInfos;
+            saleDrafts.$data.saleDraftsChanged = !saleDrafts.$data.saleDraftsChanged;
+        }
+
+        function refreshData(params) {
+            console.log("==== refreshed ====");
+            var postParams = {
+                'etypeid': sessionStorage.getItem('etypeid'),
+            };
+            $.each(params, function (key, value) {
+                if (typeof value === "object") {
+                    sessionStorage.setItem(key, JSON.stringify(value));
+                    postParams[key] = JSON.stringify(value);
+                } else {
+                    sessionStorage.setItem(key, value);
+                    postParams[key] = value;
+                }
+            });
+            $.post('/getPersonalCurrentSaleDraft', postParams, function (res) {
+                if (res.status === '200') {
+                    draftInfoChanged(res.data);
+                } else {
+                    errHandler('信息获取失败');
+                }
+            }, 'json');
+        }
+
     </script>
 
-</div>
 </div>
 </body>
 </html>
