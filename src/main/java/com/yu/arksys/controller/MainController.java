@@ -37,5 +37,9 @@ public class MainController {
         return modelAndView;
     }
 
+    @RequestMapping("/dataView")
+    public ModelAndView dataView() {
+        return new ModelAndView("dataview");
+    }
 
 }

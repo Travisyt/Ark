@@ -10,6 +10,10 @@ import java.util.Map;
 
 public interface BeanMappingService {
 
+    /**
+     *
+     * 把原始为ID字段的Bean对应成内容字段
+     */
     List<ResponseBean> mapBean(List<? extends MappableBean> beans, List<TableMapInfo> tableMapInfos);
 
     List<RecordTuple> getEmployeeMap();

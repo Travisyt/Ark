@@ -27,9 +27,9 @@ public class BeanMappingServiceImp implements BeanMappingService {
 
     @Override
     public List<ResponseBean> mapBean(List<? extends MappableBean> beans, List<TableMapInfo> tableMapInfos) {
-        Map<String, Map<String, String>> mapInfos = new HashMap<>();
+        Map<String, Map<String, String>> mapInfos = new HashMap<>();//各字段的键值对列表
         tableMapInfos.forEach(item -> {
-            Map<String, String> map = new HashMap<>();
+            Map<String, String> map = new HashMap<>();//键值对
             mapperDao.getMapper(item.getKeyFieldName(), item.getValueFieldName(), item.getTableName()).forEach(tuple -> {
                 map.put(tuple.getId(), tuple.getName());
             });

@@ -13,6 +13,10 @@ import java.util.Map;
 @Component(value = "MapperDao")
 public interface MapperDao {
 
+    /**
+     *
+     * 取出键值对列表
+     */
     @Select("select ${keyField} as id,${valueField} as name from ${tableName}")
     List<RecordTuple> getMapper(@Param("keyField") String keyField, @Param("valueField") String valueField, @Param("tableName") String tableName);
 

@@ -3,17 +3,14 @@ package com.yu.arksys.bean;
 import com.yu.arksys.bean.api.MappableBean;
 import com.yu.arksys.bean.api.ResponseBean;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
-public class DetailedBillDraft implements MappableBean {
+public class DetailedBill implements MappableBean {
 
-    public DetailedBillDraft() {
+    public DetailedBill() {
     }
 
-    public DetailedBillDraft(String vchcode, String atypeid, String btypeid, String etypeid, String ktypeid, String ptypeId, double qty, double price, double total, String date, String vchtype) {
+    public DetailedBill(String vchcode, String atypeid, String btypeid, String etypeid, String ktypeid, String ptypeId, double qty, double price, double total, String date, String vchtype) {
         Vchcode = vchcode;
         this.atypeid = atypeid;
         this.btypeid = btypeid;
@@ -138,16 +135,8 @@ public class DetailedBillDraft implements MappableBean {
     }
 
     @Override
-    public String toString() {
-        return Vchcode + ", " + atypeid + ", " + btypeid + ", " + etypeid + ", " + ktypeid + ", " + PtypeId + ", " + Qty + ", " + price + ", " + total + ", " + date + ", " + Vchtype;
-    }
-
-    /**
-     * 把自己(this)对应成字段值
-     */
-    @Override
     public ResponseBean getMappedBean(Map<String, Map<String, String>> mapper) {
-        return new DetailedBillDraftResponse(
+        return new DetailedBillResponse(
                 this.Vchcode,
                 mapper.get("atypeid").get(this.atypeid),
                 mapper.get("btypeid").get(this.btypeid),
@@ -159,7 +148,6 @@ public class DetailedBillDraft implements MappableBean {
                 this.total,
                 this.date,
                 mapper.get("vchtype").get(this.Vchtype)
-                );
+        );
     }
-
 }

@@ -1,5 +1,9 @@
 package com.yu.arksys.bean;
 
+/**
+ * 包含表名、ID字段、值字段的Bean
+ * 用于寻找对应关系
+ */
 public class TableMapInfo {
 
     public TableMapInfo() {

@@ -1,5 +1,8 @@
 package com.yu.arksys.bean;
 
+/**
+ * 键值对
+ */
 public class RecordTuple {
 
     public RecordTuple() {
