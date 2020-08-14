@@ -42,4 +42,9 @@ public class MainController {
         return new ModelAndView("dataview");
     }
 
+    @RequestMapping("/goodsSelect")
+    public ModelAndView goodsSelect() {
+        return new ModelAndView("goodsSelect");
+    }
+
 }

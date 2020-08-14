@@ -1,7 +1,12 @@
 package com.yu.arksys.grasp.service;
 
+import com.yu.arksys.bean.api.ResponseBean;
+
+import java.util.List;
+
 public interface CommodityService {
 
+    // ========= 价格查询 ========== //
     String getFirstPriceByPtypeid(String ptypeid);
 
     String getSecondPriceByPtypeid(String ptypeid);
@@ -13,5 +18,12 @@ public interface CommodityService {
     String getFirstPriceByPusercode(String pusercode);
 
     String getSecondPriceByPusercode(String pusercode);
+
+    // ========= 信息查询 ========== //
+    List<ResponseBean> getCommodityListByParentId(String parentId, String orderBy);
+
+    List<ResponseBean> getCommodityListByParentCode(String parentCode, String orderBy);
+
+
 
 }

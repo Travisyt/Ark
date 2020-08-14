@@ -11,6 +11,13 @@ public class CommodityServiceImp implements CommodityService {
     @Autowired
     CommodityDao commodityDao;
 
+    /**
+     * 信息查询
+     */
+
+    /**
+     * 价格查询
+     */
     @Override
     public String getFirstPriceByPtypeid(String ptypeid) {
         return commodityDao.getPricesByPtypeid(ptypeid).get(0);

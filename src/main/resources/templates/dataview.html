@@ -9,28 +9,196 @@
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/echarts.js"></script>
     <script type="text/javascript" src="js/vue.js"></script>
+
 </head>
 <body>
 
-<div th:fragment="dataview">
+<div th:fragment="dataView">
+    <div class="container-fluid" style="padding: 0 0 0 0">
+        <!--    vue data    -->
+        <div id="data"></div>
+        <!--    左侧      -->
+        <div id="option" class="col-md-2" style="padding: 0 0 0 0;">
+            <div style="padding: 10px 10px 10px 10px;box-shadow: 0 0 5px #000000;margin: 20px 10px;">
+                <h4 style="margin-left: 10px">内容选项</h4>
+                <hr/>
+                <div class="form-group">
+                    <label style="margin-left: 5%;margin-top: 0">选择商品</label>
+                    <div class="input-group" style="border: solid 3px green;border-radius: 8px">
+                        <input type="text" class="form-control"/>
+                        <span class="input-group-btn">
+                        <button id="goodsSearch" type="button" class="btn btn-default" data-toggle="modal" data-target="#goodsSelect">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </span>
+                    </div>
+                    <label style="margin-left: 5%;margin-top: 10px">起始</label>
+                    <div class="input-group" style="border: solid 3px green;border-radius: 8px">
+                        <select v-model="startDate" class="form-control">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                            <option>6</option>
+                            <option>7</option>
+                            <option>8</option>
+                            <option>9</option>
+                            <option>10</option>
+                            <option>11</option>
+                            <option>12</option>
+                        </select>
+                        <span class="input-group-addon">月</span>
+                    </div>
+                    <label style="margin-left: 5%;margin-top: 10px">结束</label>
+                    <div class="input-group" style="border: solid 3px green;border-radius: 8px">
+                        <select v-model="endDate" class="form-control">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                            <option>6</option>
+                            <option>7</option>
+                            <option>8</option>
+                            <option>9</option>
+                            <option>10</option>
+                            <option>11</option>
+                            <option>12</option>
+                        </select>
+                        <span class="input-group-addon">月</span>
+                    </div>
+                    <label style="margin-left: 5%;margin-top: 10px">周期</label>
+                    <div class="input-group" style="border: solid 3px green;border-radius: 8px">
+                        <select v-model="period" class="form-control">
+                            <option>每月</option>
+                            <option>每天</option>
+                        </select>
+                    </div>
+                    <div style="margin-top: 40px;border: solid 3px grey;border-radius: 8px">
+                        <button type="button" class="btn btn-block">确认</button>
+                    </div>
 
-<!--    左侧      -->
-    <div class="col-md-2" style="border: solid">
-        123
-    </div>
+                </div>
+            </div>
 
-<!--    右侧      -->
-    <div class="col-md-10" style="border: solid">
-        123
-        <div>
+            <div style="padding: 10px 10px 30px 10px;box-shadow: 0 0 5px #000000;margin: 20px 10px">
+                <h4 style="margin-left: 10px">表格控制</h4>
+                <hr/>
+                <div class="form-group">
+                    <label style="margin-left: 5%;margin-top: 0">图表宽高：
+                        <span style="background-color: #d5d5d5;padding: 1px 5px 1px 5px">{{chartWidth}}% * {{chartHeight}}px</span>
+                    </label>
+                    <div class="input-group">
+                        <input type="range" id="chart_width" min="30" max="100" step="1" value="90"
+                               v-model="chartWidth"/>
+                    </div>
+                    <div class="input-group">
+                        <input type="range" id="chart_height" min="200" max="1500" step="10" value="500"
+                               v-model="chartHeight"/>
+                    </div>
+                </div>
+            </div>
 
         </div>
 
-        <div>
+        <!--    右侧      -->
+        <div class="col-md-10" style="padding: 0 10px 0 0">
+            <div style="padding: 30px 25px 10px 10px;box-shadow: 0 0 5px #000000;margin: 20px 10px">
+                <div id="charts_1">
+                    <div id="graph_1" style="height: 500px;width: 90%;">
 
+                    </div>
+                </div>
+
+                <div style="border: solid">
+                    标题2
+                </div>
+            </div>
         </div>
-
     </div>
+
+    <!--    模态框    -->
+    <div th:replace="goodsSelect::goodsselect"></div>
+
+    <!--    载入动画    -->
+    <div id="loading" class="col-md-3 pull-right" style="height: 50px; padding: 20px 0 0 0;display: inline;">
+        <!--        loading        -->
+        <span class="loading-small" id="loading-icon">
+                    <span></span><span></span><span></span><span></span><span></span>
+        </span>
+    </div>
+
+
+    <script>
+        var optionV = new Vue({
+            el: '#option',
+            data: {
+                startDate: '',
+                endDate: '',
+                period: '',
+                goodsId: '',
+                chartWidth: '90',
+                chartHeight: '500'
+            },
+            computed: {
+                chartSizeFlag: function () {
+                    return this.chartWidth + this.chartHeight;
+                }
+            }
+        });
+        optionV.$watch('chartSizeFlag', function (nval) {
+            $("#graph_1").css('width', optionV.$data.chartWidth + '%');
+            $('#graph_1').css('height', optionV.$data.chartHeight + 'px');
+            chart_1.resize();
+        });
+
+        // 图表
+        var chart_1 = echarts.init(document.getElementById('graph_1'));
+        var data = new Vue({
+            el: '#data',
+            data: {
+                option: {
+                    title: {
+                        text: '第一个 ECharts 实例'
+                    },
+                    tooltip: {},
+                    legend: {
+                        data: ['销量', 'sale']
+                    },
+                    xAxis: {
+                        data: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月"]
+                    },
+                    yAxis: {},
+                    series: [
+                        {
+                            name: '销量',
+                            type: 'bar',
+                            data: [5, 20, 36, 16, 10, 20, 26, 32, 40]
+                        },
+                        {
+                            name: 'sale',
+                            type: 'bar',
+                            data: [10, 20, 13, 24, 15, 26, 5, 35, 22]
+                        }
+                    ]
+                }
+            },
+            computed: {
+                dataChanged: function () {
+                    return JSON.stringify(this.option);
+                }
+            }
+        });
+        data.$watch('dataChanged', function (nval) {
+            chart_1.setOption(data.$data.option);
+        });
+
+        $(window).ready(function () {
+            chart_1.setOption(data.$data.option);
+        });
+
+    </script>
 
 </div>
 
