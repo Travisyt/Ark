@@ -1,4 +1,4 @@
-package com.yu.arksys.bean;
+package com.yu.arksys.bean.raw;
 
 import com.yu.arksys.bean.api.MappableBean;
 import com.yu.arksys.bean.api.ResponseBean;
@@ -33,4 +33,5 @@ public class Commodity implements MappableBean {
     public ResponseBean getMappedBean(Map<String, Map<String, String>> mapper) {
         return null;
     }
+
 }

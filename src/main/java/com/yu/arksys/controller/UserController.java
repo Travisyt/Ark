@@ -1,7 +1,7 @@
 package com.yu.arksys.controller;
 
 import com.yu.arksys.bean.LoginUser;
-import com.yu.arksys.bean.Status;
+import com.yu.arksys.bean.response.Status;
 import com.yu.arksys.service.api.Logger;
 import com.yu.arksys.service.api.MemoryDataBase;
 import com.yu.arksys.service.api.UserService;

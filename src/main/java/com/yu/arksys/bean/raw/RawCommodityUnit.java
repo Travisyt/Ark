@@ -1,11 +1,16 @@
-package com.yu.arksys.bean;
+package com.yu.arksys.bean.raw;
 
-public class CommodityUnit {
+import com.yu.arksys.bean.api.AggregatableBean;
 
-    public CommodityUnit() {
+/**
+ * 原态的商品单位信息
+ */
+public class RawCommodityUnit {
+
+    public RawCommodityUnit() {
     }
 
-    public CommodityUnit(String PTypeId, String unit1, String URate, String isBase) {
+    public RawCommodityUnit(String PTypeId, String unit1, String URate, String isBase) {
         this.PTypeId = PTypeId;
         Unit1 = unit1;
         this.URate = URate;

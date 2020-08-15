@@ -1,17 +1,9 @@
 package com.yu.arksys.utils;
 
-import com.yu.arksys.bean.DetailedBillDraft;
-import com.yu.arksys.bean.DetailedBillDraftResponse;
-import com.yu.arksys.bean.api.DataBean;
-import org.springframework.stereotype.Service;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
 
 /**
  * 所有字段必须用单引号包围

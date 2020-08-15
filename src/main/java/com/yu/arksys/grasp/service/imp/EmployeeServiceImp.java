@@ -1,6 +1,6 @@
 package com.yu.arksys.grasp.service.imp;
 
-import com.yu.arksys.bean.EmployeeRecord;
+import com.yu.arksys.bean.raw.EmployeeRecord;
 import com.yu.arksys.grasp.dao.EmployeeDao;
 import com.yu.arksys.grasp.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;

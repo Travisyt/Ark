@@ -1,4 +1,4 @@
-package com.yu.arksys.bean;
+package com.yu.arksys.bean.response;
 
 public class Status {
 

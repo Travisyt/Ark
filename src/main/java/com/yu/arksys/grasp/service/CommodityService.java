@@ -24,6 +24,10 @@ public interface CommodityService {
 
     List<ResponseBean> getCommodityListByParentCode(String parentCode, String orderBy);
 
+    List<ResponseBean> getFuzzySearchCommodityListByCode(String code);
 
+    List<ResponseBean> getFuzzySearchCommodityListByName(String name);
+
+    List<ResponseBean> getFuzzySearchCommodityListByAll(String keyWord);
 
 }

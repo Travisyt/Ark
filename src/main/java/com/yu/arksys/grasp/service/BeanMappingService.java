@@ -8,6 +8,9 @@ import com.yu.arksys.bean.api.ResponseBean;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Bean 重组
+ */
 public interface BeanMappingService {
 
     /**

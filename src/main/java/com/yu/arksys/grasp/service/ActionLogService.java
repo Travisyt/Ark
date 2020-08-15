@@ -1,6 +1,6 @@
 package com.yu.arksys.grasp.service;
 
-import com.yu.arksys.bean.EmployeeAction;
+import com.yu.arksys.bean.raw.EmployeeAction;
 
 import java.util.List;
 import java.util.Map;

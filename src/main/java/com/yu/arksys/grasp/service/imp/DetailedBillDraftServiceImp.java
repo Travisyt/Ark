@@ -1,6 +1,6 @@
 package com.yu.arksys.grasp.service.imp;
 
-import com.yu.arksys.bean.DetailedBillDraft;
+import com.yu.arksys.bean.raw.DetailedBillDraft;
 import com.yu.arksys.bean.RecordTuple;
 import com.yu.arksys.bean.api.ResponseBean;
 import com.yu.arksys.grasp.dao.DetailedBillDraftDao;

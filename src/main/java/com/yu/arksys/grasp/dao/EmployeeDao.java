@@ -1,6 +1,6 @@
 package com.yu.arksys.grasp.dao;
 
-import com.yu.arksys.bean.EmployeeRecord;
+import com.yu.arksys.bean.raw.EmployeeRecord;
 import com.yu.arksys.bean.RecordTuple;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;

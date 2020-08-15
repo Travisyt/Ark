@@ -1,6 +1,6 @@
 package com.yu.arksys.grasp.service.imp;
 
-import com.yu.arksys.bean.EmployeeAction;
+import com.yu.arksys.bean.raw.EmployeeAction;
 import com.yu.arksys.grasp.dao.ActionLogDao;
 import com.yu.arksys.grasp.service.ActionLogService;
 import com.yu.arksys.utils.SQLUtils;

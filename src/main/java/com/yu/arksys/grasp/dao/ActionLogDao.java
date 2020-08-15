@@ -1,6 +1,6 @@
 package com.yu.arksys.grasp.dao;
 
-import com.yu.arksys.bean.EmployeeAction;
+import com.yu.arksys.bean.raw.EmployeeAction;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Qualifier;

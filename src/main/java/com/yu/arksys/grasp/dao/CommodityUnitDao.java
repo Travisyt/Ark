@@ -1,21 +1,33 @@
 package com.yu.arksys.grasp.dao;
 
-import com.yu.arksys.bean.CommodityUnit;
+import com.yu.arksys.bean.raw.CommodityUnit;
+import com.yu.arksys.bean.raw.RawCommodityUnit;
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 @Qualifier("graspSqlSessionTemplate")
 @Component("commodityUnitDao")
 public interface CommodityUnitDao {
 
     @Select("select PTypeId,Unit1,URate,IsBase from xw_PtypeUnit")
-    List<CommodityUnit> getAllCommodityUnits();
+    List<RawCommodityUnit> getAllRawCommodityUnits();
 
     @Select("select PTypeId,Unit1,URate,IsBase from xw_PtypeUnit where PTypeId=${PTypeId}")
-    CommodityUnit getCommodityUnitsById(@Param("PTypeId") String pTypeId);
+    List<RawCommodityUnit> getRawCommodityUnitsById(@Param("PTypeId") String pTypeId);
+
+//    @MapKey("PTypeId")
+//    @Select("select t.PTypeId," +
+//            "(select Unit1 from xw_PtypeUnit t1 where t1.PTypeId=t.PTypeId and t1.IsBase=1) as baseUnit," +
+//            "(select")
+//    Map<String, CommodityUnit> getCommodityUnitMapWithConditions(@Param("conditions") String conditions);
+
+    @Select("select PTypeId,Unit1,URate,IsBase from xw_PtypeUnit where conditions")
+    List<RawCommodityUnit> getRawCommodityUnitsWithConditions(@Param("conditions") String conditions);
 
 }

@@ -1,4 +1,4 @@
-package com.yu.arksys.bean;
+package com.yu.arksys.bean.response;
 
 import com.yu.arksys.bean.api.ResponseBean;
 

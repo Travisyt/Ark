@@ -1,7 +1,8 @@
-package com.yu.arksys.bean;
+package com.yu.arksys.bean.raw;
 
 import com.yu.arksys.bean.api.MappableBean;
 import com.yu.arksys.bean.api.ResponseBean;
+import com.yu.arksys.bean.response.DetailedBillResponse;
 
 import java.util.Map;
 
