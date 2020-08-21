@@ -6,6 +6,7 @@ import com.yu.arksys.bean.AccountsRecord;
 import com.yu.arksys.bean.OrderRecord;
 import com.yu.arksys.bean.RecordTuple;
 import com.yu.arksys.grasp.dao.CommodityDao;
+import com.yu.arksys.grasp.dao.CommodityUnitDao;
 import com.yu.arksys.grasp.dao.StockDao;
 import com.yu.arksys.grasp.service.ActionLogService;
 import com.yu.arksys.grasp.service.BeanMappingService;
@@ -17,6 +18,7 @@ import com.yu.arksys.service.api.order.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -192,6 +194,19 @@ public class DataController {
         map.put("secondPrice", commodityService.getSecondPriceByPusercode(pusercode));
         map.put("lastPurchasePrice", commodityService.getLastPurchasePriceByPusercode(pusercode));
         return map;
-
     }
+
+    @Autowired
+    CommodityUnitDao commodityUnitDao;
+
+    @RequestMapping("/getCommodityUnitMap")
+    @ResponseBody
+    public Map<String, Object> getCommodityUnitMap() {
+        Map<String, Object> result = new HashMap<>();
+        result.put("data", commodityService.getMergedUnitMap());
+        result.put("status", "200");
+//        result.put("data", commodityUnitDao.getAllRawCommodityUnits());
+        return result;
+    }
+
 }

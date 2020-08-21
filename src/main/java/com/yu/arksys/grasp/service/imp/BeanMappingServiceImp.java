@@ -4,6 +4,7 @@ import com.yu.arksys.bean.RecordTuple;
 import com.yu.arksys.bean.TableMapInfo;
 import com.yu.arksys.bean.api.MappableBean;
 import com.yu.arksys.bean.api.ResponseBean;
+import com.yu.arksys.component.BeanMapper;
 import com.yu.arksys.grasp.dao.BusinessRelatedUnitDao;
 import com.yu.arksys.grasp.dao.EmployeeDao;
 import com.yu.arksys.grasp.dao.MapperDao;

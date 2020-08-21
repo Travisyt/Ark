@@ -1,5 +1,6 @@
 package com.yu.arksys.grasp.dao;
 
+import com.yu.arksys.bean.raw.Commodity;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,9 +15,16 @@ import java.util.List;
 @Component("commodityDao")
 public interface CommodityDao {
 
+    // ============= 列表 =============== //
+    @Select("SELECT ptypeid,ParId,leveal,pusercode,pfullname,RowIndex,isStop,deleted,LastBuyPrice,punitname FROM ptype WHERE ${conditions} ORDER BY RowIndex")
+    List<Commodity> getCommodityListWithConditions(String conditions);
+
+    // ============= 信息 =============== //
     @Select("select pfullname from ptype where pusercode = '${pusercode}'")
     List<String> findFullNameByCode(@Param("pusercode") String pusercode);
 
+
+    // ============= 价格 =============== //
     @Select("select Price from xw_P_PtypePrice where PTypeId = '${ptypeid}' and PRTypeId in ('0002','0003','0101')")
     List<String> getPricesByPtypeid(@Param("ptypeid") String ptypeid);
 

@@ -15,19 +15,15 @@ import java.util.Map;
 @Component("commodityUnitDao")
 public interface CommodityUnitDao {
 
-    @Select("select PTypeId,Unit1,URate,IsBase from xw_PtypeUnit")
+    @Select("select PTypeId,Unit1,URate,Ordid,IsBase from xw_PtypeUnit")
     List<RawCommodityUnit> getAllRawCommodityUnits();
 
-    @Select("select PTypeId,Unit1,URate,IsBase from xw_PtypeUnit where PTypeId=${PTypeId}")
+    @Select("select PTypeId,Unit1,URate,Ordid,IsBase from xw_PtypeUnit where PTypeId=${PTypeId}")
     List<RawCommodityUnit> getRawCommodityUnitsById(@Param("PTypeId") String pTypeId);
 
-//    @MapKey("PTypeId")
-//    @Select("select t.PTypeId," +
-//            "(select Unit1 from xw_PtypeUnit t1 where t1.PTypeId=t.PTypeId and t1.IsBase=1) as baseUnit," +
-//            "(select")
-//    Map<String, CommodityUnit> getCommodityUnitMapWithConditions(@Param("conditions") String conditions);
-
-    @Select("select PTypeId,Unit1,URate,IsBase from xw_PtypeUnit where conditions")
+    @Select("select PTypeId,Unit1,URate,Ordid,IsBase from xw_PtypeUnit where ${conditions}")
     List<RawCommodityUnit> getRawCommodityUnitsWithConditions(@Param("conditions") String conditions);
+
+
 
 }

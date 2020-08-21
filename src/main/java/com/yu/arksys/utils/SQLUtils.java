@@ -25,11 +25,10 @@ public class SQLUtils {
     }
 
     /**
-     *
      * @param conditions 以HashMap存储条件
-     *                   规则如下：
-     *                      条件为'='、'<'、'>'，以符号加值的格式传递。例如：key, >value
-     *                      条件为'between ... and ...'，以'@min,max'的格式传递
+     * 规则如下：
+     * 条件为'='、'<'、'>'，以符号加值的格式传递。例如：key, >value
+     * 条件为'between ... and ...'，以'@min,max'的格式传递
      *
      * @return 返回SQL条件语句
      */
@@ -56,6 +55,12 @@ public class SQLUtils {
         return stringBuilder.substring(0, stringBuilder.lastIndexOf(" and "));
     }
 
+    /**
+     *
+     * @param field 字段
+     * @param keyword 关键字
+     * @return 模糊查询条件语句
+     */
     public static String getFuzzySearchConditionString(String field, String keyword) {
         return "CHARINDEX('" + keyword + "', " + field + ") <> 0";
     }
@@ -64,12 +69,12 @@ public class SQLUtils {
         return surround + src + surround;
     }
 
-    public static void main(String[] args) throws ParseException, NoSuchFieldException, NoSuchMethodException {
-        Date date = new Date(System.currentTimeMillis() + 3600000);
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        System.out.println(format.format(date));
-        System.out.println(format.parse("2020-4-4 13:00:00").toString());
-        System.out.println();
-    }
+//    public static void main(String[] args) throws ParseException, NoSuchFieldException, NoSuchMethodException {
+//        Date date = new Date(System.currentTimeMillis() + 3600000);
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        System.out.println(format.format(date));
+//        System.out.println(format.parse("2020-4-4 13:00:00").toString());
+//        System.out.println();
+//    }
 
 }

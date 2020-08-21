@@ -6,7 +6,6 @@ import com.yu.arksys.bean.api.MappableBean;
 import com.yu.arksys.bean.api.ResponseBean;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Bean 重组
@@ -18,6 +17,8 @@ public interface BeanMappingService {
      * 把原始为ID字段的Bean对应成内容字段
      */
     List<ResponseBean> mapBean(List<? extends MappableBean> beans, List<TableMapInfo> tableMapInfos);
+
+//    Map<String, ResponseBean> mergeBean(List<MergeableBean> beans);
 
     List<RecordTuple> getEmployeeMap();
 

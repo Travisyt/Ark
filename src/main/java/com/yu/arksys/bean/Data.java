@@ -30,6 +30,7 @@ public class Data {
      */
     private List<OrderRecord> data;
 
+
     public int getTotalNum() {
         return totalNum;
     }

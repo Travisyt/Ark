@@ -1,7 +1,5 @@
 package com.yu.arksys.bean.raw;
 
-import com.yu.arksys.bean.api.AggregatableBean;
-
 /**
  * 原态的商品单位信息
  */
@@ -10,11 +8,12 @@ public class RawCommodityUnit {
     public RawCommodityUnit() {
     }
 
-    public RawCommodityUnit(String PTypeId, String unit1, String URate, String isBase) {
+    public RawCommodityUnit(String PTypeId, String unit1, String URate, String isBase, String Ordid) {
         this.PTypeId = PTypeId;
         Unit1 = unit1;
         this.URate = URate;
         IsBase = isBase;
+        this.Ordid = Ordid;
     }
 
     private String PTypeId;
@@ -24,6 +23,16 @@ public class RawCommodityUnit {
     private String URate;
 
     private String IsBase;
+
+    private String Ordid;
+
+    public String getOrdid() {
+        return Ordid;
+    }
+
+    public void setOrdid(String ordid) {
+        Ordid = ordid;
+    }
 
     public String getPTypeId() {
         return PTypeId;
