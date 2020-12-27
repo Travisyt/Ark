@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>库存报警</title>
+    <link href="bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link href="css/elements.css" rel="stylesheet">
+    <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/echarts.js"></script>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript" src="js/commodityUtils.js"></script>
+</head>
+<body>
+
+<div class="container-fluid" id="stockAlertTables">
+    <!--    左侧工具栏   -->
+    <div class="col-md-2" style="padding: 10px 10px 10px 10px">
+        <div style="height: 90vh;box-shadow: 0 0 5px #333333;padding: 5px 5px 5px 5px">
+            <h3>库存报警</h3>
+            <div style="padding: 10px 5px 10px 0">
+                <button type="button" class="btn btn-primary" style="width: 100%" data-toggle="modal"
+                        data-target="#addAlert" onclick="document.getElementById('addAlertConfirm').onclick=function() {
+                          addAlert();
+                        }">添加库存告警
+                </button>
+<!--                <button type="button" class="btn btn-primary" style="width: 100%;margin-top: 10px">只查看报警列表</button>-->
+                <button type="button" class="btn btn-primary" style="width: 100%;margin-top: 10px" data-toggle="modal"
+                        data-target="#addAlert" onclick="document.getElementById('addAlertConfirm').onclick=function() {
+                          modifyAlert();
+                        }">修改库存告警
+                </button>
+            </div>
+        </div>
+    </div>
+    <!--    右侧表格    -->
+    <div class="col-md-10" style="padding: 10px 10px 10px 10px">
+        <div style="height: 90vh;box-shadow: 0 0 5px #333333;padding: 5px 5px 5px 5px">
+
+            <div>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th style="width: 40%">商品名称</th>
+                        <th style="width: 20%">辅助数量</th>
+                        <th style="width: 20%">基本数量</th>
+                        <th style="width: 20%">报警下限</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+            <div style="overflow-y: scroll; max-height: 90%;overscroll-behavior: contain">
+                <table class="table">
+                    <tbody>
+                    <tr v-for="stockAlert in stockAlerts" v-bind:class="{'alert-mark': isAlert(stockAlert)}">
+                        <td style="width: 40%;font-weight: bold;font-size: large">{{ stockAlert.pfullname }}</td>
+                        <td style="width: 20%;font-weight: bold;font-size: large">{{ unitFormat(stockAlert) }}</td>
+                        <td style="width: 20%;font-weight: bold;font-size: large">{{ parseInt(stockAlert.qty) }}{{ getBaseUnit(stockAlert) }}</td>
+                        <td style="width: 20%;font-weight: bold;font-size: large">{{ stockAlert.minimum }}{{ getBaseUnit(stockAlert) }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addAlert" tabindex="-1" role="dialog" aria-labelledby="addAlertLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                <div>
+                    添加库存预警
+                </div>
+            </div>
+
+            <div class="modal-body">
+                <div style="padding: 20px 10px 20px 10px">
+                    <label style="margin-left: 5%;margin-top: 0">选择商品</label>
+                    <div class="input-group" style="border: solid 3px green;border-radius: 8px">
+                        <input readonly v-model="selected.pfullname" type="text" class="form-control"/>
+                        <span class="input-group-btn">
+                        <button id="goodsSearch" type="button" class="btn btn-default" data-toggle="modal"
+                                data-target="#goodsSelect">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </span>
+                    </div>
+                </div>
+                <div style="padding: 20px 10px 20px 10px">
+                    <label style="margin-left: 5%;margin-top: 0">选择仓库</label>
+                    <div class="input-group" style="border: solid 3px green;border-radius: 8px">
+                        <input readonly value="总仓库" type="text" class="form-control"/>
+                        <span class="input-group-btn">
+                    </span>
+                    </div>
+                </div>
+                <div style="padding: 20px 10px 20px 10px">
+                    <label style="margin-left: 5%;margin-top: 0">输入报警下限</label>
+                    <div class="input-group" style="border: solid 3px green;border-radius: 8px">
+                        <input v-model="minimum" type="text" class="form-control"/>
+                        <span class="input-group-btn">
+                    </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button id="addAlertClose" type="button" class="btn btn-default btn-lg" data-dismiss="modal" onclick="cleanForm()">关闭
+                </button>
+                <button id="addAlertConfirm" type="button" class="btn btn-primary btn-lg" onclick="addAlert()">确认
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<!--    模态框    -->
+<div th:replace="goodsSelect::goodsselect"></div>
+
+<!--    载入动画    -->
+<div id="loading" class="col-md-3 pull-right" style="height: 50px; padding: 20px 0 0 0;display: inline;">
+    <!--        loading        -->
+    <span class="loading-small"
+          id="loading-icon"><span></span><span></span><span></span><span></span><span></span></span>
+</div>
+<script>
+    $(window).ready(function () {
+        refreshData({});
+    });
+
+    // 载入模态框事件
+    $('#goodsSelect').on('shown.bs.modal', function () {
+        refreshCommodityList({openFlag: true});
+        sessionStorage.setItem('goodsSelectFlagStatement', 'addAlertModal.$data.selectedFlag = !addAlertModal.$data.selectedFlag')
+    });
+
+    var addAlertModal = new Vue({
+        el: '#addAlert',
+        data: {
+            selected: {},
+            selectedFlag: false,
+            minimum: 0
+        }
+    });
+    addAlertModal.$watch('selectedFlag', function (nval) {
+        addAlertModal.$data.selected = JSON.parse(sessionStorage.getItem('selectedGoodsList'))[0];
+    });
+
+    var stockAlertTables = new Vue({
+        el: '#stockAlertTables',
+        data: {
+            stockAlerts: [],
+            commodityUnitMap: {}
+        },
+        methods: {
+            unitFormat: function (commodity) {
+                return fUnitFormat(commodity, stockAlertTables.$data.commodityUnitMap[commodity.ptypeid]);
+            },
+            getBaseUnit: function (commodity) {
+                if (typeof stockAlertTables.$data.commodityUnitMap[commodity.ptypeid] === 'undefined') {
+                    return '-';
+                } else {
+                    return stockAlertTables.$data.commodityUnitMap[commodity.ptypeid].baseUnit;
+                }
+            },
+            isAlert: function (commodity) {
+                return parseInt(commodity.qty) <= parseInt(commodity.minimum);
+            }
+        }
+    });
+
+    function cleanForm() {
+        addAlertModal.$data.selected = {pfullname: '--', status: '0'};
+        addAlertModal.$data.minimum = '--';
+        refreshData();
+    }
+
+    function modifyAlert(commodity = addAlertModal.$data.selected, minimum = addAlertModal.$data.minimum, ktypeid = '00005') {
+        if (commodity.status !== undefined || minimum === '--') {
+            alert('填写信息不全。');
+        } else {
+            $.post('/commodity/modifyStockAlert', {
+                ptypeid: commodity.ptypeid,
+                ktypeid: ktypeid,
+                minimum: minimum
+            }, function (res) {
+                if (res.status === '200') {
+                    alert('添加成功。');
+                    $('#addAlertClose').click();
+                }
+            });
+        }
+
+    }
+
+    function addAlert(commodity = addAlertModal.$data.selected, minimum = addAlertModal.$data.minimum, ktypeid = '00005') {
+        console.log('---------');
+        console.log(commodity);
+        console.log(minimum);
+        console.log('+++++++++');
+        if (minimum === '--' || commodity.status !== undefined) {
+            alert('填写信息不全。');
+        } else {
+            $.post('/commodity/addStockAlert', {
+                ptypeid: commodity.ptypeid,
+                ktypeid: ktypeid,
+                minimum: minimum
+            }, function (res) {
+                if (res.status === '1') {
+                    console.log(res);
+                    alert('告警已存在。');
+                } else if (res.status === '0') {
+                    alert('添加失败。');
+                } else {
+                    alert('添加成功。');
+                    $('#addAlertClose').click();
+                }
+            });
+        }
+
+    }
+
+    function refreshData(params) {
+        console.log("==== refreshed ====");
+        var postParams = {};
+        $.each(params, function (key, value) {
+            if (typeof value === "object") {
+                sessionStorage.setItem(key, JSON.stringify(value));
+                postParams[key] = JSON.stringify(value);
+            } else {
+                sessionStorage.setItem(key, value);
+                postParams[key] = value;
+            }
+        });
+        loading(true);
+        $.post('/commodity/getStockAlertList', postParams, function (res) {
+            if (res.status === '200') {
+                stockAlertTables.$data.stockAlerts = res.data;
+                $.post('/basicInfo/getCommodityUnitMap', params, function (res) {
+                    stockAlertTables.$data.commodityUnitMap = res.data;
+                    loading(false)
+                });
+            } else {
+                alert('获取数据失败。');
+                loading(false);
+            }
+        });
+
+    }
+
+    function loading(isLoading) {
+        if (isLoading) {
+            $("#loading").css('display', 'inline');
+            $("#override").css('display', 'inline');
+        } else {
+            setTimeout(function () {
+                $("#loading").css('display', 'none');
+                $("#override").css('display', 'none');
+            }, 500);
+        }
+    }
+
+</script>
+<!--    景深蒙版    -->
+<div class="depth-of-focus" id="override"
+     style="z-index: 998;background-color: #cccccc;opacity: 50%;position: absolute;height: 100%;width: 100%;top: 0;left: 0;display: none"></div>
+
+</body>
+</html>

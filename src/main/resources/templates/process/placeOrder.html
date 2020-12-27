@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>下单系统</title>
+    <link href="../../static/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link href="css/elements.css" rel="stylesheet">
+    <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="../../static/bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/echarts.js"></script>
+    <script type="text/javascript" src="js/vue.js"></script>
+
+</head>
+<body>
+
+<div th:fragment="placeOrder">
+    <div class="container-fluid" style="padding: 0 0 0 0">
+        <!--    vue data    -->
+        <div id="data"></div>
+        <!--    左侧      -->
+        <div id="option" class="col-md-2" style="padding: 0 0 0 0;">
+            <div style="padding: 10px 10px 10px 10px;box-shadow: 0 0 5px #000000;margin: 20px 10px;">
+                <h4 style="margin-left: 10px">内容选项</h4>
+                <hr/>
+                <div class="form-group">
+                    <label style="margin-left: 5%;margin-top: 0">选择商品</label>
+                    <div class="input-group" style="border: solid 3px green;border-radius: 8px">
+                        <input type="text" class="form-control"/>
+                        <span class="input-group-btn">
+                        <button id="goodsSearch" type="button" class="btn btn-default" data-toggle="modal" data-target="#goodsSelect">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </span>
+                    </div>
+                    <label style="margin-left: 5%;margin-top: 10px">起始</label>
+                    <div class="input-group" style="border: solid 3px green;border-radius: 8px">
+                        <select v-model="startDate" class="form-control">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                            <option>6</option>
+                            <option>7</option>
+                            <option>8</option>
+                            <option>9</option>
+                            <option>10</option>
+                            <option>11</option>
+                            <option>12</option>
+                        </select>
+                        <span class="input-group-addon">月</span>
+                    </div>
+                    <label style="margin-left: 5%;margin-top: 10px">结束</label>
+                    <div class="input-group" style="border: solid 3px green;border-radius: 8px">
+                        <select v-model="endDate" class="form-control">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                            <option>6</option>
+                            <option>7</option>
+                            <option>8</option>
+                            <option>9</option>
+                            <option>10</option>
+                            <option>11</option>
+                            <option>12</option>
+                        </select>
+                        <span class="input-group-addon">月</span>
+                    </div>
+                    <label style="margin-left: 5%;margin-top: 10px">周期</label>
+                    <div class="input-group" style="border: solid 3px green;border-radius: 8px">
+                        <select v-model="period" class="form-control">
+                            <option>每月</option>
+                            <option>每天</option>
+                        </select>
+                    </div>
+                    <div style="margin-top: 40px;border: solid 3px grey;border-radius: 8px">
+                        <button type="button" class="btn btn-block">确认</button>
+                    </div>
+
+                </div>
+            </div>
+
+            <div style="padding: 10px 10px 30px 10px;box-shadow: 0 0 5px #000000;margin: 20px 10px">
+                <h4 style="margin-left: 10px">表格控制</h4>
+                <hr/>
+
+            </div>
+
+        </div>
+
+        <!--    右侧      -->
+        <div class="col-md-10" style="padding: 0 10px 0 0">
+            <div style="padding: 30px 25px 10px 10px;box-shadow: 0 0 5px #000000;margin: 20px 10px">
+                <div id="charts_1">
+                    <div id="graph_1" style="height: 500px;width: 90%;">
+
+                    </div>
+                </div>
+
+                <div style="border: solid">
+                    标题2
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--    模态框    -->
+    <div th:replace="goodsSelect::goodsselect"></div>
+
+    <!--    载入动画    -->
+    <div id="loading" class="col-md-3 pull-right" style="height: 50px; padding: 20px 0 0 0;display: inline;">
+        <!--        loading        -->
+        <span class="loading-small" id="loading-icon">
+                    <span></span><span></span><span></span><span></span><span></span>
+        </span>
+    </div>
+
+
+    <script>
+        $(window).ready(function () {
+
+        });
+    </script>
+
+</div>
+
+</body>
+</html>

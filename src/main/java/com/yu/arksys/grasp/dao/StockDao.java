@@ -12,4 +12,5 @@ public interface StockDao {
     @Select("select kfullname from Stock where ktypeid = ${id}")
     String findFullNameById(@Param("id") String id);
 
+
 }

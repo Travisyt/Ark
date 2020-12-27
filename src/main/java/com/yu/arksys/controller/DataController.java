@@ -1,24 +1,17 @@
 package com.yu.arksys.controller;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
-import com.yu.arksys.bean.AccountsRecord;
 import com.yu.arksys.bean.OrderRecord;
-import com.yu.arksys.bean.RecordTuple;
+import com.yu.arksys.grasp.dao.BusinessRelatedUnitDao;
 import com.yu.arksys.grasp.dao.CommodityDao;
 import com.yu.arksys.grasp.dao.CommodityUnitDao;
-import com.yu.arksys.grasp.dao.StockDao;
-import com.yu.arksys.grasp.service.ActionLogService;
-import com.yu.arksys.grasp.service.BeanMappingService;
-import com.yu.arksys.grasp.service.CommodityService;
-import com.yu.arksys.grasp.service.DetailedBillDraftService;
+import com.yu.arksys.grasp.service.*;
 import com.yu.arksys.service.api.MappingService;
 import com.yu.arksys.service.api.accounts.AccountsService;
 import com.yu.arksys.service.api.order.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -197,16 +190,47 @@ public class DataController {
     }
 
     @Autowired
-    CommodityUnitDao commodityUnitDao;
+    BusinessRelatedUnitService businessRelatedUnitService;
 
-    @RequestMapping("/getCommodityUnitMap")
+    @RequestMapping("/getBusinessRelatedUnits")
     @ResponseBody
-    public Map<String, Object> getCommodityUnitMap() {
-        Map<String, Object> result = new HashMap<>();
-        result.put("data", commodityService.getMergedUnitMap());
-        result.put("status", "200");
-//        result.put("data", commodityUnitDao.getAllRawCommodityUnits());
-        return result;
+    public Map<String, Object> getBusinessRelatedUnits(String parid) {
+        System.out.println("=======================数据请求======================");
+        System.out.println("/getBusinessRelatedUnits parameters:");
+        System.out.println("parid: " + parid);
+        System.out.println("=======================请求结束======================");
+        if (parid == null) {
+            parid = "0";
+        }
+        return businessRelatedUnitService.getBusinessList(parid);
     }
+
+    @Autowired
+    BusinessRelatedUnitDao businessRelatedUnitDao;
+
+    // ================================= 单位信息 ================================= //
+    @RequestMapping("/saveBusinessAddress")
+    @ResponseBody
+    public Map<String, Object> businessRelatedUnitAddressTest(String btypeid, String longitude, String latitude, String mapname, String entryemployee) {
+        System.out.println("=======================数据上传======================");
+        System.out.println("/saveBusinessAddress parameters:");
+        System.out.println("btypeid: " + btypeid);
+        System.out.println("longitude: " + longitude);
+        System.out.println("latitude: " + latitude);
+        System.out.println("mapname: " + mapname);
+        System.out.println("=======================上传结束======================");
+        Map<String, Object> res = new HashMap<>();
+        try {
+            businessRelatedUnitDao.insertBusinessAddress(btypeid, businessRelatedUnitDao.findFullNameById(btypeid), longitude, latitude, mapname, entryemployee);
+            res.put("status", "200");
+        } catch (Exception e) {
+            System.out.println("ID已存在，转为UPDATE");
+            businessRelatedUnitDao.updateBusinessAddress(btypeid, longitude, latitude, mapname, entryemployee);
+            res.put("status", "200");
+        }
+        return res;
+    }
+
+
 
 }

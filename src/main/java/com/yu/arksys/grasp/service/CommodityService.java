@@ -1,8 +1,9 @@
 package com.yu.arksys.grasp.service;
 
 import com.yu.arksys.bean.api.ResponseBean;
-import com.yu.arksys.bean.raw.CommodityUnit;
-import com.yu.arksys.bean.raw.RawCommodityUnit;
+import com.yu.arksys.bean.raw.CommodityBrief;
+import com.yu.arksys.bean.raw.CommodityOfDataView;
+import com.yu.arksys.bean.result.CommodityUnit;
 
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,8 @@ public interface CommodityService {
     // ========= 单位查询 ========== //
     Map<String, CommodityUnit> getMergedUnitMap();
 
+    Map<String, CommodityUnit> getMergedUnitMapByParId(String ParId);
+
     Map<String, CommodityUnit> getMergedUnitMapWithConditions(Map<String, String> conditions);
 
     // ========= 信息查询 ========== //
@@ -37,5 +40,26 @@ public interface CommodityService {
     List<ResponseBean> getFuzzySearchCommodityListByName(String name);
 
     List<ResponseBean> getFuzzySearchCommodityListByAll(String keyWord);
+
+    /**
+     * 获取简短的商品信息，用于商品列表或者其他一些不需要详细信息的情景
+     * @param parentId 父目录ID
+     * @param ktypeid 仓库ID
+     * @param orderBy 排序根据
+     * @return 子级商品列表
+     */
+    List<CommodityBrief> getBriefCommodityListByParentId(String parentId, String ktypeid, String orderBy);
+
+    // **** dataView **** //
+
+    List<CommodityOfDataView> getDataViewCommodityListByParentId(String parentId, String ktypeid, String orderBy);
+
+    // ========= stockAlerts ========== //
+    List<ResponseBean> getStockAlertList();
+
+    boolean insertStockAlert(String ptypeid, String ktypeid, String minimum);
+
+    boolean updateStockAlert(String ptypeid, String ktypeid, String minimum);
+
 
 }

@@ -1,8 +1,11 @@
 package com.yu.arksys.grasp.dao;
 
+import com.yu.arksys.bean.raw.CheckedSaleDraft;
 import com.yu.arksys.bean.raw.DetailedBillDraft;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -47,11 +50,41 @@ public interface DetailedBillDraftDao {
             @Param("frontPageNum") String frontPageNum
             );
 
-    @Select("select Vchcode,atypeid,btypeid,etypeid,ktypeid,PtypeId,Qty,price,total,date,Vchtype from BakDly where " +
+    @Select("select Vchcode,atypeid,btypeid,etypeid,ktypeid,PtypeId,Qty,price,total,date,Vchtype,DlyOrder from BakDly where " +
             "date=${date} and ${conditions}")
     List<DetailedBillDraft> getDailyRecordsWithConditions(@Param("conditions") String conditions,@Param("date") String date);
 
     @Select("select distinct btypeid from BakDly where date=${date} and etypeid='${etypeid}'")
     List<String> getCurrentBtypeIdList(@Param("etypeid") String etypeid, @Param("date") String date);
+
+    @Select("select * from checkedSaleDraft where etypeid='${employee}' and date = ${date}")
+    List<CheckedSaleDraft> getCheckedSaleDraftByEmployee(@Param("employee") String employee, @Param("date") String date);
+
+    @Select("select Vchcode,atypeid,btypeid,etypeid,ktypeid,PtypeId,Qty,price,total,date,Vchtype,DlyOrder from BakDly where " +
+            "date=${date} and Vchtype='11' and etypeid='${employee}'")
+    List<DetailedBillDraft> getDetailedSaleDraftByEmployee(@Param("employee") String etypeid, @Param("date") String date);
+
+    @Update("update checkedSaleDraft set ${field}='${value}' where dlyorder='${dlyorder}'")
+    void updateCheckedSaleDraftIdentifiedByDlyOrder(@Param("dlyorder") String dlyorder, @Param("field") String field, @Param("value") String value);
+
+    @Insert("insert into checkedSaleDraft(dlyorder,etypeid,ptypeid,btypeid,ktypeid,vchcode,qty,price,deleted,date,modified) val" +
+            "ues('${dlyorder}','${etypeid}','${ptypeid}','${btypeid}','${ktypeid}','${vchcode}','${qty}','${price}','${d" +
+            "eleted}',${date},'${modified}')")
+    void insertCheckedSaleDraft(
+            @Param("dlyorder") String dlyorder,
+            @Param("etypeid") String etypeid,
+            @Param("ptypeid") String ptypeid,
+            @Param("btypeid") String btypeid,
+            @Param("ktypeid") String ktypeid,
+            @Param("vchcode") String vchcode,
+            @Param("qty") String qty,
+            @Param("price") String price,
+            @Param("deleted") String deleted,
+            @Param("date") String date,
+            @Param("modified") String modified
+    );
+
+    @Update("update checkedSaleDraft set modified='0' where etypeid='${etypeid}'")
+    void unsetModified(@Param("etypeid") String etypeid);
 
 }

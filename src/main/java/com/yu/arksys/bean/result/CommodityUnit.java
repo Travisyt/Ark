@@ -1,4 +1,4 @@
-package com.yu.arksys.bean.raw;
+package com.yu.arksys.bean.result;
 
 /**
  * 经过分类的商品单位信息

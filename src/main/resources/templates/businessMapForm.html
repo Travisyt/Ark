@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>单位地图</title>
+    <link href="bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link href="css/elements.css" rel="stylesheet">
+    <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/echarts.js"></script>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript" src="js/commodityUtils.js"></script>
+</head>
+<body style="background-color: #f5f5f5">
+
+<div class="container-fluid">
+    <div class="row" style="height: 100px;background-color: #f5f5f5"></div>
+    <div class="row" style="height: 330px;background-color: #f5f5f5">
+        <div class="col-md-3" style="height: 100%;background-color: #f5f5f5"></div>
+        <div class="col-md-6" id="businessMapForm"
+             style="height: 100%;background-color: #cccccc;border-radius: 50px 50px 50px 50px;box-shadow: 0 0 8px #333333;padding: 30px 30px 30px 50px">
+            <h2 style="padding-left: 50px">
+                客户地址地图
+            </h2>
+            <div style="margin-top: 40px;padding-left: 50px">
+                <label>
+                    选择日期:&emsp;
+                    <input id="date" type="date" v-model="date" style="width: 200px">
+                </label>
+            </div>
+            <div style="margin-top: 20px;padding-left: 50px">
+                <label>选择经手人:&emsp;</label>
+                <span class="dropdown">
+                    <button id="employee" type="button" class="btn dropdown-toggle" data-toggle="dropdown"
+                            @click="getEmployees()" style="width: 200px">
+                        {{ currentEmployee.name }}&emsp;  <span class="caret"
+                                                                style="position:absolute;right: 20px"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="employee"
+                        style="max-height: 400px;overflow-y: scroll;overscroll-behavior: contain">
+                        <li role="presentation" v-for="employee in employees">
+                            <a @click="changeInfos(employee)">{{ employee.name }}</a>
+                        </li>
+                    </ul>
+                </span>
+            </div>
+            <div style="margin-top: 50px">
+                <button class="btn btn-primary" type="button" style="width: 100%;font-size: large" v-on:click="redirect()">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(window).ready(function () {
+        let date = new Date();
+        this.dateString = date.getFullYear().toString().concat('-').concat((date.getMonth() + 1).toString()).concat('-').concat(date.getDate().toString());
+        businessMapForm.$data.date = this.dateString;
+    });
+    var businessMapForm = new Vue({
+        el: '#businessMapForm',
+        data: {
+            date: '',
+            currentEmployee: {name: '选择经手人...'},
+            employees: []
+        },
+        methods: {
+            getEmployees: function () {
+                $.post('/getEmployeeMap', function (res) {
+                    if (res.status === '200') {
+                        businessMapForm.$data.employees = res.data;
+                    } else {
+                        alert('获取信息失败');
+                    }
+                }, 'json');
+            },
+            changeInfos: function (employee) {
+                if (employee !== '选择经手人...') {
+                    this.currentEmployee = employee;
+                }
+            },
+            redirect: function () {
+                // if (businessMapForm.$data.currentEmployee.id !== undefined) {
+                //     StandardPost('/businessMap', {date: businessMapForm.$data.date, currentEmployee: businessMapForm.$data.currentEmployee})
+                // }
+                sessionStorage.setItem('businessMapDate', businessMapForm.$data.date);
+                sessionStorage.setItem('currentEmployee', JSON.stringify(businessMapForm.$data.currentEmployee));
+                window.location.href = '/businessMap';
+            }
+        }
+    });
+
+    function StandardPost(url, args) {
+        let body = $(document.body),
+            form = $("<form method='post'></form>"),
+            input;
+        form.attr({"action": url});
+        $.each(args, function (key, value) {
+            input = $("<input type='hidden'>");
+            input.attr({"name": key});
+            input.val(value);
+            form.append(input);
+        });
+        form.appendTo(document.body);
+        form.submit();
+        document.body.removeChild(form[0]);
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>currentWork</title>
+    <link href="bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link href="css/elements.css" rel="stylesheet">
+    <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/echarts.js"></script>
+    <script type="text/javascript" src="js/vue.js"></script>
+</head>
+<body>
+<div class="container-fluid" id="work">
+    <div class="row">
+        <div style="height: 200px"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <div style="padding: 100px 30px 100px 30px; background-color: #d5d5d5; border-radius: 10px;box-shadow: 2px 2px 5px #222222">
+                <div>
+                    <label style="font-size: x-large">
+                        商品编号：
+                        <input class="input-large" v-model="userCode"/>
+                    </label>
+                    <button type="button" style="width: 200px" class="btn btn-lg" v-on:click="getInfo()">查询</button>
+                    <hr/>
+                </div>
+                <div style="height: 50px"></div>
+                <div style="font-weight: bolder;font-size: x-large">
+                    商品名称： <span>{{ commodity.pfullname }}</span>
+                </div>
+                <div style="font-weight: bolder;font-size: x-large">
+                    最近购买价： <span>{{ commodity.lastBuyPrice }}</span>
+                </div>
+                <div style="font-weight: bolder;font-size: x-large">
+                    均价： <span>{{ averagePrice }}</span>
+                </div>
+                <div style="font-weight: bolder;font-size: x-large">
+                    库存数量： <span>{{ totalNum }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+</div>
+<script>
+    var work = new Vue({
+        el: '#work',
+        data: {
+            flag: true,
+            userCode: '',
+            commodity: {},
+            averagePrice: '',
+            totalNum: ''
+        },
+        methods: {
+            getInfo: function (userCode=work.$data.userCode) {
+                $.post(
+                    '/commodity/getCommodityByCode',
+                    { pusercode: userCode },
+                    function (res) {
+                        if (res.status === '200') {
+                            work.$data.commodity = res.data;
+                            work.$data.flag = !work.$data.flag;
+                        } else {
+                            alert("信息输入有误");
+                        }
+                    }
+                );
+            }
+        }
+    });
+    work.$watch('flag', function (nval) {
+        work.$data.averagePrice = getPrice(work.$data.commodity.ptypeid);
+        work.$data.totalNum = getNum(work.$data.commodity.ptypeid)
+    });
+    function getPrice(ptypeid) {
+        $.post(
+            '/commodity/getAveragePrice',
+            { ptypeid: ptypeid },
+            function (res) {
+                if (res.status === '200') {
+                    work.$data.averagePrice = res.data;
+                } else {
+                    work.$data.averagePrice = '';
+                }
+            }
+        );
+    }
+    function getNum(ptypeid) {
+        $.post(
+            '/commodity/getTotalNum',
+            { ptypeid: ptypeid },
+            function (res) {
+                if (res.status === '200') {
+                    work.$data.totalNum = res.data;
+                } else {
+                    work.$data.averagePrice = '';
+                }
+            }
+        );
+    }
+
+</script>
+</body>
+</html>

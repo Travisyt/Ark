@@ -3,12 +3,12 @@ package com.yu.arksys.bean.raw;
 /**
  * 原态的商品单位信息
  */
-public class RawCommodityUnit {
+public class CommodityUnitRaw {
 
-    public RawCommodityUnit() {
+    public CommodityUnitRaw() {
     }
 
-    public RawCommodityUnit(String PTypeId, String unit1, String URate, String isBase, String Ordid) {
+    public CommodityUnitRaw(String PTypeId, String unit1, String URate, String isBase, String Ordid) {
         this.PTypeId = PTypeId;
         Unit1 = unit1;
         this.URate = URate;

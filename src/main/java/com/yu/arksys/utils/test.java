@@ -3,7 +3,9 @@ package com.yu.arksys.utils;
 import com.alibaba.fastjson.JSON;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.BiConsumer;
 
 public class test {
@@ -33,10 +35,31 @@ public class test {
 //            }
 //        });
 
-        Map<String, String> conditions = new HashMap<>();
-        conditions.put("name", "=nick");
-        conditions.put("id", "<100");
-        System.out.println(SQLUtils.getConditionString(conditions));
+//        Map<String, String> conditions = new HashMap<>();
+//        conditions.put("name", "=nick");
+//        conditions.put("id", "<100");
+//        System.out.println(SQLUtils.getConditionString(conditions));
+
+//        System.out.println(SQLUtils.getCurrentDate());
+
+//        class P {
+//            public String member;
+//        }
+//        P p = new P();
+//        p.member = "def";
+//
+//        Set<String> set = new HashSet<>();
+//        set.add("abc");
+//        set.add(p.member);
+//        set.add("123");
+//
+//        System.out.println(set.contains("def"));
+//        set.remove("def");
+//        System.out.println(set);
+        double d = 12.5;
+        System.out.println(d);
+        String ds = String.valueOf(d);
+        System.out.println(ds);
 
     }
 

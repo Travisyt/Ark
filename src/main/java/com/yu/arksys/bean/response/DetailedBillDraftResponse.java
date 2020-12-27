@@ -3,12 +3,11 @@ package com.yu.arksys.bean.response;
 import com.yu.arksys.bean.api.ResponseBean;
 
 public class DetailedBillDraftResponse implements ResponseBean {
-
     public DetailedBillDraftResponse() {
     }
 
-    public DetailedBillDraftResponse(String Vchcode, String atype, String btype, String etype, String ktype, String ptype, double qty, double price, double total, String date, String vchtype) {
-        this.Vchcode = Vchcode;
+    public DetailedBillDraftResponse(String vchcode, String atype, String btype, String etype, String ktype, String ptype, double qty, double price, double total, String date, String vchtype, String dlyOrder, String btypeid, String ptypeid, String etypeid, String ktypeid) {
+        Vchcode = vchcode;
         this.atype = atype;
         this.btype = btype;
         this.etype = etype;
@@ -19,17 +18,14 @@ public class DetailedBillDraftResponse implements ResponseBean {
         this.total = total;
         this.date = date;
         Vchtype = vchtype;
+        DlyOrder = dlyOrder;
+        this.btypeid = btypeid;
+        Ptypeid = ptypeid;
+        this.etypeid = etypeid;
+        this.ktypeid = ktypeid;
     }
 
     private String Vchcode;
-
-    public String getVchcode() {
-        return Vchcode;
-    }
-
-    public void setVchcode(String vchcode) {
-        Vchcode = vchcode;
-    }
 
     private String atype;
 
@@ -50,6 +46,32 @@ public class DetailedBillDraftResponse implements ResponseBean {
     private String date;
 
     private String Vchtype;
+
+    private String DlyOrder;
+
+    private String btypeid;
+
+    private String Ptypeid;
+
+    private String etypeid;
+
+    private String ktypeid;
+
+    public String getKtypeid() {
+        return ktypeid;
+    }
+
+    public void setKtypeid(String ktypeid) {
+        this.ktypeid = ktypeid;
+    }
+
+    public String getVchcode() {
+        return Vchcode;
+    }
+
+    public void setVchcode(String vchcode) {
+        Vchcode = vchcode;
+    }
 
     public String getAtype() {
         return atype;
@@ -129,5 +151,37 @@ public class DetailedBillDraftResponse implements ResponseBean {
 
     public void setVchtype(String vchtype) {
         Vchtype = vchtype;
+    }
+
+    public String getDlyOrder() {
+        return DlyOrder;
+    }
+
+    public void setDlyOrder(String dlyOrder) {
+        DlyOrder = dlyOrder;
+    }
+
+    public String getBtypeid() {
+        return btypeid;
+    }
+
+    public void setBtypeid(String btypeid) {
+        this.btypeid = btypeid;
+    }
+
+    public String getPtypeid() {
+        return Ptypeid;
+    }
+
+    public void setPtypeid(String ptypeid) {
+        Ptypeid = ptypeid;
+    }
+
+    public String getEtypeid() {
+        return etypeid;
+    }
+
+    public void setEtypeid(String etypeid) {
+        this.etypeid = etypeid;
     }
 }

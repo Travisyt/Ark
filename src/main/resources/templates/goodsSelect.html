@@ -3,84 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <title>商品选择</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap/bootstrap.min.css" rel="stylesheet">
     <link href="css/elements.css" rel="stylesheet">
     <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
-    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="bootstrap/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/echarts.js"></script>
     <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript" src="js/commodityUtils.js"></script>
 </head>
 <body>
 <div th:fragment="goodsselect">
+
     <div class="modal fade" id="goodsSelect" tabindex="-1" role="dialog" aria-labelledby="goodsSelectLabel"
          aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel">商品列表</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <div>
+                        当前目录：{{ commodityDir() }}
+                    </div>
                 </div>
 
                 <div class="modal-body">
-                    <div style="padding: 10px 10px 10px 10px;border: solid 3px #000000">
+                    <div style="padding: 0 10px 5px 10px">
                         <div class="form-group">
-                            显示
                             <div class="checkbox">
-                                <label>
-                                    <input type="checkbox">商品名称
-                                </label>
-                                <label>
-                                    <input type="checkbox">库存
-                                </label>
-                                <label>
-                                    <input type="checkbox">月销量
-                                </label>
+
                             </div>
                         </div>
                     </div>
-                    <div style="padding: 10px 10px 10px 10px;border: solid 3px #000000">
-                        <table class="table table-hover">
-                            <thead><tr>
+
+                    <div style="padding: 10px 10px 10px 10px">
+                        <table class="table table-hover table-striped">
+                            <thead id="goodsSelectTableHead"
+                                   style="border-top: solid 3px black;border-bottom: solid 3px black">
+                            <tr>
                                 <th>商品名称</th>
-                                <th>库存</th>
-                                <th>月销量</th>
-                            </tr></thead>
+                                <th>基本单位</th>
+                                <th>库存量</th>
+                                <th style="display: none">预售价1</th>
+                                <th style="display: none">预售价2</th>
+                                <th style="display: none">零售价</th>
+                                <th style="display: none">单位换算</th>
+                            </tr>
+                            </thead>
                             <tbody>
-                                <tr>
-                                    <td>A商品</td><td>21</td><td>120</td>
-                                </tr>
-                                <tr>
-                                    <td>B商品</td><td>22</td><td>120</td>
-                                </tr>
-                                <tr>
-                                    <td>C商品</td><td>15</td><td>1260</td>
-                                </tr>
-                                <tr>
-                                    <td>D商品</td><td>53</td><td>620</td>
-                                </tr>
-                                <tr>
-                                    <td>E商品</td><td>71</td><td>160</td>
-                                </tr>
-                                <tr>
-                                    <td>F商品</td><td>23</td><td>50</td>
-                                </tr>
+                            <tr v-for="commodity in commodityList"
+                                v-on:dblclick="commodityChangeDirectory(commodity)">
+                                <td>{{ commodity.pfullname }}</td>
+                                <td>{{ getBaseUnit(commodity.ptypeid) }}</td>
+                                <td>{{ unitFormat(commodity) }}</td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button id="goodsSelectConfirm" type="button" class="btn btn-primary">确认</button>
+                    <a href="#goodsSelectTableHead" style="display: none">
+                        <span id="goodsSelectBackTop"></span>
+                    </a>
+                    <button id="goodsSelectBack" type="button" class="btn btn-info btn-lg" v-on:click="backSpace()">返回
+                    </button>
+                    <button id="goodsSelectClose" type="button" class="btn btn-default btn-lg" data-dismiss="modal">关闭
+                    </button>
+                    <button id="goodsSelectConfirm" type="button" class="btn btn-primary btn-lg">确认</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal -->
     </div>
     <script>
-        // 模态框
-        $("#goodsSearch").click(function () {
 
+        var goodsSelect = new Vue({
+            el: '#goodsSelect',
+            data: {
+                commodityList: [],
+                orderBy: 'RowIndex',
+                commodityUnitMap: {},
+                actionStack: [
+                    ['00000', '库存商品']
+                ]
+            },
+            computed: { },
+            methods: {
+                commodityDir: function () {
+                    let dir = '';
+                    $.each(this.actionStack, function (k, v) {
+                        dir = dir.concat(v[1]).concat(' /');
+                    });
+                    return dir;
+                },
+                backSpace: function () {
+                    if (goodsSelect.$data.actionStack.length !== 1) {
+                        goodsSelect.$data.actionStack.pop();
+                        let last = goodsSelect.$data.actionStack.pop();
+                        refreshCommodityList({ParId: last[0], pfullname: last[1]});
+                    }
+                },
+                commodityChangeDirectory: function (commodity) {
+                    if (typeof commodity === 'undefined') {
+                        refreshCommodityList();
+                    } else {
+                        if (commodity.psonnum === '0') {
+                            selectGoods([commodity]);
+                        } else {
+                            refreshCommodityList({ParId: commodity.ptypeid, pfullname: commodity.pfullname});
+                        }
+                    }
+                },
+                unitFormat: function (commodity) {
+                    if (commodity.psonnum !== '0') {
+                        return '';
+                    } else {
+                        return fUnitFormat(commodity, goodsSelect.$data.commodityUnitMap[commodity.ptypeid]);
+                    }
+                },
+                getBaseUnit: function (ptypeid) {
+                    if (typeof goodsSelect.$data.commodityUnitMap[ptypeid] === 'undefined') {
+                        return '-';
+                    } else {
+                        return goodsSelect.$data.commodityUnitMap[ptypeid].baseUnit;
+                    }
+                }
+            }
         });
+
+        function refreshCommodityList(param = {openFlag: true}) {
+            if (param.hasOwnProperty('openFlag')) {
+                param = {ParId: goodsSelect.$data.actionStack[goodsSelect.$data.actionStack.length - 1][0]}
+            } else {
+                goodsSelect.$data.actionStack.push([param.ParId, param.pfullname]);
+            }
+            $('#goodsSelectBackTop').click();
+            $('.modal-content').addClass("depth-of-focus");
+            $.post('/basicInfo/getCommodityUnitMap', param, function (res) {
+                goodsSelect.$data.commodityUnitMap = res.data;
+            });
+            $.post('/commodity/getBriefCommodityList', param, function (res) {
+                goodsSelect.$data.commodityList = res.data;
+                $('.modal-content').removeClass("depth-of-focus");
+            });
+        }
+
+        function selectGoods(goods = []) {
+            sessionStorage.setItem('selectedGoodsList', JSON.stringify(goods));
+            eval(sessionStorage.getItem('goodsSelectFlagStatement'));
+            $('#goodsSelectClose').click();
+        }
+
+
     </script>
 </div>
 </body>

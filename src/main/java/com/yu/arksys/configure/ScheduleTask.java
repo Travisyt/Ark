@@ -14,6 +14,9 @@ public class ScheduleTask {
     public void refreshCurrentDate() {
         Date date = new Date(System.currentTimeMillis() + 3600000);
         SQLUtils.refreshCurrentDate(date);
+        System.out.println("<================ Schedule Task ================>");
+        System.out.println("日期已经更新为：" + date + " 。");
+        System.out.println("<================ ------------- ================>");
     }
 
 }

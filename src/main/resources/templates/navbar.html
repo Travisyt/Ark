@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <title>导航条</title>
 
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap/bootstrap.min.css" rel="stylesheet">
     <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
-    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="bootstrap/bootstrap.min.js"></script>
 </head>
 <body>
 <div th:fragment="navbar">
@@ -46,7 +46,7 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                            aria-expanded="false">进货管理 <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="javascript:changeContentPage('dataView', 'dataView')">数据分析</a></li>
+                            <li><a href="javascript:changeContentPage('dataView')">数据分析</a></li>
                             <li><a href="javascript:changeContentPage('order', 'general-order')">订单列表</a></li>
                         </ul>
                     </li>
@@ -54,8 +54,8 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                            aria-expanded="false">监控 <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="javascript:changeContentPage('orderDrafts', 'orderDrafts')">实时销售草稿</a></li>
-                            <li><a href="javascript:changeContentPage('actionWatch', 'actionWatch')">操作日志</a></li>
+                            <li><a href="javascript:changeContentPage('orderDrafts')">实时销售草稿</a></li>
+                            <li><a href="javascript:changeContentPage('actionWatch')">操作日志</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -95,9 +95,9 @@
             }, 'json')
         });
 
-        function changeContentPage(page, content) {
+        function changeContentPage(page) {
             sessionStorage.clear();
-            window.location.href = '/main?page=' + page + '&content=' + content;
+            window.location.href = "/main?page=" + page + "&content=" + page;
         }
     </script>
 </div>

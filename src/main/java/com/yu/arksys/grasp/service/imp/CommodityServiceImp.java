@@ -1,28 +1,36 @@
 package com.yu.arksys.grasp.service.imp;
 
 import com.yu.arksys.bean.api.ResponseBean;
-import com.yu.arksys.bean.raw.CommodityUnit;
-import com.yu.arksys.bean.raw.RawCommodityUnit;
+import com.yu.arksys.bean.raw.CommodityBrief;
+import com.yu.arksys.bean.raw.CommodityOfDataView;
+import com.yu.arksys.bean.raw.StockAlert;
+import com.yu.arksys.bean.result.CommodityUnit;
+import com.yu.arksys.bean.raw.CommodityUnitRaw;
 import com.yu.arksys.grasp.dao.CommodityDao;
 import com.yu.arksys.grasp.dao.CommodityUnitDao;
+import com.yu.arksys.grasp.service.BeanMappingService;
 import com.yu.arksys.grasp.service.CommodityService;
+import com.yu.arksys.utils.DataInfo;
 import com.yu.arksys.utils.SQLUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Service
-public class CommodityServiceImp implements CommodityService {
+public class CommodityServiceImp implements
+        CommodityService {
 
     @Autowired
     CommodityDao commodityDao;
 
     @Autowired
     CommodityUnitDao commodityUnitDao;
+
+    @Autowired
+    BeanMappingService beanMappingService;
 
     //==================== 信息查询 =======================//
     @Override
@@ -48,6 +56,56 @@ public class CommodityServiceImp implements CommodityService {
     @Override
     public List<ResponseBean> getFuzzySearchCommodityListByAll(String keyWord) {
         return null;
+    }
+
+    @Override
+    public List<CommodityBrief> getBriefCommodityListByParentId(String parentId, String ktypeid, String orderBy) {
+        List<CommodityBrief> commodityBriefs;
+        if (parentId == null || parentId.equals("")) {
+            parentId = "00000";
+        }
+        if (orderBy == null || orderBy.equals("")) {
+            orderBy = "RowIndex";
+        }
+        if (ktypeid == null || ktypeid.equals("") || ktypeid.equals("00000")) {
+            commodityBriefs = commodityDao.getBriefCommodityListNoStock(parentId, orderBy);
+        } else {
+            commodityBriefs = commodityDao.getBriefCommodityList(parentId, ktypeid, orderBy);
+        }
+        return commodityBriefs;
+    }
+
+    @Override
+    public List<CommodityOfDataView> getDataViewCommodityListByParentId(String parentId, String ktypeid, String orderBy) {
+        return null;
+    }
+
+    @Override
+    public List<ResponseBean> getStockAlertList() {
+        List<StockAlert> stockAlerts = commodityDao.getStockAlertsList();
+        return beanMappingService.mapBean(stockAlerts, DataInfo.stockAlertMapTables());
+    }
+
+    @Override
+    public boolean insertStockAlert(String ptypeid, String ktypeid, String minimum) {
+        try {
+            commodityDao.addStockAlert(ptypeid, ktypeid, minimum);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean updateStockAlert(String ptypeid, String ktypeid, String minimum) {
+        try {
+            commodityDao.modifyStockAlert(ptypeid, ktypeid, minimum);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     //==================== 价格查询 =======================//
@@ -87,11 +145,24 @@ public class CommodityServiceImp implements CommodityService {
     }
 
     @Override
+    public Map<String, CommodityUnit> getMergedUnitMapByParId(String ParId) {
+        List<CommodityUnitRaw> units = commodityUnitDao.getRawCommodityUnitsByParId(ParId);
+        Map<String, CommodityUnit> result = mergeCommodityUnit(units);
+        if (result.isEmpty()) throw new RuntimeException("商品单位获取失败");
+        return result;
+    }
+
+    @Override
     public Map<String, CommodityUnit> getMergedUnitMapWithConditions(Map<String, String> conditions) {
         String conditionString = SQLUtils.getConditionString(conditions);
-        List<RawCommodityUnit> units = commodityUnitDao.getRawCommodityUnitsWithConditions(conditionString);
-        Map<String, CommodityUnit> result = new HashMap<>();
+        List<CommodityUnitRaw> units = commodityUnitDao.getRawCommodityUnitsWithConditions(conditionString);
+        Map<String, CommodityUnit> result = mergeCommodityUnit(units);
+        if (result.isEmpty()) throw new RuntimeException("商品单位获取失败");
+        return result;
+    }
 
+    protected Map<String, CommodityUnit> mergeCommodityUnit(List<CommodityUnitRaw> units) {
+        Map<String, CommodityUnit> result = new HashMap<>();
         units.forEach(unit -> {
             String id = unit.getPTypeId();
             String unit1 = "";
@@ -109,7 +180,6 @@ public class CommodityServiceImp implements CommodityService {
             }
             result.put(id, commodityUnit);
         });
-        if (result.isEmpty()) throw new RuntimeException("商品单位获取失败");
         return result;
     }
 

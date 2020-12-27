@@ -1,12 +1,13 @@
 package com.yu.arksys.bean.raw;
 
+import com.yu.arksys.bean.api.Distinguishable;
 import com.yu.arksys.bean.api.MappableBean;
 import com.yu.arksys.bean.api.ResponseBean;
 import com.yu.arksys.bean.response.DetailedBillDraftResponse;
 
 import java.util.Map;
 
-public class DetailedBillDraft implements MappableBean {
+public class DetailedBillDraft implements MappableBean, Distinguishable {
 
     public DetailedBillDraft() {
     }
@@ -23,6 +24,21 @@ public class DetailedBillDraft implements MappableBean {
         this.total = total;
         this.date = date;
         Vchtype = vchtype;
+    }
+
+    public DetailedBillDraft(String vchcode, String atypeid, String btypeid, String etypeid, String ktypeid, String ptypeId, double qty, double price, double total, String date, String vchtype, String dlyOrder) {
+        Vchcode = vchcode;
+        this.atypeid = atypeid;
+        this.btypeid = btypeid;
+        this.etypeid = etypeid;
+        this.ktypeid = ktypeid;
+        PtypeId = ptypeId;
+        Qty = qty;
+        this.price = price;
+        this.total = total;
+        this.date = date;
+        Vchtype = vchtype;
+        DlyOrder = dlyOrder;
     }
 
     private String Vchcode;
@@ -46,6 +62,16 @@ public class DetailedBillDraft implements MappableBean {
     private String date;
 
     private String Vchtype;
+
+    private String DlyOrder;
+
+    public String getDlyOrder() {
+        return DlyOrder;
+    }
+
+    public void setDlyOrder(String dlyOrder) {
+        DlyOrder = dlyOrder;
+    }
 
     public String getVchcode() {
         return Vchcode;
@@ -156,8 +182,17 @@ public class DetailedBillDraft implements MappableBean {
                 this.price,
                 this.total,
                 this.date,
-                mapper.get("vchtype").get(this.Vchtype)
+                mapper.get("vchtype").get(this.Vchtype),
+                this.DlyOrder,
+                this.btypeid,
+                this.PtypeId,
+                this.etypeid,
+                this.ktypeid
                 );
     }
 
+    @Override
+    public String getDistinguishCode() {
+        return this.PtypeId + this.ktypeid + this.Qty + this.price;
+    }
 }

@@ -2,12 +2,14 @@ package com.yu.arksys.controller;
 
 import com.yu.arksys.bean.raw.EmployeeRecord;
 import com.yu.arksys.bean.api.ResponseBean;
+import com.yu.arksys.grasp.dao.BusinessRelatedUnitDao;
 import com.yu.arksys.grasp.dao.EmployeeDao;
 import com.yu.arksys.grasp.service.ActionLogService;
 import com.yu.arksys.grasp.service.DetailedBillDraftService;
 import com.yu.arksys.service.api.MappingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -25,17 +27,14 @@ public class TestController {
      * @return json
      */
     @RequestMapping("/test")
-    @ResponseBody
-    public Map<String, List<Map<String, String>>> test() {
-        System.out.println(mappingService.getFullyMapping());
-        return mappingService.getFullyMapping();
+    public ModelAndView test() {
+        return new ModelAndView("test");
     }
 
     @RequestMapping("/order")
     public ModelAndView order() {
         return new ModelAndView("main");
     }
-
 
 
     /**

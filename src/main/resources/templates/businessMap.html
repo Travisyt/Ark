@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>客户地址地图</title>
+    <link href="bootstrap/bootstrap.min.css" rel="stylesheet"/>
+    <link href="css/elements.css" rel="stylesheet">
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <script src="bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/echarts.js"></script>
+    <script type="text/javascript" src="js/vue.js"></script>
+</head>
+<script charset="utf-8" src="https://map.qq.com/api/gljs?v=1.exp&key=OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77"></script>
+<style type="text/css">
+    html,
+    body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    #container {
+        width: 100%;
+        height: 100%;
+    }
+</style>
+
+<body>
+<div id="mapNavi" style="position: absolute;top: 0;width: 100%;height: 40px;z-index: 200;">
+    <div id="mapLogo" style="display: inline-block;background-color: #d4d4d4;width: 120px;height: 100%;padding-top: 11px;padding-left: 20px;border-radius: 0 0 20px 0;box-shadow: 0 0 5px #555555;">
+        单位地址图
+    </div>
+</div>
+<div id="container"></div>
+
+<script>
+    $(window).ready(function () {
+        this.geometries = [];
+        let date = sessionStorage.getItem('businessMapDate');
+        let currentEmployee = JSON.parse(sessionStorage.getItem('currentEmployee'));
+
+    });
+
+    var center = new TMap.LatLng(32.217778026264256, 120.0503263015747); //设置中心点坐标
+    //初始化地图
+    var map = new TMap.Map("container", {
+        center: center
+    });
+
+    label = new TMap.MultiLabel({
+        id: 'label-layer',
+        map: map,
+        styles: {
+            'label': new TMap.LabelStyle({
+                'color': '#333', //颜色属性,
+                'size': 22, //文字大小属性
+                'offset': {
+                    x: 0,
+                    y: 0
+                }, //文字偏移属性单位为像素
+                'angle': 0, //文字旋转属性
+                'alignment': 'center', //文字水平对齐属性
+                'verticalAlignment': 'middle' //文字垂直对齐属性
+            })
+        },
+        geometries: [{
+            'id': 'label',
+            'styleId': 'label',
+            'position': center,
+            'content': '总仓库',
+        },
+            {
+                'id': 'label1',
+                'styleId': 'label',
+                'position': new TMap.LatLng(32.19539486838813, 120.02495431721658),
+                'content': '门市',
+            }
+        ]
+    });
+
+    //初始化marker
+    var marker = new TMap.MultiMarker({
+        id: "marker-layer", //图层id
+        map: map,
+        styles: { //点标注的相关样式
+            "marker": new TMap.MarkerStyle({
+                "width": 25,
+                "height": 35,
+                "anchor": {
+                    x: 16,
+                    y: 32
+                },
+                "src": "https://mapapi.qq.com/web/lbs/javascriptGL/demo/img/markerDefault.png"
+            })
+        },
+        geometries: [{ //点标注数据数组
+            "id": "demo",
+            "styleId": "marker",
+            "position": new TMap.LatLng(39.984104, 116.307503),
+            "properties": {
+                "title": "marker"
+            }
+        },
+            {
+                "id": "demo1",
+                "styleId": "marker",
+                "position": new TMap.LatLng(39.986104, 116.309503),
+                "properties": {
+                    "title": "marker1"
+                }
+            }
+        ]
+    });
+</script>
+</body>
+</html>

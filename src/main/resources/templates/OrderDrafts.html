@@ -3,47 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <title>orderDrafts</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap/bootstrap.min.css" rel="stylesheet">
     <link href="css/elements.css" rel="stylesheet">
-    <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
-    <script type="text/javascript" src="js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="js/echarts.js"></script>
-    <script type="text/javascript" src="js/vue.js"></script>
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <script src="bootstrap/bootstrap.min.js"></script>
+    <script src="js/vue.js"></script>
+    <script src="js/commodityUtils.js"></script>
 </head>
 <body>
 <div th:fragment="orderDrafts">
     <div class="container-fluid" id="orderDraftsFrame">
 
         <div class="row" id="employeeSelection">
-            <div class="col-md-3" style="height: 50px; padding: 20px 0 0 20px;">
+            <div class="col-md-2" style="height: 50px; padding: 20px 0 0 20px;">
                 <span>经手人： </span>
                 <span class="dropdown">
                     <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" id="employee"
                             @click="getEmployees()">
                         {{ currentEmployee }}  <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="employee" style="max-height: 400px;overflow-y: scroll;overscroll-behavior: contain">
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="employee"
+                        style="max-height: 400px;overflow-y: scroll;overscroll-behavior: contain">
                         <li role="presentation" v-for="employee in employees">
                             <a @click="changeInfos(employee)">{{ employee.name }}</a>
                         </li>
                     </ul>
                 </span>
             </div>
-            <div class="col-md-3" style="height: 50px; padding: 20px 0 0 20px;">
-                <span>客户: </span>
-                <span class="dropdown">
-                    <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" id="btype"
-                            @click="getBtype()">
-                        {{ currentBtypeName }}  <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="btype" style="max-height: 400px;overflow-y: scroll;overscroll-behavior: contain">
-                        <li role="presentation" v-for="btype in btypes">
-                            <a @click="changeBtype(btype)">{{ btype.name }}</a>
-                        </li>
-                    </ul>
-                </span>
+            <!--            将列表中商品全部准备发出            -->
+            <div class="col-md-2" style="height: 50px; padding: 15px 0 0 20px;">
+                <button type="button" class="btn btn-info" onclick="checkSaleDraft()"
+                        style="width: 100%;font-size: large;font-weight: bold">更新草稿
+                </button>
             </div>
-            <div id="loading" class="col-md-3 pull-right" style="height: 50px; padding: 20px 0 0 0;display: none;">
+            <div class="col-md-2" style="height: 50px; padding: 15px 0 0 20px;">
+                <button type="button" class="btn btn-primary" onclick="doPrint()"
+                        style="width: 100%;font-size: large;font-weight: bold">打印草稿
+                </button>
+            </div>
+
+            <div class="col-md-2" style="height: 50px; padding: 15px 0 0 20px;">
+                <button type="button" class="btn btn-danger" onclick="unsetModified()"
+                        style="width: 100%;font-size: large;font-weight: bold">清除已打印的草稿
+                </button>
+            </div>
+            <div id="loading" class="col-md-3 pull-right"
+                 style="height: 50px; padding: 20px 0 0 0;display: none;z-index: 999">
                 <!--        loading        -->
                 <span class="loading-small" id="loading-icon">
                     <span></span><span></span><span></span><span></span><span></span>
@@ -51,86 +56,164 @@
             </div>
         </div>
         <hr/>
-        <div class="row" id="saleDrafts">
-            <div class="col-md-6" style="border-right: 2px solid #9d9d9d;">
-                <div>
-                    <table class="table table-hover table-striped" style="table-layout: fixed">
+        <div id="saleDrafts">
+            <div class="row">
+                <div class="col-md-4" style="border-right: 5px solid #9d9d9d;border-left: 5px solid #9d9d9d;">
+                    <h3>目前草稿清单:</h3>
+                    <div>
+                        <table class="table table-hover table-striped" style="table-layout: fixed">
+                            <thead>
+                            <tr>
+                                <th style="width: 20%">客户</th>
+                                <th style="width: 15%">仓库</th>
+                                <th style="width: 65%">商品名称</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div style="overflow-y: scroll; max-height: 75vh;overscroll-behavior: contain">
+                        <table class="table table-hover table-striped" style="table-layout: fixed">
+                            <tbody>
+                            <tr v-for="saleDraft in saleDrafts">
+                                <td style="width: 20%;font-size: large">{{ saleDraft.btype }}</td>
+                                <td style="width: 15%">{{ saleDraft.ktype }}</td>
+                                <td style="width: 65%;font-weight: bold;font-size: large">{{ saleDraft.ptype }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="draftTable" class="col-md-8">
+                    <h3>草稿更新进度(绿色背景: 新增草稿。 红色删除线: 已删除草稿):</h3>
+                    <div>
+                        <table class="table table-hover table-striped" style="table-layout: fixed">
+                            <thead>
+                            <tr>
+                                <th style="width: 15%">客户</th>
+                                <th style="width: 10%">仓库</th>
+                                <th style="width: 45%">商品名称</th>
+                                <th style="width: 20%">数量</th>
+                                <th style="width: 9%">单价</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div style="overflow-y: scroll; max-height: 75vh;overscroll-behavior: contain">
+                        <table class="table table-hover" style="table-layout: fixed">
+                            <tbody>
+                            <tr v-for="saleDraft in checkedSaleDrafts"
+                                v-bind:class="{'deleted-mark': markDeleted(saleDraft), 'modified-mark': markModified(saleDraft)}">
+                                <td style="width: 15%;font-size: large">{{ saleDraft.btype }}</td>
+                                <td style="width: 10%">{{ saleDraft.ktype }}</td>
+                                <td style="width: 45%;font-weight: bold;font-size: large">{{ saleDraft.ptype }}</td>
+                                <td style="width: 20%;font-weight: bold;font-size: large">{{ unitFormat(saleDraft) }}
+                                    ({{
+                                    parseInt(saleDraft.qty) }}{{ getBaseUnit(saleDraft.ptypeid) }})
+                                </td>
+                                <td style="width: 9%;font-weight: bold;font-size: large">{{ saleDraft.price }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <hr/>
+            </div>
+            <div class="row" style="display: none">
+                <iframe name="printFrame" src="/printPage" style="width: 95vw; height: 100px"></iframe>
+            </div>
+            <div class="row">
+                <!--            打印区域                -->
+                <div id="printArea" style="display: none">
+                    <h4>经手人： {{ currentEmployee() }}</h4>
+                    <table class="table table-hover table-condensed" style="table-layout: fixed">
                         <thead>
                         <tr>
                             <th style="width: 15%">客户</th>
+                            <th style="width: 10%">仓库</th>
                             <th style="width: 45%">商品名称</th>
                             <th style="width: 20%">数量</th>
-                            <th style="width: 20%">单价</th>
+                            <th style="width: 9%">单价</th>
                         </tr>
                         </thead>
-                    </table>
-                </div>
-                <div style="overflow-y: scroll; max-height: 600px;overscroll-behavior: contain">
-                    <table class="table table-hover table-striped" style="table-layout: fixed">
-<!--                        <thead>-->
-<!--                        <tr>-->
-<!--                            <th>客户</th>-->
-<!--                            <th>商品名称</th>-->
-<!--                            <th>数量</th>-->
-<!--                            <th>单价</th>-->
-<!--                        </tr>-->
-<!--                        </thead>-->
                         <tbody>
-                        <tr v-for="saleDraft in saleDrafts">
-                            <td style="width: 15%">{{ saleDraft.btype }}</td>
-                            <td style="width: 45%">{{ saleDraft.ptype }}</td>
-                            <td style="width: 20%">{{ saleDraft.qty }}</td>
-                            <td style="width: 20%">{{ saleDraft.price }}</td>
+                        <tr v-for="saleDraft in modifiedDrafts()"
+                            v-bind:class="{'deleted-mark': markDeleted(saleDraft)}"
+                            style="background-color: rgba(35,174,54,0.35)">
+                            <td style="width: 15%;font-size: large">{{ saleDraft.btype }}</td>
+                            <td style="width: 10%">{{ saleDraft.ktype }}</td>
+                            <td style="width: 45%;font-weight: bold;font-size: large">{{ saleDraft.ptype }}</td>
+                            <td style="width: 20%;font-weight: bold;font-size: large">{{ unitFormat(saleDraft) }} ({{
+                                parseInt(saleDraft.qty) }}{{ getBaseUnit(saleDraft.ptypeid) }})
+                            </td>
+                            <td style="width: 9%;font-weight: bold;font-size: large">{{ saleDraft.price }}</td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-            <div class="col-md-6">
-                <table class="table table-hover table-striped">
-                    <thead>
-                    <tr>
-                        <th>商品名称</th>
-                        <th>数量</th>
-                        <th>单价</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="saleDraft in saleDraftsWithBtype">
-                        <td>{{ saleDraft.ptype }}</td>
-                        <td>{{ saleDraft.qty }}</td>
-                        <td>{{ saleDraft.price }}</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
         </div>
+    </div>
 
+    <div class="modal fade" id="alert" tabindex="-1" role="dialog" aria-labelledby="alertLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <div>
+                        注意
+                    </div>
+                </div>
+
+                <div class="modal-body">
+                    <div style="padding: 10px 10px 10px 10px">
+                        <h1>{{ info }}</h1>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button id="alertCancel" type="button" class="btn btn-primary btn-lg" data-dismiss="modal">取消
+                    </button>
+                    <button id="alertConfirm" type="button" class="btn btn-danger btn-lg" onclick="modalConfirm()">确认</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
     </div>
 
 
     <script type="text/javascript" src="js/utils.js"></script>
 
     <script>
-        // Vue Object
+        $('#goodsSelect').on('shown.bs.modal', function () {
+
+        });
+        var modalAlert = new Vue({
+            el: '#alert',
+            data: {
+                info: '',
+                isConfirm: false
+            }
+        });
+
         var employeeSelection = new Vue({
             el: "#employeeSelection",
             data: {
                 employees: [{}],
-                currentEmployee: '选择经手人...',
-                btypes: [{}],
-                currentBtypeName: '选择客户...',
-                currentBtypeId: 0
+                currentEmployee: '选择经手人...'
             },
             methods: {
                 changeInfos: function (employee) {
-                    self.autoRefresh ? self.clearInterval(self.autoRefresh) : true;
-                    this.currentEmployee = employee.name;
-                    this.currentBtypeName = '选择客户...';
-                    refreshData({etypeid: employee.id});
-                    self.autoRefresh = self.setInterval(function () {
+                    // self.autoRefresh ? self.clearInterval(self.autoRefresh) : true;
+                    if (employee !== '选择经手人...') {
+                        this.currentEmployee = employee.name;
                         refreshData({etypeid: employee.id});
-                    }, 5000);
+                    }
+
+                    // self.autoRefresh = self.setInterval(function () {
+                    //     refreshData({etypeid: employee.id});
+                    // }, 5000);
                 },
                 getEmployees: function () {
                     $.post('/getEmployeeMap', function (res) {
@@ -140,24 +223,6 @@
                             errHandler('获取信息失败');
                         }
                     }, 'json');
-                },
-                getBtype: function () {
-                    if (!sessionStorage.getItem('etypeid')) {
-                        errHandler('先选择经手人');
-                    }
-                    let params = { etypeid: sessionStorage.getItem('etypeid') };
-                    $.post('/getBtypeMap', params, function (res) {
-                        if (res.status === '200') {
-                            employeeSelection.$data.btypes = res.data;
-                        } else {
-                            errHandler('获取信息失败');
-                        }
-                    }, 'json');
-                },
-                changeBtype: function (btype) {
-                    this.currentBtypeName = btype.name;
-                    this.currentBtypeId = btype.id;
-                    refreshData();
                 }
             }
         });
@@ -167,21 +232,46 @@
             data: {
                 saleDraftsChanged: false,
                 saleDrafts: [],
-                saleDraftsWithBtype: []
+                commodityUnitMap: {},
+                checkedSaleDrafts: []
             },
-            computed: {}
+            computed: {},
+            methods: {
+                currentEmployee: function () {
+                    return employeeSelection.$data.currentEmployee;
+                },
+                statusAction: function (params) {
+                },
+                unitFormat: function (commodity) {
+                    return fUnitFormat(commodity, saleDrafts.$data.commodityUnitMap[commodity.ptypeid]);
+                },
+                getBaseUnit: function (ptypeid) {
+                    if (typeof saleDrafts.$data.commodityUnitMap[ptypeid] === 'undefined') {
+                        return '-';
+                    } else {
+                        return saleDrafts.$data.commodityUnitMap[ptypeid].baseUnit;
+                    }
+                },
+                markDeleted: function (saleDraft) {
+                    return saleDraft.deleted === '1';
+                },
+                markModified: function (saleDraft) {
+                    return saleDraft.modified === '1';
+                },
+                modifiedDrafts: function () {
+                    let modifiedDrafts = [];
+                    let that = this;
+                    $.each(that.checkedSaleDrafts, function (key, val) {
+                        if (val["modified"] === "1") {
+                            modifiedDrafts.push(val);
+                        }
+                    });
+                    return modifiedDrafts;
+                }
+            }
         });
 
         saleDrafts.$watch('saleDraftsChanged', function () {
-            saleDrafts.$data.saleDraftsWithBtype = [];
-            let res = [];
-            console.log('-------- foreach');
-            saleDrafts.$data.saleDrafts.forEach(function (item) {
-                if (item.btype === employeeSelection.$data.currentBtypeName) {
-                    res.push(item);
-                }
-            });
-            saleDrafts.$data.saleDraftsWithBtype = res;
         });
 
         // functions
@@ -189,11 +279,48 @@
         function loading(isLoading) {
             if (isLoading) {
                 $("#loading").css('display', 'inline');
+                $("#override").css('display', 'inline');
             } else {
                 setTimeout(function () {
                     $("#loading").css('display', 'none');
-                }, 1300);
+                    $("#override").css('display', 'none');
+                }, 500);
             }
+        }
+
+        function modalConfirm() {
+            $.post('/saleDraft/unsetModified', {etypeid: sessionStorage.getItem('etypeid')}, function (res) {
+                if (res.status !== '200') {
+                    alert("更新草稿状态失败，已打印草稿将不会清除。")
+                } else {
+                    refreshData({});
+                }
+                $('#alert').modal('hide');
+            });
+        }
+
+        function unsetModified() {
+            modalAlert.$data.info = '请确认清除更新草稿前已经打印。';
+            $('#alert').modal('show');
+        }
+
+        function doPrint() {
+            printFrame.document.getElementById("printArea").innerHTML = document.getElementById("printArea").innerHTML;
+            printFrame.document.getElementsByTagName('body')[0].style.zoom = 0.7;
+            printFrame.window.print(); //调用浏览器的打印功能打印指定区域
+        }
+
+        function checkSaleDraft() {
+            loading(true);
+            $.post('/saleDraft/saleDraftCheck', {etypeid: sessionStorage.getItem('etypeid')}, function (res) {
+                if (res.status === '200') {
+                    refreshData({});
+                    loading(false);
+                } else {
+                    loading(false);
+                    errHandler('信息获取失败');
+                }
+            });
         }
 
         function draftInfoChanged(draftInfos, callback = function () {
@@ -217,19 +344,32 @@
                 }
             });
             loading(true);
-            $.post('/getPersonalCurrentSaleDraft', postParams, function (res) {
-                if (res.status === '200') {
-                    draftInfoChanged(res.data);
-                    loading(false);
-                } else {
-                    loading(false);
-                    errHandler('信息获取失败');
-                }
-            }, 'json');
+            $.post('/basicInfo/getCommodityUnitMap', {}, function (res) {
+                saleDrafts.$data.commodityUnitMap = res.data;
+                $.post('/getPersonalCurrentSaleDraft', postParams, function (res) {
+                    if (res.status === '200') {
+                        draftInfoChanged(res.data);
+                        $.post('/saleDraft/getCheckedSaleDrafts', postParams, function (res1) {
+                            if (res.status === '200') {
+                                saleDrafts.$data.checkedSaleDrafts = res1.data;
+                                loading(false);
+                            } else {
+                                loading(false);
+                                errHandler('信息获取失败');
+                            }
+                        });
+                    } else {
+                        loading(false);
+                        errHandler('信息获取失败');
+                    }
+                }, 'json');
+            });
         }
 
     </script>
-
+    <!--    景深蒙版    -->
+    <div class="depth-of-focus" id="override"
+         style="z-index: 998;background-color: #cccccc;opacity: 50%;position: absolute;height: 100%;width: 100%;top: 0;left: 0;display: none"></div>
 </div>
 </body>
 </html>
