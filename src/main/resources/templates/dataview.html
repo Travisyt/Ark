@@ -78,7 +78,7 @@
                         </select>
                     </div>
                     <div style="margin-top: 40px;border: solid 3px grey;border-radius: 8px">
-                        <button type="button" class="btn btn-block">确认</button>
+                        <button type="button" class="btn btn-block" onclick="acceptOption()">确认</button>
                     </div>
 
                 </div>
@@ -147,8 +147,8 @@
                 period: '',
                 goodsId: '',
                 goods: {},
-                chartWidth: '90',
-                chartHeight: '500',
+                chartWidth: '100',
+                chartHeight: '700',
                 selectedFlag: false
             },
             computed: {
@@ -179,22 +179,28 @@
                     },
                     tooltip: {},
                     legend: {
-                        data: ['销量', 'sale']
+                        data: ['销量']
                     },
                     xAxis: {
                         data: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月"]
                     },
-                    yAxis: {},
+                    yAxis: {
+                        type: 'value',
+                    },
                     series: [
                         {
                             name: '销量',
                             type: 'bar',
-                            data: [5, 20, 36, 16, 10, 20, 26, 32, 40]
-                        },
-                        {
-                            name: 'sale',
-                            type: 'bar',
-                            data: [10, 20, 13, 24, 15, 26, 5, 35, 22]
+                            data: [5, 20, 36, 16, 10, 20, 26, 32, 40],
+                            label: {
+                                normal: {
+                                    show: true,
+                                    fontWeight: 'bold',
+                                    formatter: function (params) {
+                                        params.data
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -208,6 +214,61 @@
         data.$watch('dataChanged', function (nval) {
             chart_1.setOption(data.$data.option);
         });
+
+        function acceptOption() {
+            $.post('/dataview/getSalesDataPermonth', {ptypeid: optionV.$data.goodsId}, function (res) {
+                if (res.status === "200") {
+                    let datar = res.data;
+                    let xaxis = [], yaxis = [], series = [];
+                    datar.sort(function (a, b) {
+                        return parseInt(a.month) - parseInt(b.month);
+                    });
+                    $.each(datar, function (key, value) {
+                        xaxis.push(value.month.toString().concat('月'));
+                        series.push(value.totalnum);
+                    });
+                    $.post('/basicInfo/getSingleCommodityUnitMap', {ptypeid: optionV.$data.goodsId}, function (res1) {
+                        let option = {
+                            title: {
+                                text: datar[0].pfullname
+                            },
+                            tooltip: {},
+                            legend: {
+                                data: ['销量']
+                            },
+                            xAxis: {
+                                data: xaxis
+                            },
+                            series: [
+                                {
+                                    name: '销量',
+                                    type: 'bar',
+                                    data: series,
+                                    markLine: {
+                                        data: [
+                                            {type: 'average', name: '平均销量'}
+                                        ]
+                                    },
+                                    label: {
+                                        normal: {
+                                            show: true,
+                                            fontWeight: 'bold',
+                                            formatter: function (params) {
+                                                return fUnitFormat({qty: params.data}, res1.data[optionV.$data.goodsId])
+                                            },
+                                            fontSize: 16
+                                        }
+                                    }
+                                }
+                            ]
+                        };
+                        console.log(option);
+                        data.$data.option = option;
+                    });
+
+                }
+            });
+        }
 
         $(window).ready(function () {
             chart_1.setOption(data.$data.option);

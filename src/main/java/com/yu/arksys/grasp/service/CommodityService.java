@@ -26,6 +26,8 @@ public interface CommodityService {
     // ========= 单位查询 ========== //
     Map<String, CommodityUnit> getMergedUnitMap();
 
+    Map<String, CommodityUnit> getMergedUnitMapById(String ptypeid);
+
     Map<String, CommodityUnit> getMergedUnitMapByParId(String ParId);
 
     Map<String, CommodityUnit> getMergedUnitMapWithConditions(Map<String, String> conditions);

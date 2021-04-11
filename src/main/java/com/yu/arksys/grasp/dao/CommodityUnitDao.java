@@ -15,7 +15,7 @@ public interface CommodityUnitDao {
     @Select("select PTypeId,Unit1,URate,Ordid,IsBase from xw_PtypeUnit")
     List<CommodityUnitRaw> getAllRawCommodityUnits();
 
-    @Select("select PTypeId,Unit1,URate,Ordid,IsBase from xw_PtypeUnit where PTypeId=${PTypeId}")
+    @Select("select PTypeId,Unit1,URate,Ordid,IsBase from xw_PtypeUnit where PTypeId='${PTypeId}'")
     List<CommodityUnitRaw> getRawCommodityUnitsById(@Param("PTypeId") String pTypeId);
 
     @Select("select PTypeId,Unit1,URate,Ordid,IsBase from xw_PtypeUnit where ${conditions}")

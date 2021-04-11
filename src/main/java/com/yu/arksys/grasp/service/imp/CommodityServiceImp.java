@@ -153,6 +153,14 @@ public class CommodityServiceImp implements
     }
 
     @Override
+    public Map<String, CommodityUnit> getMergedUnitMapById(String ptypeid) {
+        List<CommodityUnitRaw> units = commodityUnitDao.getRawCommodityUnitsById(ptypeid);
+        Map<String, CommodityUnit> result = mergeCommodityUnit(units);
+        if (result.isEmpty()) throw new RuntimeException("商品单位获取失败");
+        return result;
+    }
+
+    @Override
     public Map<String, CommodityUnit> getMergedUnitMapWithConditions(Map<String, String> conditions) {
         String conditionString = SQLUtils.getConditionString(conditions);
         List<CommodityUnitRaw> units = commodityUnitDao.getRawCommodityUnitsWithConditions(conditionString);
