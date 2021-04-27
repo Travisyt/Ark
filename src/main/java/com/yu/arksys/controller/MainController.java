@@ -10,6 +10,16 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class MainController {
 
+    @RequestMapping("/fortemp")
+    public ModelAndView fortemp() {
+        return new ModelAndView("fortemp");
+    }
+
+    @RequestMapping("/qiuhun")
+    public ModelAndView qiuhun() {
+        return new ModelAndView("qiuhun");
+    }
+
     @RequestMapping("/home")
     public ModelAndView home() {
         return new ModelAndView("home");
