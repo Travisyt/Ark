@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>数据分析</title>
+    <title>万能数据</title>
     <link href="bootstrap/bootstrap.min.css" rel="stylesheet">
     <link href="css/elements.css" rel="stylesheet">
     <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
@@ -10,12 +10,11 @@
     <script type="text/javascript" src="js/echarts.js"></script>
     <script type="text/javascript" src="js/vue.js"></script>
     <script type="text/javascript" src="js/commodityUtils.js"></script>
-
 </head>
 <body>
 
 <div th:fragment="dataView">
-<div class="container-fluid" style="padding: 0 0 0 0">
+    <div class="container-fluid" style="padding: 0 0 0 0">
         <!--    vue data    -->
         <div id="data"></div>
         <!--    左侧      -->
@@ -24,7 +23,7 @@
                 <h4 style="margin-left: 10px">内容选项</h4>
                 <hr/>
                 <div class="form-group">
-                    <label style="margin-left: 5%;margin-top: 0">选择商品</label>
+                    <label style="margin-left: 5%;margin-top: 0">选择分组</label>
                     <div class="input-group" style="border: solid 3px green;border-radius: 8px">
                         <input readonly v-model="goods.pfullname" type="text" class="form-control"/>
                         <span class="input-group-btn">
@@ -33,49 +32,6 @@
                             <span class="glyphicon glyphicon-search"></span>
                         </button>
                     </span>
-                    </div>
-                    <label style="margin-left: 5%;margin-top: 10px">起始</label>
-                    <div class="input-group" style="border: solid 3px green;border-radius: 8px">
-                        <select v-model="startDate" class="form-control">
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
-                            <option>6</option>
-                            <option>7</option>
-                            <option>8</option>
-                            <option>9</option>
-                            <option>10</option>
-                            <option>11</option>
-                            <option>12</option>
-                        </select>
-                        <span class="input-group-addon">月</span>
-                    </div>
-                    <label style="margin-left: 5%;margin-top: 10px">结束</label>
-                    <div class="input-group" style="border: solid 3px green;border-radius: 8px">
-                        <select v-model="endDate" class="form-control">
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
-                            <option>6</option>
-                            <option>7</option>
-                            <option>8</option>
-                            <option>9</option>
-                            <option>10</option>
-                            <option>11</option>
-                            <option>12</option>
-                        </select>
-                        <span class="input-group-addon">月</span>
-                    </div>
-                    <label style="margin-left: 5%;margin-top: 10px">周期</label>
-                    <div class="input-group" style="border: solid 3px green;border-radius: 8px">
-                        <select v-model="period" class="form-control">
-                            <option>每月</option>
-                            <option>每天</option>
-                        </select>
                     </div>
                     <div style="margin-top: 40px;border: solid 3px grey;border-radius: 8px">
                         <button type="button" class="btn btn-block" onclick="acceptOption()">确认</button>

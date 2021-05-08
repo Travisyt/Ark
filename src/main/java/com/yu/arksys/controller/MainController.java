@@ -12,12 +12,17 @@ public class MainController {
 
     @RequestMapping("/fortemp")
     public ModelAndView fortemp() {
-        return new ModelAndView("fortemp");
+        return new ModelAndView("baidutest");
     }
 
-    @RequestMapping("/qiuhun")
+    @RequestMapping("/mysterious")
     public ModelAndView qiuhun() {
         return new ModelAndView("qiuhun");
+    }
+
+    @RequestMapping("/universalData")
+    public ModelAndView universalData() {
+        return new ModelAndView("universalData");
     }
 
     @RequestMapping("/home")
