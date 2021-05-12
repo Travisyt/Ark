@@ -52,13 +52,13 @@ public interface CommodityDao {
     String getLastBuyPriceById(@Param("ptypeid") String ptypeid);
 
     // ============= 库存 =============== //
-    @Select("SELECT Price,Total FROM GoodsStocks where PtypeId='${Ptypeid}' and KtypeId='00005'")
+    @Select("SELECT Price,Qty FROM GoodsStocks where PtypeId='${Ptypeid}' and KtypeId='00005'")
     String getAveragePriceById(@Param("Ptypeid") String Ptypeid);
 
-    @Select("SELECT Total FROM GoodsStocks where PtypeId='${Ptypeid}' and KtypeId='00005'")
+    @Select("SELECT Qty FROM GoodsStocks where PtypeId='${Ptypeid}' and KtypeId='00005'")
     String getTotalNumByIdMain(@Param("Ptypeid") String Ptypeid);
 
-    @Select("SELECT Total FROM GoodsStocks WHERE PtypeId='${ptypeid}' and KtypeId='${ktypeid}'")
+    @Select("SELECT Qty FROM GoodsStocks WHERE PtypeId='${ptypeid}' and KtypeId='${ktypeid}'")
     String getTotalNumById(@Param("ptypeid") String ptypeid, @Param("ktypeid") String ktypeid);
 
     // ============= dataView =============== //
