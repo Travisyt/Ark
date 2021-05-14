@@ -3,7 +3,6 @@ package com.yu.arksys.controller;
 import com.yu.arksys.bean.api.ResponseBean;
 import com.yu.arksys.bean.raw.Commodity;
 import com.yu.arksys.bean.raw.CommodityBrief;
-import com.yu.arksys.bean.response.StockAlertResponse;
 import com.yu.arksys.grasp.dao.CommodityDao;
 import com.yu.arksys.grasp.service.CommodityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +24,11 @@ public class CommodityInfoController {
     @Autowired
     CommodityService commodityService;
 
+    /**
+     * 商品基本信息
+     * @param pusercode 商品编码
+     * @return Commodity
+     */
     @RequestMapping("/getCommodityByCode")
     @ResponseBody
     public Map<String, Object> getCommodityByCode(String pusercode) {
@@ -32,20 +36,6 @@ public class CommodityInfoController {
         Map<String, Object> res = new HashMap<>();
         if (commodity != null) {
             res.put("data", commodity);
-            res.put("status", "200");
-        } else {
-            res.put("status", "0");
-        }
-        return res;
-    }
-
-    @RequestMapping("/getAveragePrice")
-    @ResponseBody
-    public Map<String, Object> getAveragePrice(String ptypeid) {
-        String price = commodityDao.getAveragePriceById(ptypeid);
-        Map<String, Object> res = new HashMap<>();
-        if (price != null) {
-            res.put("data", price);
             res.put("status", "200");
         } else {
             res.put("status", "0");

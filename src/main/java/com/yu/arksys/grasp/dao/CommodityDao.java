@@ -52,8 +52,6 @@ public interface CommodityDao {
     String getLastBuyPriceById(@Param("ptypeid") String ptypeid);
 
     // ============= 库存 =============== //
-    @Select("SELECT Price,Qty FROM GoodsStocks where PtypeId='${Ptypeid}' and KtypeId='00005'")
-    String getAveragePriceById(@Param("Ptypeid") String Ptypeid);
 
     @Select("SELECT Qty FROM GoodsStocks where PtypeId='${Ptypeid}' and KtypeId='00005'")
     String getTotalNumByIdMain(@Param("Ptypeid") String Ptypeid);

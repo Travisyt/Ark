@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -32,6 +31,9 @@ public class BasicInformationController {
         Map<String, Object> map = new HashMap<>();
         try {
             map.put("data", businessRelatedUnitService.getBusinessAddress(btypeid));
+            Map<String, String> logMap = new HashMap<>();
+            logMap.put("/basicInfo/getBusinessAddress", "btypeid="+btypeid);
+            LogUtils.dataAccessLog(logMap);
             return CollectUtills.putSuccessStatus(map);
         } catch (IncompleteParamException e) {
             return CollectUtills.putFailStatus(map, e.getMessage());
@@ -45,8 +47,7 @@ public class BasicInformationController {
     @ResponseBody
     public Map<String, Object> getCommodityUnitMap(String ParId) {
         Map<String, String> logMap = new HashMap<>();
-        logMap.put("/basicInfo/getCommodityUnitMap parameters:", "");
-        logMap.put("parid: ", ParId);
+        logMap.put("/basicInfo/getCommodityUnitMap", "ParId="+ParId);
         LogUtils.dataAccessLog(logMap);
         Map<String, Object> result = new HashMap<>();
         if (ParId == null || ParId.equals("")) {
@@ -63,8 +64,7 @@ public class BasicInformationController {
     @ResponseBody
     public Map<String, Object> getSingleCommodityUnitMap(String ptypeid) {
         Map<String, String> logMap = new HashMap<>();
-        logMap.put("/basicInfo/getSingleCommodityUnitMap parameters:", "");
-        logMap.put("ptypeid: ", ptypeid);
+        logMap.put("/basicInfo/getSingleCommodityUnitMap", "ptypeid="+ptypeid);
         LogUtils.dataAccessLog(logMap);
         Map<String, Object> result = new HashMap<>();
         if (ptypeid == null || ptypeid.equals("")) {
