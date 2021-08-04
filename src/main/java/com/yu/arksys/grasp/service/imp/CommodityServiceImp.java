@@ -49,8 +49,17 @@ public class CommodityServiceImp implements
     }
 
     @Override
-    public List<ResponseBean> getFuzzySearchCommodityListByName(String name) {
-        return null;
+    public List<CommodityBrief> getFuzzySearchCommodityListByPartName(String name, String ktypeid, String orderBy) {
+        List<CommodityBrief> commodityBriefs;
+        if (orderBy == null || orderBy.equals("")) {
+            orderBy = "RowIndex";
+        }
+        if (ktypeid == null || ktypeid.equals("") || ktypeid.equals("00000")) {
+            commodityBriefs = commodityDao.getCommodityByPartNameNoStock(name, orderBy);
+        } else {
+            commodityBriefs = commodityDao.getCommodityByPartName(name, ktypeid, orderBy);
+        }
+        return commodityBriefs;
     }
 
     @Override

@@ -31,8 +31,26 @@ function getUnitRelation(unitMap) {
     if (typeof unitMap === 'undefined') {
         return '-';
     }
-    let trdR = parseInt(unitMap.thirdRate), secR = parseInt(unitMap.secondRate);
-    let trd = '1'.concat(unitMap.thirdUnit), sec = (trdR / secR).toString().concat(unitMap.secondUnit);
-    unitString.concat(trd).concat('=').concat(sec).concat('=').concat(unitMap.baseUnit);
+    let unitString = '';
+    let trdFlag = false;
+    let secR = '';
+    let secU = '';
+    let baseRate = '1';
+    if (unitMap['thirdRate'] !== '') {
+        unitString = unitString.concat('1').concat(unitMap['thirdUnit']).concat('=');
+        baseRate = unitMap['thirdRate'].split('.')[0];
+        trdFlag = true;
+    }
+    if (unitMap['secondRate'] !== '') {
+        if (trdFlag) {
+            secR = (parseInt(unitMap['thirdRate']) / parseInt(unitMap['secondRate'])).toString();
+        } else {
+            secR = '1';
+            baseRate = unitMap['secondRate'].split('.')[0];
+        }
+        secU = unitMap['secondUnit'];
+        unitString = unitString.concat(secR).concat(secU).concat('=');
+    }
+    unitString = unitString.concat(baseRate).concat(unitMap['baseUnit']);
     return unitString;
 }

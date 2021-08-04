@@ -19,7 +19,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove"></span></button>
                     <div>
                         当前目录：{{ commodityDir() }}
                     </div>
@@ -28,8 +28,13 @@
                 <div class="modal-body">
                     <div style="padding: 0 10px 5px 10px">
                         <div class="form-group">
-                            <div class="checkbox">
-
+                            <div class="input-group">
+                                <input v-model="key" type="text" class="form-control" id="fuzzyInput" onkeydown="keydown(event)">
+                                <span class="input-group-btn"><button id="keySearch" type="button"
+                                                                      class="btn btn-primary"
+                                                                      v-on:click="fuzzySearchByPartName()">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </button></span>
                             </div>
                         </div>
                     </div>
@@ -74,10 +79,10 @@
         </div><!-- /.modal -->
     </div>
     <script>
-
         var goodsSelect = new Vue({
             el: '#goodsSelect',
             data: {
+                key: "",
                 commodityList: [],
                 orderBy: 'RowIndex',
                 commodityUnitMap: {},
@@ -85,7 +90,7 @@
                     ['00000', '库存商品']
                 ]
             },
-            computed: { },
+            computed: {},
             methods: {
                 commodityDir: function () {
                     let dir = '';
@@ -125,22 +130,40 @@
                     } else {
                         return goodsSelect.$data.commodityUnitMap[ptypeid].baseUnit;
                     }
+                },
+                fuzzySearchByPartName: function () {
+                    let partName = goodsSelect.$data.key;
+                    refreshCommodityList({partName: partName}, 2)
                 }
             }
         });
+        // goodsSelect.$watch('key', function (nv, ov) {
+        //
+        // });
+        function keydown(event) {
+            if (event.keyCode === 13) {
+                document.getElementById('keySearch').click()
+            }
+        }
 
-        function refreshCommodityList(param = {openFlag: true}) {
+        function refreshCommodityList(param = {openFlag: true}, mode = 1) {
             if (param.hasOwnProperty('openFlag')) {
                 param = {ParId: goodsSelect.$data.actionStack[goodsSelect.$data.actionStack.length - 1][0]}
             } else {
-                goodsSelect.$data.actionStack.push([param.ParId, param.pfullname]);
+                if (mode === 1) {
+                    goodsSelect.$data.actionStack.push([param.ParId, param.pfullname]);
+                }
             }
             $('#goodsSelectBackTop').click();
             $('.modal-content').addClass("depth-of-focus");
             $.post('/basicInfo/getCommodityUnitMap', param, function (res) {
                 goodsSelect.$data.commodityUnitMap = res.data;
             });
-            $.post('/commodity/getBriefCommodityList', param, function (res) {
+            let postUrl = '/commodity/getBriefCommodityList';
+            if (mode === 2) {
+                postUrl = '/commodity/getBriefCommodityListByPartName';
+            }
+            $.post(postUrl, param, function (res) {
                 goodsSelect.$data.commodityList = res.data;
                 $('.modal-content').removeClass("depth-of-focus");
             });
@@ -151,7 +174,6 @@
             eval(sessionStorage.getItem('goodsSelectFlagStatement'));
             $('#goodsSelectClose').click();
         }
-
 
     </script>
 </div>

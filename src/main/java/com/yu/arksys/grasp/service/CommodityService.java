@@ -39,7 +39,12 @@ public interface CommodityService {
 
     List<ResponseBean> getFuzzySearchCommodityListByCode(String code);
 
-    List<ResponseBean> getFuzzySearchCommodityListByName(String name);
+    /**
+     * 通过模糊查询获取简短的商品信息
+     * @param name 模糊查询关键词
+     * @return 符合条件的商品列表
+     */
+    List<CommodityBrief> getFuzzySearchCommodityListByPartName(String name, String ktypeid, String orderBy);
 
     List<ResponseBean> getFuzzySearchCommodityListByAll(String keyWord);
 

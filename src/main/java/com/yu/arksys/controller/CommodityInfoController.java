@@ -25,6 +25,25 @@ public class CommodityInfoController {
     CommodityService commodityService;
 
     /**
+     * 模糊查找
+     * 调用说明： partName不能包含SQL特殊字符
+     * @return Commodity List
+     */
+    @RequestMapping("getBriefCommodityListByPartName")
+    @ResponseBody
+    public Map<String, Object> getBriefCommodityListByPartName(String partName, String ktypeid, String orderBy) {
+        Map<String, Object> res = new HashMap<>();
+        List<CommodityBrief> commodityBriefs = commodityService.getFuzzySearchCommodityListByPartName(partName, ktypeid, orderBy);
+        if (commodityBriefs != null) {
+            res.put("data", commodityBriefs);
+            res.put("status", "200");
+        } else {
+            res.put("status", "0");
+        }
+        return res;
+    }
+
+    /**
      * 商品基本信息
      * @param pusercode 商品编码
      * @return Commodity

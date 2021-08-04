@@ -27,6 +27,12 @@ public interface CommodityDao {
     @Select("SELECT ptypeid,ParId,leveal,pusercode,pfullname,RowIndex,isStop,deleted,LastBuyPrice,punitname FROM ptype WHERE pusercode='${pusercode}'")
     Commodity getCommodityByUserId(@Param("pusercode") String pusercode);
 
+    @Select("SELECT t.ptypeid,t.ParId,t.pusercode,t.pfullname,t.RowIndex,ktypeid='${ktypeid}',Qty=(SELECT Qty FROM GoodsStocks t1 WHERE t1.PtypeId=t.ptypeid AND t1.KtypeId='${ktypeid}'),t.psonnum FROM ptype t WHERE t.pfullname like '%${partName}%' AND t.isStop='0' AND t.deleted='0' ORDER BY t.${orderBy}")
+    List<CommodityBrief> getCommodityByPartName(@Param("partName") String partName, @Param("ktypeid") String ktypeid, @Param("orderBy") String orderBy);
+
+    @Select("SELECT t.ptypeid,Qty=SUM(t.Qty),ParId=MAX(t.ParId),pusercode=MAX(t.pusercode),pfullname=MAX(t.pfullname),RowIndex=MAX(t.RowIndex),KtypeId='00000',psonnum=MAX(t.psonnum) FROM (SELECT ptype.ptypeid,GoodsStocks.Qty,ptype.ParId,ptype.pusercode,ptype.pfullname,ptype.RowIndex,GoodsStocks.KtypeId,ptype.psonnum FROM GoodsStocks RIGHT JOIN ptype ON GoodsStocks.PtypeId=ptype.ptypeid WHERE ptype.isStop='0' AND ptype.deleted='0' AND ptype.pfullname like '%${partName}%') t GROUP BY t.PtypeId ORDER BY t.${orderBy}")
+    List<CommodityBrief> getCommodityByPartNameNoStock(@Param("partName") String partName, @Param("orderBy") String orderBy);
+
     @Select("SELECT t.ptypeid,t.ParId,t.pusercode,t.pfullname,t.RowIndex,ktypeid='${ktypeid}',Qty=(SELECT Qty FROM GoodsStocks t1 WHERE t1.PtypeId=t.ptypeid AND t1.KtypeId='${ktypeid}'),t.psonnum FROM ptype t WHERE t.ParId='${parid}' AND t.isStop='0' AND t.deleted='0' ORDER BY t.${orderBy}")
     List<CommodityBrief> getBriefCommodityList(@Param("parid") String parid, @Param("ktypeid") String ktypeid, @Param("orderBy") String orderBy);
 
