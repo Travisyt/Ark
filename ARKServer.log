@@ -239,3 +239,55 @@
 2020-03-11 10:49:59.949  INFO 11036 --- [http-nio-8888-exec-2] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
 2020-03-11 10:50:00.065  INFO 11036 --- [http-nio-8888-exec-2] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Driver does not support get/set network timeout for connections. (com.microsoft.sqlserver.jdbc.SQLServerConnection.getNetworkTimeout()I)
 2020-03-11 10:50:00.104  INFO 11036 --- [http-nio-8888-exec-2] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2021-08-04 09:56:34.305  INFO 16852 --- [restartedMain] com.yu.arksys.ArkSysApplication          : Starting ArkSysApplication on LAPTOP-20HQ0J34 with PID 16852 (started by 朱雯均 in C:\Users\朱雯均\IdeaProjects\Ark)
+2021-08-04 09:56:34.308  INFO 16852 --- [restartedMain] com.yu.arksys.ArkSysApplication          : No active profile set, falling back to default profiles: default
+2021-08-04 09:56:34.347  INFO 16852 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2021-08-04 09:56:34.347  INFO 16852 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2021-08-04 09:56:35.195  INFO 16852 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8889 (https) 8887 (http)
+2021-08-04 09:56:35.208  INFO 16852 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2021-08-04 09:56:35.208  INFO 16852 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.29]
+2021-08-04 09:56:35.261  INFO 16852 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2021-08-04 09:56:35.261  INFO 16852 --- [restartedMain] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 914 ms
+2021-08-04 09:56:35.293  INFO 16852 --- [restartedMain] com.yu.arksys.service.api.Logger         : ======================= get logger from logger factory =========================
+2021-08-04 09:56:35.574  INFO 16852 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-08-04 09:56:35.654  WARN 16852 --- [restartedMain] org.thymeleaf.templatemode.TemplateMode  : [THYMELEAF][restartedMain] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+2021-08-04 09:56:35.722  INFO 16852 --- [restartedMain] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
+2021-08-04 09:56:35.765  INFO 16852 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2021-08-04 09:56:36.077  INFO 16852 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8889 (https) 8887 (http) with context path ''
+2021-08-04 09:56:36.080  INFO 16852 --- [restartedMain] com.yu.arksys.ArkSysApplication          : Started ArkSysApplication in 2.171 seconds (JVM running for 3.249)
+2021-08-04 10:07:19.180  INFO 16852 --- [https-jsse-nio-8889-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2021-08-04 10:07:19.180  INFO 16852 --- [https-jsse-nio-8889-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2021-08-04 10:07:19.184  INFO 16852 --- [https-jsse-nio-8889-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 4 ms
+2021-08-04 10:07:22.866  INFO 16852 --- [https-jsse-nio-8889-exec-8] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2021-08-04 10:07:23.004  INFO 16852 --- [https-jsse-nio-8889-exec-8] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Driver does not support get/set network timeout for connections. (com.microsoft.sqlserver.jdbc.SQLServerConnection.getNetworkTimeout()I)
+2021-08-04 10:07:23.042  INFO 16852 --- [https-jsse-nio-8889-exec-8] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2021-08-04 10:33:11.522  INFO 16852 --- [SpringContextShutdownHook] o.s.s.c.ThreadPoolTaskScheduler          : Shutting down ExecutorService 'taskScheduler'
+2021-08-04 10:33:11.523  INFO 16852 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2021-08-04 10:33:11.524  INFO 16852 --- [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2021-08-04 10:33:11.525  INFO 16852 --- [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2021-08-04 10:33:16.247  INFO 17308 --- [restartedMain] com.yu.arksys.ArkSysApplication          : Starting ArkSysApplication on LAPTOP-20HQ0J34 with PID 17308 (started by 朱雯均 in C:\Users\朱雯均\IdeaProjects\Ark)
+2021-08-04 10:33:16.249  INFO 17308 --- [restartedMain] com.yu.arksys.ArkSysApplication          : No active profile set, falling back to default profiles: default
+2021-08-04 10:33:16.281  INFO 17308 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2021-08-04 10:33:16.282  INFO 17308 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2021-08-04 10:33:17.096  INFO 17308 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8889 (https) 8887 (http)
+2021-08-04 10:33:17.110  INFO 17308 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2021-08-04 10:33:17.110  INFO 17308 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.29]
+2021-08-04 10:33:17.164  INFO 17308 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2021-08-04 10:33:17.164  INFO 17308 --- [restartedMain] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 882 ms
+2021-08-04 10:33:17.197  INFO 17308 --- [restartedMain] com.yu.arksys.service.api.Logger         : ======================= get logger from logger factory =========================
+2021-08-04 10:33:17.468  INFO 17308 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-08-04 10:33:17.547  WARN 17308 --- [restartedMain] org.thymeleaf.templatemode.TemplateMode  : [THYMELEAF][restartedMain] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+2021-08-04 10:33:17.613  INFO 17308 --- [restartedMain] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
+2021-08-04 10:33:17.655  INFO 17308 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2021-08-04 10:33:17.969  INFO 17308 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8889 (https) 8887 (http) with context path ''
+2021-08-04 10:33:17.972  INFO 17308 --- [restartedMain] com.yu.arksys.ArkSysApplication          : Started ArkSysApplication in 1.973 seconds (JVM running for 2.655)
+2021-08-04 10:33:25.600  INFO 17308 --- [https-jsse-nio-8889-exec-8] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2021-08-04 10:33:25.601  INFO 17308 --- [https-jsse-nio-8889-exec-8] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2021-08-04 10:33:25.604  INFO 17308 --- [https-jsse-nio-8889-exec-8] o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
+2021-08-04 10:33:27.712  INFO 17308 --- [https-jsse-nio-8889-exec-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2021-08-04 10:33:27.816  INFO 17308 --- [https-jsse-nio-8889-exec-1] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Driver does not support get/set network timeout for connections. (com.microsoft.sqlserver.jdbc.SQLServerConnection.getNetworkTimeout()I)
+2021-08-04 10:33:27.850  INFO 17308 --- [https-jsse-nio-8889-exec-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2021-08-04 12:42:04.336  INFO 17308 --- [SpringContextShutdownHook] o.s.s.c.ThreadPoolTaskScheduler          : Shutting down ExecutorService 'taskScheduler'
+2021-08-04 12:42:04.337  INFO 17308 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2021-08-04 12:42:04.338  INFO 17308 --- [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2021-08-04 12:42:04.339  INFO 17308 --- [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
