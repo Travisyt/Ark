@@ -102,23 +102,23 @@
                     </div>
                     <hr/>
                     <div id="charts2">
-                    <table class="table">
-                        <thead style="font-size: large">
-                        <tr>
-                            <th>客户</th>
-                            <th>销量</th>
-                            <th>辅助销量</th>
-                        </tr>
-                        </thead>
-                        <tbody style="font-size: x-large">
-                        <tr v-for="d in customerData">
-                            <td>{{ d.bfullname }}</td>
-                            <td>{{ d.qty }}</td>
-                            <td>{{ d.formattedQty }}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+                        <table class="table">
+                            <thead style="font-size: large">
+                            <tr>
+                                <th>客户</th>
+                                <th>销量</th>
+                                <th>辅助销量</th>
+                            </tr>
+                            </thead>
+                            <tbody style="font-size: x-large">
+                            <tr v-for="d in customerData">
+                                <td>{{ d.bfullname }}</td>
+                                <td>{{ d.qty }}</td>
+                                <td>{{ d.formattedQty }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
 
                 </div>
@@ -409,7 +409,11 @@
                 if (res.status === "200") {
                     let customerData = [];
                     $.each(res.data.slice(0, 20), function (k, v) {
-                        customerData.push({bfullname: v.bfullname, qty: v.totalnum, formattedQty: fUnitFormat({qty: v.totalnum}, unitMap[param.ptypeid])})
+                        customerData.push({
+                            bfullname: v.bfullname,
+                            qty: v.totalnum,
+                            formattedQty: fUnitFormat({qty: v.totalnum}, unitMap[param.ptypeid])
+                        })
                     });
                     charts2.$data.customerData = customerData;
                 }
