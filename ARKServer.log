@@ -16,3 +16,78 @@
 2022-08-02 12:38:18.055  INFO 17356 --- [main] com.yu.arksys.ArkSysApplicationTests     : Started ArkSysApplicationTests in 4.831 seconds (JVM running for 6.102)
 2022-08-02 12:38:18.612  INFO 17356 --- [SpringContextShutdownHook] o.s.s.c.ThreadPoolTaskScheduler          : Shutting down ExecutorService 'taskScheduler'
 2022-08-02 12:38:18.616  INFO 17356 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2022-08-02 12:46:26.921  INFO 5356 --- [main] com.yu.arksys.ArkSysApplicationTests     : Starting ArkSysApplicationTests on RelcuaZ with PID 5356 (started by TravisYT in F:\ideaProjs\ArkSys)
+2022-08-02 12:46:26.924  INFO 5356 --- [main] com.yu.arksys.ArkSysApplicationTests     : No active profile set, falling back to default profiles: default
+2022-08-02 12:46:29.928  INFO 5356 --- [main] com.yu.arksys.service.api.Logger         : ======================= get logger from logger factory =========================
+2022-08-02 12:46:32.524  INFO 5356 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2022-08-02 12:46:33.701  WARN 5356 --- [main] org.thymeleaf.templatemode.TemplateMode  : [THYMELEAF][main] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+2022-08-02 12:46:34.311  INFO 5356 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
+2022-08-02 12:46:34.469  INFO 5356 --- [main] com.yu.arksys.ArkSysApplicationTests     : Started ArkSysApplicationTests in 8.329 seconds (JVM running for 10.428)
+2022-08-02 12:46:34.972  INFO 5356 --- [SpringContextShutdownHook] o.s.s.c.ThreadPoolTaskScheduler          : Shutting down ExecutorService 'taskScheduler'
+2022-08-02 12:46:34.974  INFO 5356 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2022-08-02 12:59:35.736  INFO 17568 --- [restartedMain] com.yu.arksys.ArkSysApplication          : Starting ArkSysApplication on RelcuaZ with PID 17568 (F:\ideaProjs\ArkSys\target\classes started by TravisYT in F:\ideaProjs\ArkSys)
+2022-08-02 12:59:35.747  INFO 17568 --- [restartedMain] com.yu.arksys.ArkSysApplication          : No active profile set, falling back to default profiles: default
+2022-08-02 12:59:35.819  INFO 17568 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2022-08-02 12:59:35.820  INFO 17568 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2022-08-02 12:59:37.249  INFO 17568 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8889 (https) 8887 (http)
+2022-08-02 12:59:37.270  INFO 17568 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-08-02 12:59:37.270  INFO 17568 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.29]
+2022-08-02 12:59:37.383  INFO 17568 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-08-02 12:59:37.383  INFO 17568 --- [restartedMain] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 1562 ms
+2022-08-02 12:59:37.432  INFO 17568 --- [restartedMain] com.yu.arksys.service.api.Logger         : ======================= get logger from logger factory =========================
+2022-08-02 12:59:37.870  INFO 17568 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2022-08-02 12:59:37.997  WARN 17568 --- [restartedMain] org.thymeleaf.templatemode.TemplateMode  : [THYMELEAF][restartedMain] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+2022-08-02 12:59:38.052  INFO 17568 --- [restartedMain] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
+2022-08-02 12:59:38.192  INFO 17568 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2022-08-02 12:59:39.178  INFO 17568 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8889 (https) 8887 (http) with context path ''
+2022-08-02 12:59:39.181  INFO 17568 --- [restartedMain] com.yu.arksys.ArkSysApplication          : Started ArkSysApplication in 3.995 seconds (JVM running for 6.042)
+2022-08-02 13:00:21.093  INFO 17568 --- [https-jsse-nio-8889-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-08-02 13:00:21.094  INFO 17568 --- [https-jsse-nio-8889-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2022-08-02 13:00:21.110  INFO 17568 --- [https-jsse-nio-8889-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 15 ms
+2022-08-02 13:00:51.290  INFO 17568 --- [https-jsse-nio-8889-exec-10] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2022-08-02 13:00:51.386  INFO 17568 --- [https-jsse-nio-8889-exec-10] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Driver does not support get/set network timeout for connections. (com.microsoft.sqlserver.jdbc.SQLServerConnection.getNetworkTimeout()I)
+2022-08-02 13:00:51.459  INFO 17568 --- [https-jsse-nio-8889-exec-10] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2022-08-02 13:06:32.430  INFO 12140 --- [restartedMain] com.yu.arksys.ArkSysApplication          : Starting ArkSysApplication on RelcuaZ with PID 12140 (F:\ideaProjs\ArkSys\target\classes started by TravisYT in F:\ideaProjs\ArkSys)
+2022-08-02 13:06:32.434  INFO 12140 --- [restartedMain] com.yu.arksys.ArkSysApplication          : No active profile set, falling back to default profiles: default
+2022-08-02 13:06:32.508  INFO 12140 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2022-08-02 13:06:32.509  INFO 12140 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2022-08-02 13:06:34.064  INFO 12140 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8889 (https) 8887 (http)
+2022-08-02 13:06:34.084  INFO 12140 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-08-02 13:06:34.084  INFO 12140 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.29]
+2022-08-02 13:06:34.194  INFO 12140 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-08-02 13:06:34.195  INFO 12140 --- [restartedMain] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 1685 ms
+2022-08-02 13:06:34.241  INFO 12140 --- [restartedMain] com.yu.arksys.service.api.Logger         : ======================= get logger from logger factory =========================
+2022-08-02 13:06:34.703  INFO 12140 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2022-08-02 13:06:34.843  WARN 12140 --- [restartedMain] org.thymeleaf.templatemode.TemplateMode  : [THYMELEAF][restartedMain] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+2022-08-02 13:06:34.892  INFO 12140 --- [restartedMain] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
+2022-08-02 13:06:35.049  INFO 12140 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2022-08-02 13:06:36.085  INFO 12140 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8889 (https) 8887 (http) with context path ''
+2022-08-02 13:06:36.089  INFO 12140 --- [restartedMain] com.yu.arksys.ArkSysApplication          : Started ArkSysApplication in 4.164 seconds (JVM running for 6.016)
+2022-08-02 13:06:40.287  INFO 12140 --- [https-jsse-nio-8889-exec-8] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-08-02 13:06:40.288  INFO 12140 --- [https-jsse-nio-8889-exec-8] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2022-08-02 13:06:40.295  INFO 12140 --- [https-jsse-nio-8889-exec-8] o.s.web.servlet.DispatcherServlet        : Completed initialization in 7 ms
+2022-08-02 13:06:40.374  INFO 12140 --- [https-jsse-nio-8889-exec-8] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2022-08-02 13:06:40.430  INFO 12140 --- [https-jsse-nio-8889-exec-8] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Driver does not support get/set network timeout for connections. (com.microsoft.sqlserver.jdbc.SQLServerConnection.getNetworkTimeout()I)
+2022-08-02 13:06:40.465  INFO 12140 --- [https-jsse-nio-8889-exec-8] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2022-08-02 13:10:42.472  INFO 964 --- [restartedMain] com.yu.arksys.ArkSysApplication          : Starting ArkSysApplication on RelcuaZ with PID 964 (F:\ideaProjs\ArkSys\target\classes started by TravisYT in F:\ideaProjs\ArkSys)
+2022-08-02 13:10:42.475  INFO 964 --- [restartedMain] com.yu.arksys.ArkSysApplication          : No active profile set, falling back to default profiles: default
+2022-08-02 13:10:42.545  INFO 964 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2022-08-02 13:10:42.546  INFO 964 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2022-08-02 13:10:44.022  INFO 964 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8889 (https) 8887 (http)
+2022-08-02 13:10:44.041  INFO 964 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2022-08-02 13:10:44.041  INFO 964 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.29]
+2022-08-02 13:10:44.147  INFO 964 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2022-08-02 13:10:44.147  INFO 964 --- [restartedMain] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 1601 ms
+2022-08-02 13:10:44.194  INFO 964 --- [restartedMain] com.yu.arksys.service.api.Logger         : ======================= get logger from logger factory =========================
+2022-08-02 13:10:44.616  INFO 964 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2022-08-02 13:10:44.733  WARN 964 --- [restartedMain] org.thymeleaf.templatemode.TemplateMode  : [THYMELEAF][restartedMain] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+2022-08-02 13:10:44.783  INFO 964 --- [restartedMain] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
+2022-08-02 13:10:44.920  INFO 964 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2022-08-02 13:10:45.876  INFO 964 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8889 (https) 8887 (http) with context path ''
+2022-08-02 13:10:45.879  INFO 964 --- [restartedMain] com.yu.arksys.ArkSysApplication          : Started ArkSysApplication in 3.893 seconds (JVM running for 5.721)
+2022-08-02 13:10:50.075  INFO 964 --- [https-jsse-nio-8889-exec-8] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2022-08-02 13:10:50.076  INFO 964 --- [https-jsse-nio-8889-exec-8] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2022-08-02 13:10:50.091  INFO 964 --- [https-jsse-nio-8889-exec-8] o.s.web.servlet.DispatcherServlet        : Completed initialization in 14 ms
+2022-08-02 13:10:50.188  INFO 964 --- [https-jsse-nio-8889-exec-8] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2022-08-02 13:10:50.252  INFO 964 --- [https-jsse-nio-8889-exec-8] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Driver does not support get/set network timeout for connections. (com.microsoft.sqlserver.jdbc.SQLServerConnection.getNetworkTimeout()I)
+2022-08-02 13:10:50.292  INFO 964 --- [https-jsse-nio-8889-exec-8] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.

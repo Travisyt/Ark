@@ -216,26 +216,40 @@ public class CommodityServiceImp implements
         Map<String, CommodityBriefWithSalePricesResponse> map = new HashMap<>();
         commoditys.forEach(commodity -> {
             String id = commodity.getPtypeid();
-            CommodityBriefWithSalePricesResponse item = new CommodityBriefWithSalePricesResponse(
-                    id,
-                    commodity.getParId(),
-                    commodity.getPusercode(),
-                    commodity.getPfullname(),
-                    commodity.getRowIndex(),
-                    commodity.getPsonnum(),
-                    "",
-                    "",
-                    ""
-            );
+            CommodityBriefWithSalePricesResponse item;
+            if (map.containsKey(id)) {
+                item = map.get(id);
+            } else {
+                item = new CommodityBriefWithSalePricesResponse(
+                        id,
+                        commodity.getParId(),
+                        commodity.getPusercode(),
+                        commodity.getPfullname(),
+                        commodity.getRowIndex(),
+                        commodity.getPsonnum(),
+                        "",
+                        "",
+                        ""
+                );
+            }
             // 判断不是目录
             if (commodity.getPsonnum().equals("0")) {
                 switch (commodity.getPRTypeId()) {
-                    case "0001":
+                    case "0001":{
                         item.setSalePrice1(commodity.getPrice());
-                    case "0002":
+                        break;
+                    }
+                    case "0002": {
                         item.setSalePrice2(commodity.getPrice());
-                    case "0003":
+                        break;
+                    }
+                    case "0003": {
                         item.setSalePrice3(commodity.getPrice());
+                        break;
+                    }
+                    default:{
+                        break;
+                    }
                 }
             }
             map.put(id, item);
