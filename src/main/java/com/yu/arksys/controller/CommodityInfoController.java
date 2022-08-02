@@ -3,6 +3,7 @@ package com.yu.arksys.controller;
 import com.yu.arksys.bean.api.ResponseBean;
 import com.yu.arksys.bean.raw.Commodity;
 import com.yu.arksys.bean.raw.CommodityBrief;
+import com.yu.arksys.bean.response.CommodityBriefWithSalePricesResponse;
 import com.yu.arksys.grasp.dao.CommodityDao;
 import com.yu.arksys.grasp.service.CommodityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,6 +99,26 @@ public class CommodityInfoController {
         Map<String, Object> res = new HashMap<>();
         if (commodityBriefs != null) {
             res.put("data", commodityBriefs);
+            res.put("status", "200");
+        } else {
+            res.put("status", "0");
+        }
+        return res;
+    }
+
+    /**
+     * 获取简短的商品信息列表，用于商品报价
+     * ParId   父级ID
+     *
+     * @return 简要商品售价信息列表
+     */
+    @RequestMapping("/getBriefCommodityListWithSalePrices")
+    @ResponseBody
+    public Map<String, Object> getBriefCommodityListWithSalePrices(String ParId){
+        List<CommodityBriefWithSalePricesResponse> responseList = commodityService.getBriefCommodityListWithSalePricesByParentId(ParId);
+        Map<String, Object> res = new HashMap<>();
+        if (responseList != null) {
+            res.put("data", responseList);
             res.put("status", "200");
         } else {
             res.put("status", "0");

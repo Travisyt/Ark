@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>定价查询</title>
+    <link href="bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link href="css/elements.css" rel="stylesheet">
+    <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/echarts.js"></script>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript" src="js/commodityUtils.js"></script>
+</head>
+<body>
+
+<div th:fragment="priceData">
+    <div class="container-fluid" style="padding: 0 0 0 0">
+        <!--    vue data    -->
+        <div id="data"></div>
+        <!--    左侧      -->
+        <div id="option" class="col-md-2" style="padding: 0 0 0 0;">
+            <div style="padding: 10px 10px 10px 10px;box-shadow: 0 0 5px #000000;margin: 20px 10px;">
+                <h4 style="margin-left: 10px">内容选项</h4>
+                <hr/>
+                <div class="form-group">
+                    <label style="margin-left: 5%;margin-top: 0">选择商品</label>
+                    <div class="input-group" style="border: solid 3px green;border-radius: 8px">
+                        <input readonly v-model="goods.pfullname" type="text" class="form-control"/>
+                        <span class="input-group-btn">
+                        <button id="goodsSearch" type="button" class="btn btn-default" data-toggle="modal"
+                                data-target="#goodsSelect">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </span>
+                    </div>
+                    <div style="margin-top: 40px;border: solid 3px grey;border-radius: 8px">
+                        <button type="button" class="btn btn-block" onclick="acceptOption()">确认</button>
+                    </div>
+
+                </div>
+            </div>
+
+            <div style="padding: 10px 10px 30px 10px;box-shadow: 0 0 5px #000000;margin: 20px 10px;display: none">
+                <h4 style="margin-left: 10px">表格控制</h4>
+                <hr/>
+                <div class="form-group">
+                    <label style="margin-left: 5%;margin-top: 0">图表宽高：
+                        <span style="background-color: #d5d5d5;padding: 1px 5px 1px 5px">{{chartWidth}}% * {{chartHeight}}px</span>
+                    </label>
+                    <div class="input-group">
+                        <input type="range" id="chart_width" min="30" max="100" step="1" value="100"
+                               v-model="chartWidth"/>
+                    </div>
+                    <div class="input-group">
+                        <input type="range" id="chart_height" min="200" max="1500" step="10" value="800"
+                               v-model="chartHeight"/>
+                    </div>
+                </div>
+            </div>
+
+            <div style="padding: 10px 10px 10px 10px;box-shadow: 0 0 5px #000000;margin: 20px 10px">
+                <h4>历史记录</h4>
+                <table class="table table-hover">
+                    <tbody>
+                    <tr v-for="h in history">
+                        <td v-on:click="selectHistory(h)" style="cursor: pointer">{{ h.pfullname }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!--    右侧      -->
+        <div class="col-md-10" style="padding: 0 10px 0 0">
+            <div style="padding: 30px 25px 10px 10px;box-shadow: 0 0 5px #000000;margin: 20px 10px">
+                <div id="charts_1" style="width: 100%;padding: 0 1% 1% 1%">
+                    <div id="graph_1" style="height: 80vh;width: 98%;"></div>
+                    <hr/>
+                    <div id="charts" style="width: 70%;display: inline-block">
+                        <table class="table">
+                            <thead style="font-size: large">
+                            <tr>
+                                <th>部门</th>
+                                <th>库存数量</th>
+                                <th>库存辅助数量</th>
+                                <th>部门近三月销量</th>
+                            </tr>
+                            </thead>
+                            <tbody style="font-size: x-large">
+                            <tr v-for="data in departmentData">
+                                <td>{{ data.kfullname }}</td>
+                                <td>{{ data.qty }}</td>
+                                <td>{{ data.formattedQty }}</td>
+                                <td>{{ data.total }}</td>
+                                <td></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="margin-left: 2%;width: 300px;height: 260px;display: inline-block">
+                        <div id="graph_2" style="width: 300px;height: 260px"></div>
+                    </div>
+                    <hr/>
+                    <div id="charts2">
+                        <table class="table">
+                            <thead style="font-size: large">
+                            <tr>
+                                <th>客户</th>
+                                <th>销量</th>
+                                <th>辅助销量</th>
+                            </tr>
+                            </thead>
+                            <tbody style="font-size: x-large">
+                            <tr v-for="d in customerData">
+                                <td>{{ d.bfullname }}</td>
+                                <td>{{ d.qty }}</td>
+                                <td>{{ d.formattedQty }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--    模态框    -->
+    <div th:replace="goodsSelect::goodsselect"></div>
+
+    <!--    载入动画    -->
+    <div id="loading" class="col-md-3 pull-right" style="height: 50px; padding: 20px 0 0 0;display: inline;">
+        <!--        loading        -->
+        <span class="loading-small" id="loading-icon">
+                    <span></span><span></span><span></span><span></span><span></span>
+        </span>
+    </div>
+
+
+    <script>
+        // 载入模态框事件
+        $('#goodsSelect').on('shown.bs.modal', function () {
+            refreshCommodityList({openFlag: true});
+            sessionStorage.setItem('goodsSelectFlagStatement', 'optionV.$data.selectedFlag = !optionV.$data.selectedFlag')
+        });
+
+        var optionV = new Vue({
+            el: '#option',
+            data: {
+                startDate: '',
+                endDate: '',
+                period: '',
+                goodsId: '',
+                goods: {},
+                chartWidth: '50',
+                chartHeight: '400',
+                selectedFlag: false,
+                history: []
+            },
+            computed: {
+                chartSizeFlag: function () {
+                    return this.chartWidth + this.chartHeight;
+                }
+            },
+            methods: {
+                selectHistory: function (h) {
+                    optionV.$data.goodsId = h.ptypeid;
+                    optionV.$data.goods = h;
+                    acceptOption();
+                }
+            }
+        });
+        optionV.$watch('chartSizeFlag', function (nval) {
+            $("#graph_1").css('width', optionV.$data.chartWidth + '%');
+            $('#graph_1').css('height', optionV.$data.chartHeight + 'px');
+            chart_1.resize();
+        });
+        optionV.$watch('selectedFlag', function () {
+            let historyList = [];
+            let goods = JSON.parse(sessionStorage.getItem('selectedGoodsList'));
+            optionV.$data.goodsId = goods[0].ptypeid;
+            optionV.$data.goods = goods[0];
+            historyList = optionV.$data.history;
+            historyList.unshift({ptypeid: goods[0].ptypeid, pfullname: goods[0].pfullname});
+            if (historyList.length > 16) {
+                historyList.pop();
+            }
+            optionV.$data.history = historyList;
+            localStorage.setItem('selectHistory', JSON.stringify(historyList));
+        });
+
+        // 图表
+        var chart_1 = echarts.init(document.getElementById('graph_1'));
+        var chart_2 = echarts.init(document.getElementById('graph_2'));
+        var data = new Vue({
+            el: '#data',
+            data: {
+                option: {
+                    title: {
+                        text: '月销量'
+                    },
+                    tooltip: {},
+                    legend: {
+                        data: ['销量']
+                    },
+                    xAxis: {
+                        data: ["1月"]
+                    },
+                    yAxis: {
+                        type: 'value',
+                    },
+                    series: [
+                        {
+                            name: '销量',
+                            type: 'bar',
+                            data: [5],
+                            label: {
+                                normal: {
+                                    show: true,
+                                    fontWeight: 'bold',
+                                    formatter: function (params) {
+                                        params.data
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                option2: {
+                    series: [
+                        {
+                            name: '部门销售分布',
+                            type: 'pie',
+                            radius: '55%',
+                            data: [
+                                {value: 100, name: 'temp'}
+                            ]
+                        }
+                    ]
+                },
+                unitMap: ""
+            },
+            computed: {
+                dataChanged: function () {
+                    return JSON.stringify(this.option);
+                }
+            }
+        });
+        data.$watch('dataChanged', function (nval) {
+            chart_1.setOption(data.$data.option);
+            chart_2.setOption(data.$data.option2);
+        });
+
+        var charts = new Vue({
+            el: '#charts',
+            data: {
+                departmentData: []
+            }
+        });
+        var charts2 = new Vue({
+            el: '#charts2',
+            data: {
+                customerData: []
+            }
+        });
+
+        function acceptOption() {
+            let stockMap = {"00005": "总仓库", "00002": "嘉泰", "00009": "碧云广场"};
+            let param = {ptypeid: optionV.$data.goodsId};
+            let customerSales = {};
+            let departmentSales = {};
+            let stock = {};
+            let unitMap = {};
+            let departmentSalesMap = {};
+            $.ajaxSettings.async = false;
+
+            $.post('/dataview/getUniversalDepartmentDataPermonth', param, function (res) {
+                if (res.status === "200") {
+                    departmentSalesMap = res.data;
+                }
+            });
+
+            $.post('/dataview/getSalesDataPermonth', param, function (res) {
+                if (res.status === "200") {
+                    if (res.data === null || res.data === []) {
+                        alert("数据库中没有数据");
+                        return;
+                    }
+                    let datar = res.data;
+                    let xaxis = [], series = [], allSeries = [], allLegends = [];
+                    datar.sort(function (a, b) {
+                        return parseInt(a.month) - parseInt(b.month);
+                    });
+                    $.post('/basicInfo/getSingleCommodityUnitMap', {ptypeid: optionV.$data.goodsId}, function (res1) {
+                        unitMap = res1.data;
+                        data.$data.unitMap = getUnitRelation(unitMap[optionV.$data.goodsId]);
+                        let stockNameMap = [];
+                        $.each(stockMap, function (k, v) {
+                            stockNameMap.push({ktypeid: k, kfullname: v, data: []})
+                        });
+                        $.each(datar, function (key, value) {
+                            xaxis.push(value.month.toString().concat('月'));
+                            series.push(value.totalnum);
+                            $.each(stockNameMap, function (k, v) {
+                                let flag = true;
+                                $.each(departmentSalesMap[v.ktypeid], function (k1, v1) {
+                                    if (v1.month === value.month) {
+                                        stockNameMap[k].data.push(v1.totalnum);
+                                        flag = false;
+                                    }
+                                });
+                                if (flag) {
+                                    // 避免部门单月没有销量，数据无法对应的情况
+                                    stockNameMap[k].data.push('0');
+                                }
+                            });
+                        });
+                        $.each(stockNameMap, function (k, v) {
+                            allLegends.push(v.kfullname);
+                            allSeries.push({
+                                name: v.kfullname,
+                                type: 'bar',
+                                barMaxWidth: '120',
+                                stack: 'total',
+                                data: v.data,
+                                label: {
+                                    show: true,
+                                    fontWeight: 'bold',
+                                    formatter: function (params) {
+                                        return fUnitFormat({qty: params.data}, unitMap[optionV.$data.goodsId])
+                                    },
+                                    fontSize: 16
+                                },
+                                labelLayout: {
+                                    hideOverlap: true
+                                }
+
+                            });
+                        });
+
+
+                        let option = {
+                            title: {
+                                text: '月销量: ' + datar[0].pfullname + '    单位: ' + data.$data.unitMap,
+                                y: 'bottom'
+                            },
+                            tooltip: {
+                                trigger: 'axis',
+                                axisPointer: {
+                                    type: 'shadow'
+                                },
+                                textStyle: {
+                                    fontSize: 22
+                                }
+                            },
+                            grid: {
+                                containLabel: false
+                            },
+                            legend: {
+                                data: ['销量']
+                            },
+                            xAxis: {
+                                name: '时间',
+                                type: 'category',
+                                data: xaxis
+                            },
+                            yAxis: {
+                                name: '销量',
+                                type: 'value'
+                            },
+                            series: [
+                                {
+                                    name: '总销量',
+                                    type: 'bar',
+                                    data: series,
+                                    barGap: 0,
+                                    barMaxWidth: '1',
+                                    markLine: {
+                                        data: [
+                                            {type: 'average', name: '平均销量'}
+                                        ]
+                                    },
+                                    label: {
+                                        show: true,
+                                        position: 'top',
+                                        distance: 10,
+                                        offset: [10, 0],
+                                        fontWeight: 'bold',
+                                        formatter: function (params) {
+                                            return fUnitFormat({qty: params.data}, res1.data[optionV.$data.goodsId])
+                                        },
+                                        fontSize: 18,
+                                    }
+                                }
+                            ]
+                        };
+                        allLegends.unshift('总销量');
+                        option.series = option.series.concat(allSeries);
+                        option.legend = {data: allLegends};
+
+                        data.$data.option = option;
+                    });
+
+                }
+            });
+            $.post('/dataview/getCustomerSalesLastThreeMonths', param, function (res) {
+                if (res.status === "200") {
+                    let customerData = [];
+                    $.each(res.data.slice(0, 20), function (k, v) {
+                        customerData.push({
+                            bfullname: v.bfullname,
+                            qty: v.totalnum,
+                            formattedQty: fUnitFormat({qty: v.totalnum}, unitMap[param.ptypeid])
+                        })
+                    });
+                    charts2.$data.customerData = customerData;
+                }
+            });
+            $.post('/dataview/getDepartmentSalesLastThreeMonth', param, function (res) {
+                if (res.status === "200") {
+                    departmentSales = {};
+                    let option2data = [];
+                    $.each(res.data, function (k, v) {
+                        departmentSales[v.ktypeid] = v;
+                        option2data.push({value: v.total, name: v.kfullname});
+                    });
+                    data.$data.option2 = {
+                        series: [{
+                            name: '部门销售分布',
+                            type: 'pie',
+                            radius: '60%',
+                            data: option2data
+                        }]
+                    };
+
+                    $.post('/dataview/getCommodityStock', param, function (res) {
+                        if (res.status === "200") {
+                            stock = {};
+                            $.each(res.data, function (k, v) {
+                                stock[v.ktypeid] = v;
+                            });
+                            let temp = [];
+                            $.each(stock, function (k, v) {
+                                let record = v;
+                                record['formattedQty'] = fUnitFormat(record, unitMap[param.ptypeid]);
+                                if (departmentSales[k] === undefined) {
+                                    record['total'] = 0;
+                                } else {
+                                    record['total'] = fUnitFormat({qty: departmentSales[k]['totalnum']}, unitMap[param.ptypeid]);
+                                }
+                                temp.push(record);
+                            });
+                            charts.$data.departmentData = temp;
+                        }
+                    });
+                }
+            });
+            $.ajaxSettings.async = true;
+        }
+
+        $(window).ready(function () {
+            chart_1.setOption(data.$data.option);
+            if (localStorage.getItem('selectHistory') === null) {
+                localStorage.setItem('selectHistory', JSON.stringify([]));
+            }
+            optionV.$data.history = JSON.parse(localStorage.getItem('selectHistory'));
+            // chart_2.setOption(data.$data.option2);
+        });
+
+    </script>
+
+</div>
+
+</body>
+</html>

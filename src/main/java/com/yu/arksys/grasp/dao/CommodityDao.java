@@ -1,9 +1,6 @@
 package com.yu.arksys.grasp.dao;
 
-import com.yu.arksys.bean.raw.Commodity;
-import com.yu.arksys.bean.raw.CommodityBrief;
-import com.yu.arksys.bean.raw.CommodityOfDataView;
-import com.yu.arksys.bean.raw.StockAlert;
+import com.yu.arksys.bean.raw.*;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -52,6 +49,10 @@ public interface CommodityDao {
     @Select("select Price from xw_P_PtypePrice where PTypeId = (select top 1 ptypeid from ptype where pusercode =" +
             " '${pusercode}') and PRTypeId in ('0010','0002','0003','0101')")
     List<String> getPricesByPusercode(@Param("pusercode") String pusercode);
+
+    @Select("SELECT t.ptypeid,t.ParId,t.pusercode,t.pfullname,t.RowIndex,t.psonnum,p.PRTypeId,p.Price FROM ptype t LEFT JOIN xw_P_PtypePrice p ON t.ptypeid = p.PTypeId\n" +
+            "WHERE t.ParId='${ParId}' AND t.isStop='0' AND t.deleted='0'")
+    List<CommodityBriefWithSalePricesRaw> getCommodityBriefWithPricesRaw(@Param("ParId") String ParId);
 
     // ============= 最近进价 =============== //
     @Select("select LastBuyPrice from ptype where ptypeid='${ptypeid}'")

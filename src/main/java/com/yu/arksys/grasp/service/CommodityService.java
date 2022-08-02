@@ -3,6 +3,7 @@ package com.yu.arksys.grasp.service;
 import com.yu.arksys.bean.api.ResponseBean;
 import com.yu.arksys.bean.raw.CommodityBrief;
 import com.yu.arksys.bean.raw.CommodityOfDataView;
+import com.yu.arksys.bean.response.CommodityBriefWithSalePricesResponse;
 import com.yu.arksys.bean.result.CommodityUnit;
 
 import java.util.List;
@@ -22,6 +23,8 @@ public interface CommodityService {
     String getFirstPriceByPusercode(String pusercode);
 
     String getSecondPriceByPusercode(String pusercode);
+
+    List<String> getSalePriceByPtypeid(String ptypeid);
 
     // ========= 单位查询 ========== //
     Map<String, CommodityUnit> getMergedUnitMap();
@@ -56,6 +59,14 @@ public interface CommodityService {
      * @return 子级商品列表
      */
     List<CommodityBrief> getBriefCommodityListByParentId(String parentId, String ktypeid, String orderBy);
+
+    /**
+     * 获取简短的商品信息，附带售价，用于询价
+     * @param parentId 父目录ID
+     * @return 子级商品列表
+     */
+    List<CommodityBriefWithSalePricesResponse> getBriefCommodityListWithSalePricesByParentId(String parentId);
+
 
     // **** dataView **** //
 

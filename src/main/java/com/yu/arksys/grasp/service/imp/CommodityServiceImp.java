@@ -1,11 +1,9 @@
 package com.yu.arksys.grasp.service.imp;
 
 import com.yu.arksys.bean.api.ResponseBean;
-import com.yu.arksys.bean.raw.CommodityBrief;
-import com.yu.arksys.bean.raw.CommodityOfDataView;
-import com.yu.arksys.bean.raw.StockAlert;
+import com.yu.arksys.bean.raw.*;
+import com.yu.arksys.bean.response.CommodityBriefWithSalePricesResponse;
 import com.yu.arksys.bean.result.CommodityUnit;
-import com.yu.arksys.bean.raw.CommodityUnitRaw;
 import com.yu.arksys.grasp.dao.CommodityDao;
 import com.yu.arksys.grasp.dao.CommodityUnitDao;
 import com.yu.arksys.grasp.service.BeanMappingService;
@@ -15,9 +13,7 @@ import com.yu.arksys.utils.SQLUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class CommodityServiceImp implements
@@ -85,6 +81,14 @@ public class CommodityServiceImp implements
     }
 
     @Override
+    public List<CommodityBriefWithSalePricesResponse> getBriefCommodityListWithSalePricesByParentId(String parentId) {
+        if (parentId == null || parentId.equals("")) {
+            parentId = "00000";
+        }
+        return mergeCommodityPrices(commodityDao.getCommodityBriefWithPricesRaw(parentId));
+    }
+
+    @Override
     public List<CommodityOfDataView> getDataViewCommodityListByParentId(String parentId, String ktypeid, String orderBy) {
         return null;
     }
@@ -149,6 +153,14 @@ public class CommodityServiceImp implements
     }
 
     @Override
+    public List<String> getSalePriceByPtypeid(String ptypeid) {
+        List<String> list;
+        list = commodityDao.getPricesByPtypeid(ptypeid);
+        list.remove(3);
+        return list;
+    }
+
+    @Override
     public Map<String, CommodityUnit> getMergedUnitMap() {
         return getMergedUnitMapWithConditions(new HashMap<>());
     }
@@ -184,11 +196,11 @@ public class CommodityServiceImp implements
             String id = unit.getPTypeId();
             String unit1 = "";
             CommodityUnit commodityUnit;
-            if(!result.containsKey(id)) {
+            if (!result.containsKey(id)) {
                 commodityUnit = new CommodityUnit(id, "", "", "", "", "");
             } else commodityUnit = result.get(id);
             if (unit.getIsBase().equals("1")) commodityUnit.setBaseUnit(unit.getUnit1());
-            else if (unit.getOrdid().equals("1")){
+            else if (unit.getOrdid().equals("1")) {
                 commodityUnit.setSecondUnit(unit.getUnit1());
                 commodityUnit.setSecondRate(unit.getURate());
             } else if (unit.getOrdid().equals("2")) {
@@ -198,6 +210,37 @@ public class CommodityServiceImp implements
             result.put(id, commodityUnit);
         });
         return result;
+    }
+
+    protected List<CommodityBriefWithSalePricesResponse> mergeCommodityPrices(List<CommodityBriefWithSalePricesRaw> commoditys) {
+        Map<String, CommodityBriefWithSalePricesResponse> map = new HashMap<>();
+        commoditys.forEach(commodity -> {
+            String id = commodity.getPtypeid();
+            CommodityBriefWithSalePricesResponse item = new CommodityBriefWithSalePricesResponse(
+                    id,
+                    commodity.getParId(),
+                    commodity.getPusercode(),
+                    commodity.getPfullname(),
+                    commodity.getRowIndex(),
+                    commodity.getPsonnum(),
+                    "",
+                    "",
+                    ""
+            );
+            // 判断不是目录
+            if (commodity.getPsonnum().equals("0")) {
+                switch (commodity.getPRTypeId()) {
+                    case "0001":
+                        item.setSalePrice1(commodity.getPrice());
+                    case "0002":
+                        item.setSalePrice2(commodity.getPrice());
+                    case "0003":
+                        item.setSalePrice3(commodity.getPrice());
+                }
+            }
+            map.put(id, item);
+        });
+        return (List<CommodityBriefWithSalePricesResponse>) map.values();
     }
 
 }
