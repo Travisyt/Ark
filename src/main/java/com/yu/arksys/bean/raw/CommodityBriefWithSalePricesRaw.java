@@ -2,6 +2,9 @@ package com.yu.arksys.bean.raw;
 
 public class CommodityBriefWithSalePricesRaw {
 
+    public CommodityBriefWithSalePricesRaw() {
+    }
+
     public CommodityBriefWithSalePricesRaw(String ptypeid, String parId, String pusercode, String pfullname, String rowIndex, String psonnum, String PRTypeId, String price) {
         this.ptypeid = ptypeid;
         ParId = parId;

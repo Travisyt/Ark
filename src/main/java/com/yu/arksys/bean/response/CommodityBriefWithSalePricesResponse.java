@@ -2,6 +2,9 @@ package com.yu.arksys.bean.response;
 
 public class CommodityBriefWithSalePricesResponse {
 
+    public CommodityBriefWithSalePricesResponse() {
+    }
+
     public CommodityBriefWithSalePricesResponse(String ptypeid, String parId, String pusercode, String pfullname, String rowIndex, String psonnum, String salePrice1, String salePrice2, String salePrice3) {
         this.ptypeid = ptypeid;
         ParId = parId;
