@@ -240,7 +240,7 @@ public class CommodityServiceImp implements
             }
             map.put(id, item);
         });
-        return (List<CommodityBriefWithSalePricesResponse>) map.values();
+        return new ArrayList<>(map.values());
     }
 
 }

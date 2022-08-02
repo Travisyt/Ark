@@ -7,3 +7,12 @@
 2022-08-02 12:17:19.201  INFO 2144 --- [main] com.yu.arksys.ArkSysApplicationTests     : Started ArkSysApplicationTests in 3.797 seconds (JVM running for 5.121)
 2022-08-02 12:17:19.524  INFO 2144 --- [SpringContextShutdownHook] o.s.s.c.ThreadPoolTaskScheduler          : Shutting down ExecutorService 'taskScheduler'
 2022-08-02 12:17:19.527  INFO 2144 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2022-08-02 12:38:13.599  INFO 17356 --- [main] com.yu.arksys.ArkSysApplicationTests     : Starting ArkSysApplicationTests on RelcuaZ with PID 17356 (started by TravisYT in F:\ideaProjs\ArkSys)
+2022-08-02 12:38:13.601  INFO 17356 --- [main] com.yu.arksys.ArkSysApplicationTests     : No active profile set, falling back to default profiles: default
+2022-08-02 12:38:15.718  INFO 17356 --- [main] com.yu.arksys.service.api.Logger         : ======================= get logger from logger factory =========================
+2022-08-02 12:38:17.434  INFO 17356 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2022-08-02 12:38:17.733  WARN 17356 --- [main] org.thymeleaf.templatemode.TemplateMode  : [THYMELEAF][main] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+2022-08-02 12:38:17.934  INFO 17356 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
+2022-08-02 12:38:18.055  INFO 17356 --- [main] com.yu.arksys.ArkSysApplicationTests     : Started ArkSysApplicationTests in 4.831 seconds (JVM running for 6.102)
+2022-08-02 12:38:18.612  INFO 17356 --- [SpringContextShutdownHook] o.s.s.c.ThreadPoolTaskScheduler          : Shutting down ExecutorService 'taskScheduler'
+2022-08-02 12:38:18.616  INFO 17356 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
