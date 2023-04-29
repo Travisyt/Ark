@@ -12,4 +12,10 @@ public class LogUtils {
         System.out.println("");
     }
 
+    public static void dataAccessLog(String e) {
+        System.out.print("== 数据获取 == ");
+        System.out.println(e);
+        System.out.println("");
+    }
+
 }

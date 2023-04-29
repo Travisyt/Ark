@@ -17,6 +17,14 @@ public interface DetailedBillDao {
 
     public static final String SALE_TYPE = "11";
 
+    public static final String BUY_TYPE = "34";
+
+    public static final String BUY_RETURN_TYPE = "6";
+
+    /*
+    ========================= 销售 =========================
+     */
+
     @Select("select top ${pageSize} Vchcode,atypeid,btypeid,etypeid,ktypeid,PtypeId,Qty,price,total,date,Vchtype from " +
             "DlySale where ID not in (select top ${frontPageNum} ID from DlySale where ${conditions} order by ${orderBy}) " +
             "and ${conditions} order by ${orderBy}")
@@ -53,6 +61,11 @@ public interface DetailedBillDao {
     @Select("select Vchcode,atypeid,btypeid,etypeid,ktypeid,PtypeId,Qty,price,total,date,Vchtype from DlySale where " +
             "date=${date} and ${conditions}")
     List<DetailedBill> getDailyRecordsWithConditions(@Param("conditions") String conditions,@Param("date") String date);
+
+    /*
+    ========================= 进货 =========================
+     */
+
 
 
 }

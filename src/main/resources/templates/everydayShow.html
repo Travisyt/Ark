@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>每日数据</title>
+    <link href="bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link href="css/elements.css" rel="stylesheet">
+    <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/echarts.js"></script>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript" src="js/commodityUtils.js"></script>
+    <script type="text/javascript" src="js/utils.js"></script>
+</head>
+<body>
+
+<div id="body" th:fragment="everydayShow">
+    <nav class="navbar navbar-default navbar-fixed-top navbar-inner" role="navigation"
+         style="border-top: 2px solid #761c19; border-bottom: 3px solid #761c19">
+
+        <div id="navbar-option" class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#"
+                   style="color: #761c19; font-weight: bold; font-size: xx-large">华光五金今日数据 </a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-left">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">图表内容 <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="javascript:">销售总额</a></li>
+                            <li><a href="javascript:">退货总额</a></li>
+                            <li><a href="javascript:">优惠总额</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <form role="form" style="margin-top: 10px">
+                            <div class="form-group">
+                                <input type="date" class="form-control" v-model="dateOfData">
+                            </div>
+                        </form>
+                    </li>
+                </ul>
+
+                <div class="nav navbar-nav navbar-right">
+                    <p class="navbar-text" style="padding-right: 100px;">
+                        当前页面:
+                        <span id="currentPage"></span>
+                    </p>
+                </div>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+
+    </nav>
+
+    <div class="container" style="padding-top: 80px;width: 90%">
+
+        <!-- echarts -->
+        <div id="chart1">
+            <div id="chart1_data"></div>
+            <div id="graph1" style="height: 500px; width: 90%;"></div>
+        </div>
+
+        <!-- table -->
+        <div id="chart2">
+            <div></div>
+            <div>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th class="left">销售员</th>
+                        <th class="text-right">销售总额</th>
+                        <th class="text-right">扣除销售额</th>
+                        <th class="text-right">销售退货</th>
+                        <th class="text-right">优惠金额</th>
+                        <th class="text-right">实际销售额</th>
+                        <th class="text-right">乘以5%</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="d in salesData">
+                        <td class="text-left">{{d.efullname}}</td>
+                        <td class="text-right">{{parseFloat(d.totalSales).toFixed(1)}}</td>
+                        <td class="text-right">0</td>
+                        <td class="text-right">{{parseFloat(d.totalReturn).toFixed(1)}}</td>
+                        <td class="text-right">{{parseFloat(d.totalDiscount).toFixed(1)}}</td>
+                        <td class="text-right">{{parseFloat(d.netTotalSales).toFixed(1)}}</td>
+                        <td class="text-right">{{parseFloat(d.netTotalSales * 0.05).toFixed(1)}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+<!--    载入动画    -->
+<div id="loading" style="height: 50px; padding: 20px 0 0 0;display: inline;">
+    <!--        loading        -->
+    <span class="loading-small" id="loading-icon">
+                    <span></span><span></span><span></span><span></span><span></span>
+        </span>
+</div>
+<script>
+    var current_date, last_date;
+    var echart1 = echarts.init(document.getElementById('graph1'));
+    var echart1_data = new Vue({
+        el: '#chart1_data',
+        data: {
+            option: {
+                title: {
+                    text: '今日销售情况'
+                },
+                tooltip: {},
+                legend: {
+                    data: ['销量']
+                },
+                xAxis: {
+                    axisLine: {
+                        lineStyle: {
+                            width: 2
+                        }
+                    }
+                },
+                yAxis: {
+                    axisLine: {
+                        lineStyle: {
+                            width: 3
+                        }
+                    },
+                    axisLabel: {
+                        fontWeight: 'bold',
+                        fontSize: 18
+                    },
+                    name: '销售员',
+                    type: 'category',
+                    data: ["张三", "李四", "王二", "麻子", "小明"],
+                    nameTextStyle: {
+                        // fontWeight: 'bold',
+                        // fontSize: '18'
+                    }
+                },
+                series: [
+                    {
+                        name: '销量',
+                        type: 'bar',
+                        color: 'red',
+                        data: [5, 20, 36, 16, 12],
+                        itemStyle: {
+                            // 设置扇形的阴影
+                            shadowBlur: 3,
+                            shadowColor: 'black',
+                            shadowOffsetX: 0,
+                            shadowOffsetY: 1,
+                            opacity: 1
+                        },
+                        label: {
+                            normal: {
+                                show: true,
+                                fontWeight: 'bold',
+                                formatter: function (params) {
+                                    return parseFloat(params.data).toFixed(1);
+                                }
+                            }
+                        }
+                    },
+                    // {
+                    //     name: '优惠+退货',
+                    //     type: 'bar',
+                    //     color: 'grey',
+                    //     data: [10, 20, 15, 32, 12, 8, 35]
+                    // }
+                ]
+            },
+            salesData: [],
+            optionChangedFlag: true,
+        },
+        methods: {}
+    });
+    // echart1.setOption(echart1_data.$data.option);
+    var chart2_data = new Vue({
+        el: '#chart2',
+        data: {
+            salesData: {}
+        }
+    });
+    var navbar_option = new Vue({
+        el: '#navbar-option',
+        data: {
+            dateOfData: '',
+        },
+        methods: {}
+    });
+
+    echart1_data.$watch('optionChangedFlag', function (nval) {
+        echart1.setOption(echart1_data.$data.option);
+    });
+
+
+    var showSalesData = function (salesData = []) {
+        let yData = [], xData = [], valueCount = 0;
+        $.each(salesData, function (k, v) {
+            yData.push(v['efullname']);
+            xData.push(v['netTotalSales']);
+            if (v['netTotalSales']) {
+                valueCount = valueCount + 1;
+            }
+        });
+        echart1_data.$data.option.yAxis.data = yData;
+        echart1_data.$data.option.series[0].data = xData;
+        echart1_data.$data.optionChangedFlag = !echart1_data.$data.optionChangedFlag;
+        if (valueCount === 0) {
+            alert('无数据可展示。');
+        }
+    };
+
+    var refresh_data = function (param = {}) {
+        loading(true);
+        let _salesData = [];
+        $.post('/dataview/getDaySalesData', param, function (res) {
+            if (res.status === "200") {
+                _salesData = res.data.sort(function (a, b) {
+                    return (parseInt(a['netTotalSales']) - parseInt(b['netTotalSales']));
+                });
+                chart2_data.$data.salesData = _salesData;
+                showSalesData(_salesData);
+                loading(false);
+            } else {
+                alert('获取数据失败。');
+                loading(false);
+            }
+        });
+
+    };
+
+    var formatDate = function (d) {
+        let m, da;
+        m = d.getMonth() + 1;
+        da = d.getDate();
+        if (m < 10) {
+            m = '0' + m;
+        }
+        if (da < 10) {
+            da = '0' + da;
+        }
+        return (d.getFullYear() + '-' + m + '-' + da);
+    };
+
+    $(window).ready(function () {
+        let _date = new Date();
+        current_date = formatDate(_date);
+        _date.setTime(_date.getTime() - (24 * 60 * 60 * 1000));
+        last_date = formatDate(_date);
+        navbar_option.$data.dateOfData = last_date;
+        echart1.setOption(echart1_data.$data.option);
+        navbar_option.$watch('dateOfData', function (nval) {
+            refresh_data({'date': navbar_option.$data.dateOfData});
+        });
+        refresh_data(last_date);
+    });
+</script>
+</body>
+</html>

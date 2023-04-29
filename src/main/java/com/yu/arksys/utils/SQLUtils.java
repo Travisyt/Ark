@@ -11,17 +11,37 @@ import java.util.Map;
 public class SQLUtils {
 
     private static String date;
+    private static String lastDate;
 
     static {
         date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        lastDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis() - 86400000));
+
     }
 
     public static String getCurrentDate() {
         return surroundWith(date, "'");
     }
 
-    public static void refreshCurrentDate(Date d) {
+    public static String getCurrentDate(boolean surround) {
+        if(surround){
+            return surroundWith(date, "'");
+        } else {
+            return date;
+        }
+    }
+
+    public static String getLastDate(boolean surround){
+        if(surround){
+            return surroundWith(lastDate, "'");
+        } else {
+            return lastDate;
+        }
+    }
+
+    public static void refreshCurrentDate(Date d, Date ld) {
         date = new SimpleDateFormat("yyyy-MM-dd").format(d);
+        lastDate = new SimpleDateFormat("yyyy-MM-dd").format(ld);
     }
 
     /**

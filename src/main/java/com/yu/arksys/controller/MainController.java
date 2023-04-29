@@ -15,11 +15,6 @@ public class MainController {
         return new ModelAndView("baidutest");
     }
 
-    @RequestMapping("/mysterious")
-    public ModelAndView qiuhun() {
-        return new ModelAndView("qiuhun");
-    }
-
     /**
      * 万能数据
      * @return 万能数据页面
@@ -28,6 +23,7 @@ public class MainController {
     public ModelAndView universalData() {
         return new ModelAndView("universalData");
     }
+
 
     @RequestMapping("/home")
     public ModelAndView home() {
@@ -113,6 +109,12 @@ public class MainController {
     @RequestMapping("/stockAlerts")
     public ModelAndView stockAlerts() {
         return new ModelAndView("stockAlerts");
+    }
+
+
+    @RequestMapping("/everydayShow")
+    public ModelAndView everydayShow(){
+        return new ModelAndView("everydayShow");
     }
 
 }

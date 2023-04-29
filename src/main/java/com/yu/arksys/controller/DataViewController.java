@@ -3,11 +3,13 @@ package com.yu.arksys.controller;
 import com.yu.arksys.exception.DataSourceException;
 import com.yu.arksys.grasp.dao.DataViewDao;
 import com.yu.arksys.grasp.service.DataViewService;
+import com.yu.arksys.grasp.service.EverydayShowService;
 import com.yu.arksys.grasp.service.UniversalDataService;
 import com.yu.arksys.lastyear.dao.LastYearDataViewDao;
 import com.yu.arksys.utils.LogUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -30,8 +32,12 @@ public class DataViewController {
     @Autowired
     LastYearDataViewDao lastYearDataViewDao;
 
+    @Autowired
+    EverydayShowService everydayShowService;
+
     /**
      * 每月销售数据
+     *
      * @param ptypeid 商品编号
      * @return 每月数据
      */
@@ -54,6 +60,7 @@ public class DataViewController {
 
     /**
      * 去年至今的月销售情况
+     *
      * @param ptypeid 商品id
      * @return response map
      */
@@ -76,6 +83,7 @@ public class DataViewController {
 
     /**
      * 获取部门月销量
+     *
      * @param ptypeid 商品id
      * @return response map
      */
@@ -98,6 +106,7 @@ public class DataViewController {
 
     /**
      * 获取商品库存分布
+     *
      * @param ptypeid 商品id
      * @return response map
      */
@@ -120,6 +129,7 @@ public class DataViewController {
 
     /**
      * 获取部门近三月销售情况
+     *
      * @param ptypeid 商品id
      * @return response map
      */
@@ -142,6 +152,7 @@ public class DataViewController {
 
     /**
      * 获取客户近三月销售情况
+     *
      * @param ptypeid 商品id
      * @return response map
      */
@@ -164,6 +175,7 @@ public class DataViewController {
 
     /**
      * 获取职员销售均价
+     *
      * @param ptypeid 商品id
      * @return response map
      */
@@ -176,6 +188,46 @@ public class DataViewController {
         Map<String, Object> res = new HashMap<>();
         try {
             res.put("data", dataViewDao.getEmployeeAverageSalesPrice(ptypeid));
+            res.put("status", "200");
+        } catch (Exception e) {
+            e.printStackTrace();
+            res.put("status", "0");
+        }
+        return res;
+    }
+
+    @RequestMapping("/getDaySalesData")
+    @ResponseBody
+    public Map<String, Object> getSalesData(String date) {
+        LogUtils.dataAccessLog("getDaySalesData");
+
+        Map<String, Object> res = new HashMap<>();
+        try {
+            if (date != null) {
+                res.put("data", everydayShowService.getSalesData(date));
+            } else {
+                res.put("data", everydayShowService.getSalesDataLastDay());
+            }
+            res.put("status", "200");
+        } catch (Exception e) {
+            e.printStackTrace();
+            res.put("status", "0");
+        }
+        return res;
+    }
+
+    @RequestMapping("/getBuyQuantityRecords")
+    @ResponseBody
+    public Map<String, Object> getBuyQuantityRecords(String ptypeid) {
+        LogUtils.dataAccessLog("getBuyQuantityRecords");
+
+        Map<String, Object> res = new HashMap<>();
+        try {
+            if (ptypeid != null) {
+                res.put("data", dataViewDao.getBuyQuantityRecords(ptypeid));
+            } else {
+                throw new Exception("missing parameter \"ptypeid\"");
+            }
             res.put("status", "200");
         } catch (Exception e) {
             e.printStackTrace();

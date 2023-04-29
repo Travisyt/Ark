@@ -10,6 +10,7 @@
     <script type="text/javascript" src="js/echarts.js"></script>
     <script type="text/javascript" src="js/vue.js"></script>
     <script type="text/javascript" src="js/commodityUtils.js"></script>
+    <script type="text/javascript" src="js/utils.js"></script>
 </head>
 <body>
 
@@ -19,7 +20,7 @@
         <div id="data"></div>
         <!--    左侧      -->
         <div id="option" class="col-md-2" style="padding: 0 0 0 0;">
-            <div style="padding: 10px 10px 10px 10px;box-shadow: 0 0 5px #000000;margin: 20px 10px;">
+            <div style="padding: 10px 10px 10px 10px;box-shadow: 0 0 2px #000000;margin: 10px 5px;">
                 <h4 style="margin-left: 10px">内容选项</h4>
                 <hr/>
                 <div class="form-group">
@@ -40,7 +41,7 @@
                 </div>
             </div>
 
-            <div style="padding: 10px 10px 30px 10px;box-shadow: 0 0 5px #000000;margin: 20px 10px;display: none">
+            <div style="padding: 10px 10px 30px 10px;box-shadow: 0 0 2px #000000;margin: 10px 5px;display: none">
                 <h4 style="margin-left: 10px">表格控制</h4>
                 <hr/>
                 <div class="form-group">
@@ -58,7 +59,7 @@
                 </div>
             </div>
 
-            <div style="padding: 10px 10px 10px 10px;box-shadow: 0 0 5px #000000;margin: 20px 10px">
+            <div style="padding: 10px 10px 10px 10px;box-shadow: 0 0 2px #000000;margin: 10px 5px">
                 <h4>历史记录</h4>
                 <table class="table table-hover">
                     <tbody>
@@ -72,55 +73,79 @@
 
         <!--    右侧      -->
         <div class="col-md-10" style="padding: 0 10px 0 0">
-            <div style="padding: 30px 25px 10px 10px;box-shadow: 0 0 5px #000000;margin: 20px 10px">
-                <div id="charts_1" style="width: 100%;padding: 0 1% 1% 1%">
-                    <div id="graph_1" style="height: 80vh;width: 98%;"></div>
-                    <hr/>
-                    <div id="charts" style="width: 70%;display: inline-block">
-                        <table class="table">
-                            <thead style="font-size: large">
-                            <tr>
-                                <th>部门</th>
-                                <th>库存数量</th>
-                                <th>库存辅助数量</th>
-                                <th>部门近三月销量</th>
-                            </tr>
-                            </thead>
-                            <tbody style="font-size: x-large">
-                            <tr v-for="data in departmentData">
-                                <td>{{ data.kfullname }}</td>
-                                <td>{{ data.qty }}</td>
-                                <td>{{ data.formattedQty }}</td>
-                                <td>{{ data.total }}</td>
-                                <td></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div style="margin-left: 2%;width: 300px;height: 260px;display: inline-block">
-                        <div id="graph_2" style="width: 300px;height: 260px"></div>
-                    </div>
-                    <hr/>
-                    <div id="charts2">
-                        <table class="table">
-                            <thead style="font-size: large">
-                            <tr>
-                                <th>客户</th>
-                                <th>销量</th>
-                                <th>辅助销量</th>
-                            </tr>
-                            </thead>
-                            <tbody style="font-size: x-large">
-                            <tr v-for="d in customerData">
-                                <td>{{ d.bfullname }}</td>
-                                <td>{{ d.qty }}</td>
-                                <td>{{ d.formattedQty }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
+            <div style="padding: 30px 25px 10px 10px;box-shadow: 0 0 2px #000000;margin: 10px 5px">
 
-
+                <div id="graph_1" style="height: 80vh;width: 98%;"></div>
+            </div>
+            <div style="padding: 30px 25px 10px 10px;box-shadow: 0 0 2px #000000;margin: 10px 5px">
+                <h3>库存分布</h3>
+                <div id="charts" style="width: 70%;display: inline-block">
+                    <table class="table">
+                        <thead style="font-size: large">
+                        <tr>
+                            <th>部门</th>
+                            <th>库存数量</th>
+                            <th>库存辅助数量</th>
+                            <th>部门近三月销量</th>
+                        </tr>
+                        </thead>
+                        <tbody style="font-size: x-large">
+                        <tr v-for="data in departmentData">
+                            <td>{{ data.kfullname }}</td>
+                            <td>{{ data.qty }}</td>
+                            <td>{{ data.formattedQty }}</td>
+                            <td>{{ data.total }}</td>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="margin-left: 2%;width: 300px;height: 260px;display: inline-block">
+                    <div id="graph_2" style="width: 300px;height: 260px"></div>
+                </div>
+            </div>
+            <div style="padding: 30px 25px 10px 10px;box-shadow: 0 0 2px #000000;margin: 10px 5px">
+                <h3>进货记录</h3>
+                <div id="charts3">
+                    <table class="table">
+                        <thead style="font-size: medium">
+                        <tr>
+                            <th>进货日期</th>
+                            <th>供货商</th>
+                            <th>仓库名称</th>
+                            <th>最近进货量</th>
+                        </tr>
+                        </thead>
+                        <tbody style="font-size: x-large">
+                        <tr v-for="b in buyData">
+                            <td>{{ b.date }}</td>
+                            <td>{{ b.bfullname }}</td>
+                            <td>{{ b.kfullname }}</td>
+                            <td>{{ b.formattedQty }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div style="padding: 30px 25px 10px 10px;box-shadow: 0 0 2px #000000;margin: 10px 5px">
+                <h3>客户销售情况</h3>
+                <div id="charts2">
+                    <table class="table">
+                        <thead style="font-size: large">
+                        <tr>
+                            <th>客户</th>
+                            <th>销量</th>
+                            <th>辅助销量</th>
+                        </tr>
+                        </thead>
+                        <tbody style="font-size: x-large">
+                        <tr v-for="d in customerData">
+                            <td>{{ d.bfullname }}</td>
+                            <td>{{ d.qty }}</td>
+                            <td>{{ d.formattedQty }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -264,6 +289,12 @@
                 customerData: []
             }
         });
+        var charts3 = new Vue({
+            el: '#charts3',
+            data: {
+                buyData: []
+            }
+        });
 
         function acceptOption() {
             let stockMap = {"00005": "总仓库", "00002": "嘉泰", "00009": "碧云广场"};
@@ -274,6 +305,7 @@
             let unitMap = {};
             let departmentSalesMap = {};
             $.ajaxSettings.async = false;
+            loading(true);
 
             $.post('/dataview/getUniversalDepartmentDataPermonth', param, function (res) {
                 if (res.status === "200") {
@@ -285,6 +317,7 @@
                 if (res.status === "200") {
                     if (res.data === null || res.data === []) {
                         alert("数据库中没有数据");
+                        loading(false);
                         return;
                     }
                     let datar = res.data;
@@ -401,13 +434,29 @@
                         option.legend = {data: allLegends};
 
                         data.$data.option = option;
+                        loading(false);
                     });
-
+                }
+            });
+            $.post('/dataview/getBuyQuantityRecords', param, function (res) {
+                if (res.status === "200") {
+                    let buyData = [];
+                    $.each(res.data, function (k, v) {
+                        buyData.push({
+                            bfullname: v.bfullname,
+                            date: v.date,
+                            kfullname: v.kfullname,
+                            qty: v.totalnum,
+                            formattedQty: fUnitFormat({qty: v.qty}, unitMap[param.ptypeid])
+                        })
+                    });
+                    charts3.$data.buyData = buyData;
                 }
             });
             $.post('/dataview/getCustomerSalesLastThreeMonths', param, function (res) {
                 if (res.status === "200") {
                     let customerData = [];
+                    // 选择前20条数据
                     $.each(res.data.slice(0, 20), function (k, v) {
                         customerData.push({
                             bfullname: v.bfullname,
@@ -457,6 +506,7 @@
                     });
                 }
             });
+            loading(false);
             $.ajaxSettings.async = true;
         }
 
