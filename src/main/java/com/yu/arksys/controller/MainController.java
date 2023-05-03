@@ -24,6 +24,11 @@ public class MainController {
         return new ModelAndView("universalData");
     }
 
+    @RequestMapping("/stockWatch")
+    public ModelAndView stockWatch() {
+        return new ModelAndView("stockWatch");
+    }
+
 
     @RequestMapping("/home")
     public ModelAndView home() {

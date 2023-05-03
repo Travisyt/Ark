@@ -517,6 +517,13 @@
             }
             optionV.$data.history = JSON.parse(localStorage.getItem('selectHistory'));
             // chart_2.setOption(data.$data.option2);
+            let params = new URLSearchParams(window.location.search);
+            let id = params.get('ptypeid');
+            console.log(id);
+            if (id) {
+                optionV.$data.goodsId = id;
+                acceptOption();
+            }
         });
 
     </script>

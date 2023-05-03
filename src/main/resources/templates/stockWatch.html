@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>库存监控</title>
+    <link href="bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link href="css/elements.css" rel="stylesheet">
+    <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/echarts.js"></script>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript" src="js/commodityUtils.js"></script>
+</head>
+<body>
+<div class="alert alert-success" style="position: fixed;z-index: 100;width: 100%;display: none">
+    <strong>成功!</strong>
+</div>
+<div id="workspace" class="container-fluid">
+    <div class="col-md-10" style="padding: 0 10px 5px 10px">
+        <hr/>
+        <div class="form-group">
+            <div class="input-group">
+                <input v-model="key" type="text" class="form-control" id="fuzzyInput" onkeydown="keydown(event)">
+                <span class="input-group-btn"><button id="keySearch" type="button"
+                                                      class="btn btn-primary"
+                                                      v-on:click="fuzzySearchByPartName()">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </button></span>
+            </div>
+        </div>
+        <button id="goodsSelectBack" type="button" class="btn btn-info" v-on:click="backSpace()">返回上级
+        </button>
+        <button id="backToIndex" type="button" class="btn btn-info" v-on:click="backToIndex()">返回主目录
+        </button>
+    </div>
+
+    <div style="padding: 10px 10px 10px 10px">
+        <table class="table table-hover table-striped">
+            <thead id="goodsSelectTableHead"
+                   style="border-top: solid 3px black;border-bottom: solid 3px black">
+            <tr>
+                <th>商品名称</th>
+                <th>单位</th>
+                <th>库存量</th>
+                <th>状态</th>
+                <th>报警下限</th>
+                <th>跳转</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="commodity in commodityList"
+                v-on:dblclick="commodityChangeDirectory(commodity)">
+                <td>{{ commodity.pfullname }}</td>
+                <td>{{ getUnitMap(commodity.ptypeid) }}</td>
+                <td>{{ unitFormat(commodity) }}</td>
+
+                <td v-if="commodity.psonnum > 0"></td>
+                <td v-else-if="commodity.qty === null || commodity.minimum === null"
+                    style="background-color: lightgrey"></td>
+                <td v-else-if="commodity.qty<commodity['minimum']" style="background-color: red"></td>
+                <td v-else style="background-color: green"></td>
+
+                <td style="display: none">{{commodity.ptypeid}}</td>
+                <td v-if="commodity['minimum']">{{ commodity['minimum'] }}{{ getBaseUnit(commodity.ptypeid) }} /辅助数量：
+                    {{unitFormat(commodity, 2)}}<span><input type="number"><button class="btn btn-sm btn-info"
+                                                                                   v-on:click="modifyAlert($event)"> 修改</button></span>
+                </td>
+                <td v-else>未设置 <span v-if="commodity.psonnum <= 0"><input type="number"><button
+                        class="btn btn-sm btn-primary"
+                        v-on:click="addAlert($event,commodity.ptypeid)">添加报警</button></span></td>
+
+                <td v-if="commodity.psonnum > 0"></td>
+                <td v-else>
+                    <a v-on:click="openData(commodity.ptypeid)">跳转到销售数据</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    var goodsSelect = new Vue({
+        el: '#workspace',
+        data: {
+            key: "",
+            commodityList: [],
+            orderBy: 'RowIndex',
+            commodityUnitMap: {},
+            actionStack: [
+                ['00000', '库存商品']
+            ]
+        },
+        computed: {},
+        methods: {
+            openData: function(ptypeid){
+                window.open('/universalData?ptypeid='.concat(ptypeid));
+            },
+            commodityDir: function () {
+                let dir = '';
+                $.each(this.actionStack, function (k, v) {
+                    dir = dir.concat(v[1]).concat(' /');
+                });
+                return dir;
+            },
+            backSpace: function () {
+                if (goodsSelect.$data.actionStack.length !== 1) {
+                    goodsSelect.$data.actionStack.pop();
+                    let last = goodsSelect.$data.actionStack.pop();
+                    refreshCommodityList({ParId: last[0], pfullname: last[1]});
+                }
+            },
+            commodityChangeDirectory: function (commodity) {
+                if (typeof commodity === 'undefined') {
+                    refreshCommodityList();
+                } else {
+                    if (commodity.psonnum === '0') {
+                        // selectGoods([commodity]);
+                    } else {
+                        refreshCommodityList({ParId: commodity.ptypeid, pfullname: commodity.pfullname});
+                    }
+                }
+            },
+            unitFormat: function (commodity, mode = 1) {
+                if (commodity.psonnum !== '0') {
+                    return '';
+                } else if (mode === 1) {
+                    return fUnitFormat(commodity, goodsSelect.$data.commodityUnitMap[commodity.ptypeid]);
+                } else if (mode === 2) {
+                    return fUnitFormat(commodity, goodsSelect.$data.commodityUnitMap[commodity.ptypeid], 'minimum');
+                }
+            },
+            getBaseUnit: function (ptypeid) {
+                if (typeof goodsSelect.$data.commodityUnitMap[ptypeid] === 'undefined') {
+                    return '-';
+                } else {
+                    return goodsSelect.$data.commodityUnitMap[ptypeid].baseUnit;
+                }
+            },
+            getUnitMap: function (ptypeid) {
+                let mapString = '';
+                let unitLast = "";
+                let map = goodsSelect.$data.commodityUnitMap[ptypeid];
+                if (map === null || map === undefined) {
+                    return '-'
+                }
+                if (map.thirdUnit !== '' && map.secondUnit !== '') {
+                    mapString = mapString.concat('1').concat(map.thirdUnit).concat('=');
+                    mapString = mapString.concat(cutLastZero((map.thirdRate / map.secondRate).toString())).concat(map.secondUnit).concat('=');
+                    mapString = mapString.concat(cutLastZero(map.thirdRate.toString())).concat(map.baseUnit);
+                } else if (map.thirdUnit === '' && map.secondUnit !== '') {
+                    mapString = mapString.concat('1').concat(map.secondUnit).concat('=');
+                    mapString = mapString.concat(cutLastZero(map.secondRate.toString())).concat(map.baseUnit);
+                } else {
+                    mapString = mapString.concat('1').concat(cutLastZero(map.secondUnit.toString()));
+                }
+                return mapString;
+            },
+            fuzzySearchByPartName: function () {
+                let partName = goodsSelect.$data.key;
+                refreshCommodityList({partName: partName}, 2)
+            },
+            backToIndex: function () {
+                refreshCommodityList({ParId: '00000'});
+            },
+            escapeNull: escapeNull,
+            modifyAlert: function (e) {
+                // if (ptypeid === null || ptypeid === undefined){
+                //     alert('PTYPEID 错误。');
+                //     return;
+                // }
+                modifyAlert(e.currentTarget.parentElement.parentElement.previousElementSibling.innerHTML, e.currentTarget.previousElementSibling.value);
+                refreshCommodityList();
+            },
+            addAlert: function (e, ptypeid) {
+                addAlert(ptypeid, e.currentTarget.previousElementSibling.value);
+                refreshCommodityList();
+            }
+        }
+    });
+    // goodsSelect.$watch('key', function (nv, ov) {
+    //
+    // });
+    function keydown(event) {
+        if (event.keyCode === 13) {
+            document.getElementById('keySearch').click()
+        }
+    }
+
+    function addAlert(ptypeid, minimum = '0', ktypeid = '00005') {
+        if (ptypeid === undefined || ptypeid === null) {
+            alert('填写信息不全。');
+        } else {
+            $.post('/commodity/addStockAlert', {
+                ptypeid: ptypeid,
+                ktypeid: ktypeid,
+                minimum: minimum
+            }, function (res) {
+                if (res.status === '1') {
+                    console.log(res);
+                } else if (res.status === '0') {
+                    alert('添加失败。');
+                } else {
+                    $('.alert').css('display', 'block');
+                    setTimeout(function () {
+                        $('.alert').css('display', 'none');
+                    }, 2000)
+                }
+            });
+        }
+
+    }
+
+    function modifyAlert(ptypeid, minimum = 0, ktypeid = '00005') {
+        if (ptypeid === undefined || ptypeid === null) {
+            alert('填写信息不全。');
+        } else {
+            $.post('/commodity/modifyStockAlert', {
+                ptypeid: ptypeid,
+                ktypeid: ktypeid,
+                minimum: minimum
+            }, function (res) {
+                if (res.status === '200') {
+                    $('.alert').css('display', 'block');
+                    setTimeout(function () {
+                        $('.alert').css('display', 'none');
+                    }, 2000)
+                }
+            });
+        }
+
+    }
+
+    function refreshCommodityList(param = {openFlag: true}, mode = 1) {
+        if (param.hasOwnProperty('openFlag')) {
+            param = {ParId: goodsSelect.$data.actionStack[goodsSelect.$data.actionStack.length - 1][0]}
+        } else {
+            if (mode === 1) {
+                goodsSelect.$data.actionStack.push([param.ParId, param.pfullname]);
+            }
+        }
+        param.ktypeid = "00005";
+        $('.container-fluid').addClass("depth-of-focus");
+        $.post('/basicInfo/getCommodityUnitMap', param, function (res) {
+            goodsSelect.$data.commodityUnitMap = res.data;
+        });
+        let postUrl = '/commodity/getBriefCommodityList';
+        if (mode === 2) {
+            postUrl = '/commodity/getBriefCommodityListByPartName';
+        }
+
+        $.post(postUrl, param, function (res) {
+            let rres = res.data;
+            let keyValue = {};
+            $.post('/commodity/getCommodityListWithAlerts', param, function (res) {
+                res.data.forEach(item => {
+                    keyValue[item.ptypeid] = item;
+                });
+                // console.log(keyValue);
+                rres.forEach(item => {
+                    item['minimum'] = keyValue[item['ptypeid']]['minimum'];
+                    // console.log(keyValue[item['ptypeid']]);
+                });
+                goodsSelect.$data.commodityList = rres;
+                // console.log(rres);
+                $('.container-fluid').removeClass("depth-of-focus");
+            });
+        });
+
+    }
+
+    $(window).ready(function () {
+        refreshCommodityList({ParId: "00000"});
+    })
+
+</script>
+
+</body>
+</html>

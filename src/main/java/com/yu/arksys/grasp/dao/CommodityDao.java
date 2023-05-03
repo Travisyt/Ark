@@ -72,6 +72,9 @@ public interface CommodityDao {
     @Select("SELECT t.ptypeid,t.ktypeid,t.minimum,Qty=(SELECT Qty FROM GoodsStocks t1 WHERE t1.PtypeId=t.ptypeid AND t1.KtypeId=t.ktypeid) FROM stockAlerts t")
     List<StockAlert> getStockAlertsList();
 
+    @Select("SELECT t1.ptypeid,t2.minimum,t2.ktypeid,qty='' FROM ptype t1 LEFT JOIN stockAlerts t2 ON t1.ptypeid = t2.ptypeid WHERE t1.ParId = '${ParId}'")
+    List<StockAlert> getCommodityListWithAlerts(@Param("ParId") String ParId);
+
     @Insert("INSERT INTO stockAlerts(ptypeid,ktypeid,minimum) VALUES('${ptypeid}','${ktypeid}','${minimum}')")
     void addStockAlert(@Param("ptypeid") String ptypeid, @Param("ktypeid") String ktypeid, @Param("minimum") String minimum);
 

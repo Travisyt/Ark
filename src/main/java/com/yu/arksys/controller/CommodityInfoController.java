@@ -3,6 +3,7 @@ package com.yu.arksys.controller;
 import com.yu.arksys.bean.api.ResponseBean;
 import com.yu.arksys.bean.raw.Commodity;
 import com.yu.arksys.bean.raw.CommodityBrief;
+import com.yu.arksys.bean.raw.StockAlert;
 import com.yu.arksys.bean.response.CommodityBriefWithSalePricesResponse;
 import com.yu.arksys.grasp.dao.CommodityDao;
 import com.yu.arksys.grasp.service.CommodityService;
@@ -140,6 +141,27 @@ public class CommodityInfoController {
             res.put("data", beans);
             res.put("status", "200");
         } else {
+            res.put("status", "0");
+        }
+        return res;
+    }
+
+    /**
+     * 获取商品ID列表附带预警
+     *
+     * @return 获取商品ID列表附带预警
+     */
+    @RequestMapping("/getCommodityListWithAlerts")
+    @ResponseBody
+    public Map<String, Object> getCommodityListWithAlerts(String ParId) {
+        List<StockAlert> stockAlerts;
+        Map<String, Object> res = new HashMap<>();
+        try{
+            stockAlerts = commodityDao.getCommodityListWithAlerts(ParId);
+            res.put("data", stockAlerts);
+            res.put("status", "200");
+        } catch (Exception e){
+            e.printStackTrace();
             res.put("status", "0");
         }
         return res;

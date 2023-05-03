@@ -1,6 +1,6 @@
-function fUnitFormat(commodity, unitMap) {
+function fUnitFormat(commodity, unitMap, target='qty') {
     let unitString = '';
-    let qty = parseInt(commodity.qty);
+    let qty = parseInt(commodity[target]);
     if (typeof unitMap === 'undefined') {
         return '-';
     }
@@ -53,4 +53,26 @@ function getUnitRelation(unitMap) {
     }
     unitString = unitString.concat(baseRate).concat(unitMap['baseUnit']);
     return unitString;
+}
+
+function escapeNull(obj) {
+    if(obj === null){
+        return '';
+    }
+}
+
+function cutLastZero(targetStr) {
+    let resStr = targetStr;
+    let count = 20;
+    if (resStr.lastIndexOf('.') === -1) {
+        return resStr;
+    }
+    while (resStr.lastIndexOf('0') === (resStr.length - 1) && count > 0) {
+        resStr = resStr.substr(0, resStr.lastIndexOf('0'));
+        count = count - 1;
+    }
+    if (resStr.lastIndexOf('.') === (resStr.length - 1)) {
+        resStr = resStr.substr(0, resStr.lastIndexOf('.'));
+    }
+    return resStr;
 }
