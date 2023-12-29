@@ -40,7 +40,7 @@
                     </div>
 
                     <div style="padding: 10px 10px 10px 10px">
-                        <table class="table table-hover table-striped">
+                        <table class="table table-hover table-striped" style="cursor: default">
                             <thead id="goodsSelectTableHead"
                                    style="border-top: solid 3px black;border-bottom: solid 3px black">
                             <tr>
@@ -171,7 +171,9 @@
 
         function selectGoods(goods = []) {
             sessionStorage.setItem('selectedGoodsList', JSON.stringify(goods));
-            eval(sessionStorage.getItem('goodsSelectFlagStatement'));
+            if(goods.length > 0){
+                eval(sessionStorage.getItem('goodsSelectFlagStatement'));
+            }
             $('#goodsSelectClose').click();
         }
 

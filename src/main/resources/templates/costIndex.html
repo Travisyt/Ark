@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>费用核算</title>
+    <link href="bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link href="css/elements.css" rel="stylesheet">
+    <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/echarts.js"></script>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript" src="js/commodityUtils.js"></script>
+    <script type="text/javascript" src="js/utils.js"></script>
+</head>
+
+<body>
+
+<div th:fragment="costIndex">
+    <div class="container-fluid" style="padding: 0 0 0 0">
+        <!-- 左侧菜单 -->
+        <div id="leftMenu" class="col-md-2" style="padding: 0 0 0 0;">
+            <div style="padding: 10px 10px 10px 10px;box-shadow: 0 0 2px #000000;margin: 10px 5px;">
+                <div>
+                    <button id="addCostRecordButton" type="button" class="btn btn-lg btn-primary" style="width: 100%">
+                        记录费用
+                    </button>
+                </div>
+            </div>
+            <div style="padding: 10px 10px 10px 10px;box-shadow: 0 0 2px #000000;margin: 10px 5px;">
+                左侧菜单2
+            </div>
+        </div>
+
+        <!-- 右侧菜单 -->
+        <div class="col-md-10" style="padding: 0 10px 0 0">
+            <div style="padding: 30px 25px 10px 10px;box-shadow: 0 0 2px #000000;margin: 10px 5px">
+                <h1>费用记录</h1>
+                <table class="table table-striped">
+                    <thead style="border-top: solid 3px black;border-bottom: solid 3px black">
+                    <tr>
+                        <th>项目名称</th>
+                        <th>项目类别</th>
+                        <th>金额</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+</body>
+</html>

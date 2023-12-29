@@ -54,6 +54,13 @@ public interface DataViewDao {
     List<DepartmentSalesOfCommodity> getDepartmentSalesLastThreeMonths(@Param("ptypeid") String ptypeid);
 
     /**
+     * 获取所有有在售数据商品的近三月销售额
+     * @return SalesNumOfCommodity List
+     */
+    @Select("select ptypeid=t.PtypeId,totalnum=-SUM(t.Qty) from DlySale t where (MONTH(getdate())-3)<=MONTH(t.date) GROUP BY PtypeId")
+    List<SalesNumOfCommodity> getSalesNumLastThreeMonthsOfCommodityAll();
+
+    /**
      * universal页面中 获取商品的库存分布
      *
      * @return CommodityStock List

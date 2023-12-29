@@ -16,6 +16,22 @@ public class MainController {
     }
 
     /**
+     * 费用核算主页
+     */
+    @RequestMapping("/costIndex")
+    public ModelAndView costIndex(){
+        return new ModelAndView("costIndex");
+    }
+
+    /**
+     * 定价系统主页
+     */
+    @RequestMapping("/priceIndex")
+    public ModelAndView priceIndex(){
+        return new ModelAndView("priceIndex");
+    }
+
+    /**
      * 万能数据
      * @return 万能数据页面
      */

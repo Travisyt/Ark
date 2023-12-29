@@ -196,6 +196,11 @@ public class DataViewController {
         return res;
     }
 
+    /**
+     * 获取职员日销售情况
+     * @param date
+     * @return
+     */
     @RequestMapping("/getDaySalesData")
     @ResponseBody
     public Map<String, Object> getSalesData(String date) {
@@ -216,6 +221,11 @@ public class DataViewController {
         return res;
     }
 
+    /**
+     * 获取进货历史数据
+     * @param ptypeid 商品ID
+     * @return 历史进货列表 List BuyQuantityRecord
+     */
     @RequestMapping("/getBuyQuantityRecords")
     @ResponseBody
     public Map<String, Object> getBuyQuantityRecords(String ptypeid) {

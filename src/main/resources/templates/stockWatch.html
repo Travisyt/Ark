@@ -44,6 +44,8 @@
                 <th>库存量</th>
                 <th>状态</th>
                 <th>报警下限</th>
+                <th></th>
+                <th>设置</th>
                 <th>跳转</th>
             </tr>
             </thead>
@@ -54,21 +56,35 @@
                 <td>{{ getUnitMap(commodity.ptypeid) }}</td>
                 <td>{{ unitFormat(commodity) }}</td>
 
-                <td v-if="commodity.psonnum > 0"></td>
+                <td v-if="commodity.psonnum > 0"> </td>
                 <td v-else-if="commodity.qty === null || commodity.minimum === null"
-                    style="background-color: lightgrey"></td>
-                <td v-else-if="commodity.qty<commodity['minimum']" style="background-color: red"></td>
-                <td v-else style="background-color: green"></td>
+                    style="background-color: lightgrey"> </td>
+                <td v-else-if="commodity.qty<parseFloat(commodity['minimum'])" style="background-color: red"> </td>
+                <td v-else style="background-color: green"> </td>
+
+                <!--        数量显示        -->
+                <td v-if="commodity['minimum']">{{ commodity['minimum'] }}{{ getBaseUnit(commodity.ptypeid) }}</td>
+                <td v-else>未设置</td>
+
+                <td v-if="commodity['minimum']">{{unitFormat(commodity, 2)}}</td>
+                <td v-else>未设置</td>
 
                 <td style="display: none">{{commodity.ptypeid}}</td>
-                <td v-if="commodity['minimum']">{{ commodity['minimum'] }}{{ getBaseUnit(commodity.ptypeid) }} /辅助数量：
-                    {{unitFormat(commodity, 2)}}<span><input type="number"><button class="btn btn-sm btn-info"
-                                                                                   v-on:click="modifyAlert($event)"> 修改</button></span>
-                </td>
-                <td v-else>未设置 <span v-if="commodity.psonnum <= 0"><input type="number"><button
-                        class="btn btn-sm btn-primary"
-                        v-on:click="addAlert($event,commodity.ptypeid)">添加报警</button></span></td>
 
+                <td v-if="commodity['minimum']"><input type="number">
+                    <button class="btn btn-sm btn-info"
+                            v-on:click="modifyAlert($event)"> 修改
+                    </button>
+                </td>
+                <td v-else-if="commodity.psonnum <= 0"><input type="number">
+                    <button
+                            class="btn btn-sm btn-primary"
+                            v-on:click="addAlert($event,commodity.ptypeid)">添加报警
+                    </button>
+                </td>
+                <td v-else></td>
+
+                <!--    跳转      -->
                 <td v-if="commodity.psonnum > 0"></td>
                 <td v-else>
                     <a v-on:click="openData(commodity.ptypeid)">跳转到销售数据</a>
@@ -92,7 +108,7 @@
         },
         computed: {},
         methods: {
-            openData: function(ptypeid){
+            openData: function (ptypeid) {
                 window.open('/universalData?ptypeid='.concat(ptypeid));
             },
             commodityDir: function () {
@@ -168,7 +184,7 @@
                 //     alert('PTYPEID 错误。');
                 //     return;
                 // }
-                modifyAlert(e.currentTarget.parentElement.parentElement.previousElementSibling.innerHTML, e.currentTarget.previousElementSibling.value);
+                modifyAlert(e.currentTarget.parentElement.previousElementSibling.innerHTML, e.currentTarget.previousElementSibling.value);
                 refreshCommodityList();
             },
             addAlert: function (e, ptypeid) {
