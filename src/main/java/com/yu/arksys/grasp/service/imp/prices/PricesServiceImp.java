@@ -17,11 +17,17 @@ public class PricesServiceImp implements PricesService {
     PricesDao pricesDao;
 
     @Override
-    public List<CommoditySalesAtPrice> getSalesAtPrices(String ptypeid, int month) {
+    public List<CommoditySalesAtPrice> getSalesAtPricesLastThreeMonth(String ptypeid) {
+        return pricesDao.getSalesAtPriceLastThreeMonth(ptypeid);
+    }
+
+    @Override
+    public List<CommoditySalesAtPrice> getSalesAtPrices(String ptypeid, String yearMonth) {
+        int month = Integer.parseInt(yearMonth.substring(5, 7));
         if (month < 1 || month > 12){
             return new ArrayList<>();
         }
-        return pricesDao.getSalesAtPriceOneMonth(ptypeid, Integer.toString(month));
+        return pricesDao.getSalesAtPriceOneMonth(ptypeid, yearMonth);
     }
 
     @Override

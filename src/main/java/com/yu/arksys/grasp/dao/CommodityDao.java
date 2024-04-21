@@ -41,6 +41,9 @@ public interface CommodityDao {
     @Select("select pfullname from ptype where pusercode = '${pusercode}'")
     List<String> findFullNameByCode(@Param("pusercode") String pusercode);
 
+    @Select("select psonnum from ptype where ptypeid='${ptypeid}'")
+    Integer ptypeSonnum(@Param("ptypeid") String ptypeid);
+
 
     // ============= 价格 =============== //
     @Select("select Price from xw_P_PtypePrice where PTypeId = '${ptypeid}' and PRTypeId in ('0002','0003','0101')")

@@ -35,7 +35,7 @@ public interface DetailedBillDraftDao {
             @Param("orderBy") String orderBy
     );
 
-    @Select("select top ${pageSize} `Vch`code,atypeid,btypeid,etypeid,ktypeid,PtypeId,Qty,price,total,date,Vchtype from " +
+    @Select("select top ${pageSize} Vchcode,atypeid,btypeid,etypeid,ktypeid,PtypeId,Qty,price,total,date,Vchtype from " +
             "BakDly where ID not in (select top ${frontPageNum} ID from BakDly where ${conditions} and ${conditions}")
     List<DetailedBillDraft> getRecordsWithConditions(
             @Param("pageSize") String pageSize,

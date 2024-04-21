@@ -5,6 +5,7 @@ import com.yu.arksys.grasp.dao.DataViewDao;
 import com.yu.arksys.grasp.service.DataViewService;
 import com.yu.arksys.grasp.service.EverydayShowService;
 import com.yu.arksys.grasp.service.UniversalDataService;
+import com.yu.arksys.grasp.service.customer.BusinessRelatedUnitService;
 import com.yu.arksys.lastyear.dao.LastYearDataViewDao;
 import com.yu.arksys.utils.LogUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ import java.util.Map;
 @Controller
 @RequestMapping("/dataview")
 public class DataViewController {
+
+    @Autowired
+    BusinessRelatedUnitService businessRelatedUnitService;
 
     @Autowired
     DataViewService dataViewService;
@@ -238,6 +242,45 @@ public class DataViewController {
             } else {
                 throw new Exception("missing parameter \"ptypeid\"");
             }
+            res.put("status", "200");
+        } catch (Exception e) {
+            e.printStackTrace();
+            res.put("status", "0");
+        }
+        return res;
+    }
+
+    /**
+     * 获取某（类）商品的客户销售数据
+     * @param ptypeid 商品ID
+     * @param isCatalog 是否是目录
+     */
+    @ResponseBody
+    @RequestMapping("/getCommodityCustomerSalesData")
+    public Map<String, Object> getCommodityCustomerSalesData(String ptypeid, boolean isCatalog){
+        Map<String, String> params = new HashMap<>();
+        params.put("getCommodityCustomerSalesData: ptypeid", ptypeid);
+        LogUtils.dataAccessLog(params);
+        Map<String, Object> res = new HashMap<>();
+        try {
+            res.put("data", businessRelatedUnitService.getCommodityCustomerSalesData(ptypeid, isCatalog));
+            res.put("status", "200");
+        } catch (Exception e) {
+            e.printStackTrace();
+            res.put("status", "0");
+        }
+        return res;
+    }
+
+    @ResponseBody
+    @RequestMapping("/getCustomerCommoditySalesTotal")
+    public Map<String, Object> getCustomerCommoditySalesTotal(String btypeid){
+        Map<String, String> params = new HashMap<>();
+        params.put("getCustomerCommoditySalesTotal: btypeid", btypeid);
+        LogUtils.dataAccessLog(params);
+        Map<String, Object> res = new HashMap<>();
+        try {
+            res.put("data", businessRelatedUnitService.getCustomerCommoditySalesTotal(btypeid));
             res.put("status", "200");
         } catch (Exception e) {
             e.printStackTrace();

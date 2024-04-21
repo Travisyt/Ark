@@ -1,8 +1,8 @@
 package com.yu.arksys.controller;
 
 import com.yu.arksys.exception.IncompleteParamException;
-import com.yu.arksys.grasp.service.BusinessRelatedUnitService;
-import com.yu.arksys.grasp.service.CommodityService;
+import com.yu.arksys.grasp.service.customer.BusinessRelatedUnitService;
+import com.yu.arksys.grasp.service.commodity.CommodityService;
 import com.yu.arksys.utils.CollectUtills;
 import com.yu.arksys.utils.LogUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,11 @@ public class BasicInformationController {
     public Map<String, Object> getBusinessAddress(String btypeid){
         Map<String, Object> map = new HashMap<>();
         try {
-            map.put("data", businessRelatedUnitService.getBusinessAddress(btypeid));
+            if(btypeid == null){
+                map.put("data", businessRelatedUnitService.getBusinessAddress());
+            } else {
+                map.put("data", businessRelatedUnitService.getBusinessAddress(btypeid));
+            }
             Map<String, String> logMap = new HashMap<>();
             logMap.put("/basicInfo/getBusinessAddress", "btypeid="+btypeid);
             LogUtils.dataAccessLog(logMap);

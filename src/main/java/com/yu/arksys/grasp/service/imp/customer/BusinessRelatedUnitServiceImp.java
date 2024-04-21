@@ -1,10 +1,13 @@
-package com.yu.arksys.grasp.service.imp;
+package com.yu.arksys.grasp.service.imp.customer;
 
 import com.yu.arksys.bean.raw.BusinessAddress;
 import com.yu.arksys.bean.raw.BusinessRelatedUnit;
+import com.yu.arksys.bean.result.customer.CommodityCustomerSalesRecord;
+import com.yu.arksys.bean.result.customer.CustomerCommoditySalesTotalRecord;
 import com.yu.arksys.exception.IncompleteParamException;
-import com.yu.arksys.grasp.dao.BusinessRelatedUnitDao;
-import com.yu.arksys.grasp.service.BusinessRelatedUnitService;
+import com.yu.arksys.grasp.dao.CommodityDao;
+import com.yu.arksys.grasp.dao.customer.BusinessRelatedUnitDao;
+import com.yu.arksys.grasp.service.customer.BusinessRelatedUnitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +21,9 @@ public class BusinessRelatedUnitServiceImp implements BusinessRelatedUnitService
 
     @Autowired
     BusinessRelatedUnitDao businessRelatedUnitDao;
+
+    @Autowired
+    CommodityDao commodityDao;
 
     @Override
     public Map<String, Object> getBusinessList() {
@@ -52,5 +58,20 @@ public class BusinessRelatedUnitServiceImp implements BusinessRelatedUnitService
             throw new IncompleteParamException("参数 btypeid 缺失。");
         }
     }
+
+    @Override
+    public List<CommodityCustomerSalesRecord> getCommodityCustomerSalesData(String ptypeid, boolean isCatalog) {
+        if(isCatalog){
+            return businessRelatedUnitDao.getCommodityCatalogCustomerSales(ptypeid);
+        } else {
+            return businessRelatedUnitDao.getCommodityCustomerSalesData(ptypeid);
+        }
+    }
+
+    @Override
+    public List<CustomerCommoditySalesTotalRecord> getCustomerCommoditySalesTotal(String btypeid) {
+        return businessRelatedUnitDao.getCustomerCommoditySalesTotalData(btypeid);
+    }
+
 
 }

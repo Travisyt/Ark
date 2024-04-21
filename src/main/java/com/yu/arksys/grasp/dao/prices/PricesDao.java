@@ -14,9 +14,12 @@ public interface PricesDao {
 
     // 售价区间
     // 带月份
-    @Select("SELECT pfullname=(SELECT p.pfullname FROM ptype p WHERE p.ptypeid=MAX(t.PtypeId)),qty=-SUM(t.Qty),total=-SUM(t.total),price=t.price,profit=SUM(t.costtotal)-SUM(t.total),profitrate=(SUM(t.costtotal)-SUM(t.total))/(-SUM(t.total)),month='${month}' FROM DlySale t WHERE WHERE RIGHT(LEFT(t.date,7),2) = '${month}' AND t.PtypeId='${ptypeid}' GROUP BY t.price ORDER BY t.price DESC")
-    List<CommoditySalesAtPrice> getSalesAtPriceOneMonth(@Param("ptypeid") String ptypeid,@Param("month") String month);
+    @Select("SELECT pfullname=(SELECT p.pfullname FROM ptype p WHERE p.ptypeid=MAX(t.PtypeId)),qty=-SUM(t.Qty),total=-SUM(t.total),price=t.price,profit=SUM(t.costtotal)-SUM(t.total),profitrate=(SUM(t.costtotal)-SUM(t.total))/(-SUM(t.total)),month='${yearMonth}' FROM DlySale t WHERE Vchtype = '11' AND LEFT(t.date,7) = '${yearMonth}' AND t.PtypeId='${ptypeid}' GROUP BY t.price ORDER BY t.price DESC")
+    List<CommoditySalesAtPrice> getSalesAtPriceOneMonth(@Param("ptypeid") String ptypeid,@Param("yearMonth") String yearMonth);
     // 不带月份
-    @Select("SELECT pfullname=(SELECT p.pfullname FROM ptype p WHERE p.ptypeid=MAX(t.PtypeId)),qty=-SUM(t.Qty),total=-SUM(t.total),price=t.price,profit=SUM(t.costtotal)-SUM(t.total),profitrate=(SUM(t.costtotal)-SUM(t.total))/(-SUM(t.total)),month='' FROM DlySale t WHERE t.PtypeId='${ptypeid}' GROUP BY t.price ORDER BY t.price DESC")
+    @Select("SELECT pfullname=(SELECT p.pfullname FROM ptype p WHERE p.ptypeid=MAX(t.PtypeId)),qty=-SUM(t.Qty),total=-SUM(t.total),price=t.price,profit=SUM(t.costtotal)-SUM(t.total),profitrate=(SUM(t.costtotal)-SUM(t.total))/(-SUM(t.total)),month='' FROM DlySale t WHERE Vchtype = '11' AND t.PtypeId='${ptypeid}' GROUP BY t.price ORDER BY t.price DESC")
     List<CommoditySalesAtPrice> getSalesAtPriceAll(@Param("ptypeid") String ptypeid);
+
+    @Select("SELECT pfullname=(SELECT p.pfullname FROM ptype p WHERE p.ptypeid=MAX(t.PtypeId)),qty=-SUM(t.Qty),total=-SUM(t.total),price=t.price,profit=SUM(t.costtotal)-SUM(t.total),profitrate=(SUM(t.costtotal)-SUM(t.total))/(-SUM(t.total)),month='' FROM DlySale t WHERE Vchtype = '11' AND t.date >= DATEADD(day, -90, GETDATE()) AND t.PtypeId='${ptypeid}' GROUP BY t.price ORDER BY t.price DESC")
+    List<CommoditySalesAtPrice> getSalesAtPriceLastThreeMonth(@Param("ptypeid") String ptypeid);
 }

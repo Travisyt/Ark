@@ -79,7 +79,7 @@
             </div>
             <div style="padding: 30px 25px 10px 10px;box-shadow: 0 0 2px #000000;margin: 10px 5px">
                 <h3>库存分布</h3>
-                <div id="charts" style="width: 70%;display: inline-block">
+                <div id="charts" style="width: 60%;display: inline-block">
                     <table class="table">
                         <thead style="font-size: large">
                         <tr>
@@ -92,16 +92,15 @@
                         <tbody style="font-size: x-large">
                         <tr v-for="data in departmentData">
                             <td>{{ data.kfullname }}</td>
-                            <td>{{ data.qty }}</td>
+                            <td>{{ Math.round(data.qty) }}</td>
                             <td>{{ data.formattedQty }}</td>
                             <td>{{ data.total }}</td>
-                            <td></td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
-                <div style="margin-left: 2%;width: 300px;height: 260px;display: inline-block">
-                    <div id="graph_2" style="width: 300px;height: 260px"></div>
+                <div style="width: 30%;display: inline-block">
+                    <div id="graph_2" style="width: 100%;height: 200px"></div>
                 </div>
             </div>
             <div style="padding: 30px 25px 10px 10px;box-shadow: 0 0 2px #000000;margin: 10px 5px">
@@ -128,7 +127,7 @@
                 </div>
             </div>
             <div style="padding: 30px 25px 10px 10px;box-shadow: 0 0 2px #000000;margin: 10px 5px">
-                <h3>客户销售情况</h3>
+                <h3>客户近三个月销售情况</h3>
                 <div id="charts2">
                     <table class="table">
                         <thead style="font-size: large">
@@ -305,7 +304,11 @@
             let unitMap = {};
             let departmentSalesMap = {};
             $.ajaxSettings.async = false;
-            loading(true);
+            loading(true, 'loading', 'body', function () {
+                chart_1.showLoading();
+                chart_2.showLoading();
+            });
+
 
             $.post('/dataview/getUniversalDepartmentDataPermonth', param, function (res) {
                 if (res.status === "200") {
@@ -317,7 +320,10 @@
                 if (res.status === "200") {
                     if (res.data === null || res.data === []) {
                         alert("数据库中没有数据");
-                        loading(false);
+                        loading(false, 'loading', 'body', function () {
+                            chart_1.hideLoading();
+                            chart_2.hideLoading();
+                        });
                         return;
                     }
                     let datar = res.data;
@@ -434,7 +440,10 @@
                         option.legend = {data: allLegends};
 
                         data.$data.option = option;
-                        loading(false);
+                        loading(false, 'loading', 'body', function () {
+                            chart_1.hideLoading();
+                            chart_2.hideLoading();
+                        });
                     });
                 }
             });
@@ -506,9 +515,18 @@
                     });
                 }
             });
-            loading(false);
+            loading(false, 'loading', 'body', function () {
+                chart_1.hideLoading();
+                chart_2.hideLoading();
+            });
             $.ajaxSettings.async = true;
         }
+
+        // 滚动监听 重设表格尺寸
+        $(document).scroll(function() {
+            chart_1.resize();
+            chart_2.resize();
+        });
 
         $(window).ready(function () {
             chart_1.setOption(data.$data.option);

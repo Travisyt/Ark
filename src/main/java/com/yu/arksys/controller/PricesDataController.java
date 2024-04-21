@@ -19,14 +19,14 @@ public class PricesDataController {
 
     @ResponseBody
     @RequestMapping("/getCommoditySalesAtPriceOneMonth")
-    public Map<String, Object> getCommoditySalesAtPriceOneMonth(String ptypeid, int month){
+    public Map<String, Object> getCommoditySalesAtPriceOneMonth(String ptypeid, String yearMonth){
         Map<String, String> params = new HashMap<>();
         params.put("getCommoditySalesAtPriceOneMonth: ptypeid", ptypeid);
-        params.put("getCommoditySalesAtPriceOneMonth: month", Integer.toString(month));
+        params.put("getCommoditySalesAtPriceOneMonth: month", yearMonth);
         LogUtils.dataAccessLog(params);
         Map<String, Object> res = new HashMap<>();
         try {
-            res.put("data", pricesService.getSalesAtPrices(ptypeid, month));
+            res.put("data", pricesService.getSalesAtPrices(ptypeid, yearMonth));
             res.put("status", "200");
         } catch (Exception e) {
             e.printStackTrace();
@@ -44,6 +44,23 @@ public class PricesDataController {
         Map<String, Object> res = new HashMap<>();
         try {
             res.put("data", pricesService.getSalesAtPrices(ptypeid));
+            res.put("status", "200");
+        } catch (Exception e) {
+            e.printStackTrace();
+            res.put("status", "0");
+        }
+        return res;
+    }
+
+    @ResponseBody
+    @RequestMapping("/getCommoditySalesAtPriceLastThreeMonth")
+    public Map<String, Object> getCommoditySalesAtPriceLastThreeMonth(String ptypeid){
+        Map<String, String> params = new HashMap<>();
+        params.put("getCommoditySalesAtPriceLastThreeMonth: ptypeid", ptypeid);
+        LogUtils.dataAccessLog(params);
+        Map<String, Object> res = new HashMap<>();
+        try {
+            res.put("data", pricesService.getSalesAtPricesLastThreeMonth(ptypeid));
             res.put("status", "200");
         } catch (Exception e) {
             e.printStackTrace();

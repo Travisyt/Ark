@@ -1,4 +1,4 @@
-package com.yu.arksys.grasp.service;
+package com.yu.arksys.grasp.service.commodity;
 
 import com.yu.arksys.bean.api.ResponseBean;
 import com.yu.arksys.bean.raw.CommodityBrief;

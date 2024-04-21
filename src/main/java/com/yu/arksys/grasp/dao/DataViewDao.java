@@ -42,7 +42,7 @@ public interface DataViewDao {
      * @param ptypeid 商品id
      * @return CustomerSalesOfCommodity List
      */
-    @Select("select t.btypeid,bfullname=(select b.bfullname from btype b where t.btypeid=b.btypeid),totalnum=-SUM(t.Qty),total=-SUM(t.total),profit=SUM(t.costtotal)-SUM(t.total),profitrade=CASE SUM(t.total) WHEN 0 THEN 0 ELSE (SUM(t.costtotal)-SUM(t.total))/(-SUM(t.total)) END from DlySale t where t.total<>0 and (MONTH(getdate())-3)<=MONTH(t.date) and t.PtypeId='${ptypeid}' GROUP BY t.btypeid order by totalnum desc")
+    @Select("select t.btypeid,bfullname=(select b.bfullname from btype b where t.btypeid=b.btypeid),totalnum=-SUM(t.Qty),total=-SUM(t.total),profit=SUM(t.costtotal)-SUM(t.total),profitrade=CASE SUM(t.total) WHEN 0 THEN 0 ELSE (SUM(t.costtotal)-SUM(t.total))/(-SUM(t.total)) END from DlySale t where t.total<>0 and t.date >= DATEADD(day, -90, GETDATE()) and t.PtypeId='${ptypeid}' GROUP BY t.btypeid order by totalnum desc")
     List<CustomerSalesOfCommodity> getCustomerSalesLastThreeMonths(@Param("ptypeid") String ptypeid);
 
     /**
@@ -50,14 +50,14 @@ public interface DataViewDao {
      * @param ptypeid 商品id
      * @return DepartmentSalesOfCommodity List
      */
-    @Select("select t1.*,s.kfullname from (select t.ktypeid,totalnum=-SUM(t.Qty),total=-SUM(t.total),profit=SUM(t.costtotal)-SUM(t.total),profitrade=(SUM(t.costtotal)-SUM(t.total))/(-SUM(t.total)) from DlySale t where (MONTH(getdate())-3)<=MONTH(t.date) and t.PtypeId='${ptypeid}' GROUP BY t.ktypeid) t1 inner join Stock s on s.ktypeid=t1.ktypeid order by total desc")
+    @Select("select t1.*,s.kfullname from (select t.ktypeid,totalnum=-SUM(t.Qty),total=-SUM(t.total),profit=SUM(t.costtotal)-SUM(t.total),profitrade=(SUM(t.costtotal)-SUM(t.total))/(-SUM(t.total)) from DlySale t where t.date >= DATEADD(day, -90, GETDATE()) and t.PtypeId='${ptypeid}' GROUP BY t.ktypeid) t1 inner join Stock s on s.ktypeid=t1.ktypeid order by total desc")
     List<DepartmentSalesOfCommodity> getDepartmentSalesLastThreeMonths(@Param("ptypeid") String ptypeid);
 
     /**
      * 获取所有有在售数据商品的近三月销售额
      * @return SalesNumOfCommodity List
      */
-    @Select("select ptypeid=t.PtypeId,totalnum=-SUM(t.Qty) from DlySale t where (MONTH(getdate())-3)<=MONTH(t.date) GROUP BY PtypeId")
+    @Select("select ptypeid=t.PtypeId,totalnum=-SUM(t.Qty) from DlySale t where t.date >= DATEADD(day, -90, GETDATE()) GROUP BY PtypeId")
     List<SalesNumOfCommodity> getSalesNumLastThreeMonthsOfCommodityAll();
 
     /**

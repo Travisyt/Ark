@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>客户选择</title>
+    <link href="bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link href="css/elements.css" rel="stylesheet">
+    <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/echarts.js"></script>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript" src="js/commodityUtils.js"></script>
+</head>
+<body>
+<div th:fragment="customerselect">
+
+    <div class="modal fade" id="goodsSelect" tabindex="-1" role="dialog" aria-labelledby="goodsSelectLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove"></span></button>
+                    <div>
+                        当前目录：{{ commodityDir() }}
+                    </div>
+                </div>
+
+                <div class="modal-body">
+                    <div style="padding: 0 10px 5px 10px">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input v-model="key" type="text" class="form-control" id="fuzzyInput" onkeydown="keydown(event)">
+                                <span class="input-group-btn"><button id="keySearch" type="button"
+                                                                      class="btn btn-primary"
+                                                                      v-on:click="fuzzySearchByPartName()">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </button></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="padding: 10px 10px 10px 10px">
+                        <table class="table table-hover table-striped" style="cursor: default">
+                            <thead id="goodsSelectTableHead"
+                                   style="border-top: solid 3px black;border-bottom: solid 3px black">
+                            <tr>
+                                <th>商品名称</th>
+                                <th>基本单位</th>
+                                <th>库存量</th>
+                                <th style="display: none">预售价1</th>
+                                <th style="display: none">预售价2</th>
+                                <th style="display: none">零售价</th>
+                                <th style="display: none">单位换算</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="commodity in commodityList"
+                                v-on:dblclick="commodityChangeDirectory(commodity)">
+                                <td>{{ commodity.pfullname }}</td>
+                                <td>{{ getBaseUnit(commodity.ptypeid) }}</td>
+                                <td>{{ unitFormat(commodity) }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <a href="#goodsSelectTableHead" style="display: none">
+                        <span id="goodsSelectBackTop"></span>
+                    </a>
+                    <button id="goodsSelectBack" type="button" class="btn btn-info btn-lg" v-on:click="backSpace()">返回
+                    </button>
+                    <button id="goodsSelectClose" type="button" class="btn btn-default btn-lg" data-dismiss="modal">关闭
+                    </button>
+                    <button id="goodsSelectConfirm" type="button" class="btn btn-primary btn-lg">确认</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <script>
+        var goodsSelect = new Vue({
+            el: '#goodsSelect',
+            data: {
+                key: "",
+                commodityList: [],
+                orderBy: 'RowIndex',
+                commodityUnitMap: {},
+                actionStack: [
+                    ['00000', '库存商品']
+                ]
+            },
+            computed: {},
+            methods: {
+                commodityDir: function () {
+                    let dir = '';
+                    $.each(this.actionStack, function (k, v) {
+                        dir = dir.concat(v[1]).concat(' /');
+                    });
+                    return dir;
+                },
+                backSpace: function () {
+                    if (goodsSelect.$data.actionStack.length !== 1) {
+                        goodsSelect.$data.actionStack.pop();
+                        let last = goodsSelect.$data.actionStack.pop();
+                        refreshCommodityList({ParId: last[0], pfullname: last[1]});
+                    }
+                },
+                commodityChangeDirectory: function (commodity) {
+                    if (typeof commodity === 'undefined') {
+                        refreshCommodityList();
+                    } else {
+                        if (commodity.psonnum === '0') {
+                            selectGoods([commodity]);
+                        } else {
+                            refreshCommodityList({ParId: commodity.ptypeid, pfullname: commodity.pfullname});
+                        }
+                    }
+                },
+                unitFormat: function (commodity) {
+                    if (commodity.psonnum !== '0') {
+                        return '';
+                    } else {
+                        return fUnitFormat(commodity, goodsSelect.$data.commodityUnitMap[commodity.ptypeid]);
+                    }
+                },
+                getBaseUnit: function (ptypeid) {
+                    if (typeof goodsSelect.$data.commodityUnitMap[ptypeid] === 'undefined') {
+                        return '-';
+                    } else {
+                        return goodsSelect.$data.commodityUnitMap[ptypeid].baseUnit;
+                    }
+                },
+                fuzzySearchByPartName: function () {
+                    let partName = goodsSelect.$data.key;
+                    refreshCommodityList({partName: partName}, 2)
+                }
+            }
+        });
+        // goodsSelect.$watch('key', function (nv, ov) {
+        //
+        // });
+        function keydown(event) {
+            if (event.keyCode === 13) {
+                document.getElementById('keySearch').click()
+            }
+        }
+
+        function refreshCommodityList(param = {openFlag: true}, mode = 1) {
+            if (param.hasOwnProperty('openFlag')) {
+                param = {ParId: goodsSelect.$data.actionStack[goodsSelect.$data.actionStack.length - 1][0]}
+            } else {
+                if (mode === 1) {
+                    goodsSelect.$data.actionStack.push([param.ParId, param.pfullname]);
+                }
+            }
+            $('#goodsSelectBackTop').click();
+            $('.modal-content').addClass("depth-of-focus");
+            $.post('/basicInfo/getCommodityUnitMap', param, function (res) {
+                goodsSelect.$data.commodityUnitMap = res.data;
+            });
+            let postUrl = '/commodity/getBriefCommodityList';
+            if (mode === 2) {
+                postUrl = '/commodity/getBriefCommodityListByPartName';
+            }
+            $.post(postUrl, param, function (res) {
+                goodsSelect.$data.commodityList = res.data;
+                $('.modal-content').removeClass("depth-of-focus");
+            });
+        }
+
+        function selectGoods(goods = []) {
+            sessionStorage.setItem('selectedGoodsList', JSON.stringify(goods));
+            if(goods.length > 0){
+                eval(sessionStorage.getItem('goodsSelectFlagStatement'));
+            }
+            $('#goodsSelectClose').click();
+        }
+
+    </script>
+</div>
+</body>
+</html>

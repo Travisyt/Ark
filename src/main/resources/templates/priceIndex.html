@@ -21,13 +21,21 @@
         <div id="leftMenu" class="col-md-2" style="padding: 0 0 0 0;">
             <div style="padding: 10px 10px 10px 10px;box-shadow: 0 0 2px #000000;margin: 10px 5px;">
                 <form>
-                    <h4>筛选条件</h4>
+                    <h4>参考数据筛选条件</h4>
                     <hr/>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"
                                v-model="withMonth">
                         <label class="form-check-label" for="flexCheckDefault">
                             按月份筛选数据
+                        </label>
+                    </div>
+                    <br/>
+                    <div class="form-check" id="selectLastThreeMonth" style="display: none">
+                        <input class="form-check-input" type="checkbox" value=""
+                               v-model="withLastThreeMonth">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            筛选近三个月
                         </label>
                     </div>
                     <div id="monthSelectTable" style="display: none">
@@ -45,14 +53,33 @@
                     <br/>
                     <br/>
 
-                    <h4>已选条件(点击取消)</h4>
-                    <hr/>
-                    <button id="currentMonth" class="btn btn-sm btn-danger" v-on:click="cancelCondition" style="display: none">按月筛选 <span
-                            class="glyphicon glyphicon-remove"></span></button>
                 </form>
             </div>
             <div style="padding: 10px 10px 10px 10px;box-shadow: 0 0 2px #000000;margin: 10px 5px;">
-                左侧菜单2
+                <h4>保存组合</h4>
+                <hr/>
+                <div class="form-check">
+                    <label class="form-check-label" for="goodListNameInput">
+                        请输入组合名称
+                    </label>
+                    <input class="form-check-input" type="text" value="" id="goodListNameInput"
+                           v-model="goodListNameInput" style="width: 100%">
+                    <br/>
+                    <br/>
+                    <button type="button" class="btn btn-primary" style="width: 100%" v-on:click="saveGoodsList()">
+                        保存组合
+                    </button>
+                </div>
+                <br/>
+                <br/>
+                <h4>已保存的组合</h4>
+                <hr/>
+                <div v-for="name in getLocalStorageGoodsList()">
+                    <button type="button" class="btn btn-link" style="width: 90%" v-on:click="loadGoodsList(name)">{{
+                        name }}
+                    </button>
+                </div>
+
             </div>
         </div>
         <script>
@@ -60,28 +87,90 @@
                 el: '#leftMenu',
                 data: {
                     selectedMonth: '',
+                    withLastThreeMonth: false,
                     withMonth: false,
-
+                    goodListNameInput: '',
+                    savedGroupList: []
                 },
                 methods: {
                     conditionSubmit: function () {
-                        $('#currentMonth').css('display', 'block');
                         goodsList.$data.conditions.month = leftMenu.$data.selectedMonth;
+                        goodsList.$data.conditions.lastThreeMonth = leftMenu.$data.withLastThreeMonth;
                     },
-                    cancelCondition: function () {
-                        this.withMonth = false;
-                        this.selectedMonth = '';
-                        $('#currentMonth').css('display', 'none');
-                        goodsList.$data.conditions.month = '';
+                    saveGoodsList: function () {
+                        console.log('saving goodsList ...');
+                        if (leftMenu.$data.goodListNameInput === '') {
+                            alert("名称不能为空白。");
+                        } else {
+                            let localSavedList = localStorage.getItem('goodsGroup');
+                            if (localSavedList === null) {
+                                localSavedList = {};
+                            } else if (localSavedList.hasOwnProperty(leftMenu.$data.goodListNameInput)) {
+                                alert("重复名称。");
+                                return;
+                            } else if (goodsList.$data.selectedGoodsList === null || goodsList.$data.selectedGoodsList.length === 0) {
+                                alert('商品列表为空。');
+                                return;
+                            } else {
+                                localSavedList = JSON.parse(localSavedList);
+                            }
+                            localSavedList[leftMenu.$data.goodListNameInput] = { list: goodsList.$data.selectedGoodsList };
+                            // 有赠品
+                            if(goodsList.$data.freeGoodsList !== null && goodsList.$data.freeGoodsList.length > 0){
+                                localSavedList[leftMenu.$data.goodListNameInput]['freeList'] = goodsList.$data.freeGoodsList;
+                            }
+                            localStorage.setItem('goodsGroup', JSON.stringify(localSavedList));
+                            alert('保存成功！');
+                            this.$forceUpdate();
+                        }
+                    },
+                    loadGoodsList: function (name) {
+                        let localSavedGroup = localStorage.getItem('goodsGroup');
+                        if (localSavedGroup !== null) {
+                            localSavedGroup = JSON.parse(localSavedGroup);
+                            if (localSavedGroup.hasOwnProperty(name)) {
+                                clearAllCommodity();
+                                if(localSavedGroup[name]['list'] !== null){
+                                    $.each(localSavedGroup[name]['list'], function (k, v) {
+                                        addOneCommodity(v);
+                                    });
+                                }
+                                if(localSavedGroup[name]['freeList'] !== null){
+                                    $.each(localSavedGroup[name]['freeList'], function (k, v) {
+                                        addOneCommodity(v, true);
+                                    });
+                                }
+
+                            } else {
+                                alert('组合不存在。');
+                            }
+                        } else {
+                            alert('组合不存在。');
+                        }
+                    },
+                    getLocalStorageGoodsList: function () {
+                        let localSavedGroup = localStorage.getItem('goodsGroup');
+                        if (localSavedGroup === null) {
+                            return {};
+                        } else {
+                            let res = [];
+                            $.each(JSON.parse(localSavedGroup), function (k, v) {
+                                res.push(k)
+                            });
+                            return res;
+                        }
                     }
                 }
             });
             leftMenu.$watch('withMonth', function (nval) {
                 if (nval) {
                     $('#monthSelectTable').css('display', 'block');
+                    $('#selectLastThreeMonth').css('display', 'block');
                 } else {
                     leftMenu.$data.selectedMonth = '';
+                    leftMenu.$data.withLastThreeMonth = false;
                     $('#monthSelectTable').css('display', 'none');
+                    $('#selectLastThreeMonth').css('display', 'none');
                 }
             });
             leftMenu.$watch('selectedMonth', function (nval) {
@@ -90,18 +179,24 @@
                 } else {
                     $('#conditionSubmit').prop('disabled', false);
                 }
-            })
-
+            });
+            leftMenu.$watch('withLastThreeMonth', function (nval) {
+                if (nval === false) {
+                    $('#conditionSubmit').prop('disabled', true);
+                } else {
+                    $('#conditionSubmit').prop('disabled', false);
+                }
+            });
         </script>
 
         <!-- 右侧菜单 -->
-        <div class="col-md-10" style="padding: 0 10px 0 0">
+        <div id="rightBody" class="col-md-10" style="padding: 0 10px 0 0">
             <div id="goodsList" style="padding: 10px 25px 10px 10px;box-shadow: 0 0 2px #000000;margin: 10px 5px">
                 <hr/>
                 <div>
                     <div class="pull-right">
-                        <button type="button" id="generatePrices" class="btn btn-info">生成报价</button>
-                        <button type="button" class="btn btn-primary">保存组合</button>
+                        <button type="button" class="btn btn-danger" onclick="clearAllCommodity()">清除所有商品</button>
+                        <button type="button" id="generatePrices" class="btn btn-primary">生成报价</button>
                         <button type="button" class="btn btn-primary">导出报价</button>
                     </div>
                     <h2>商品组合列表</h2>
@@ -111,30 +206,88 @@
                     <tr>
                         <th>名称</th>
                         <th>单位</th>
-                        <th>辅助单位</th>
-                        <th>推荐定价</th>
-                        <th>定价</th>
-                        <th></th>
+                        <th>数量</th>
+                        <th>拆卖单价</th>
+                        <th>组合单价</th>
+                        <th>组合面价</th>
+                        <th>参考</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="selectedGoods in selectedGoodsList">
+                    <tr v-for="selectedGoods in selectedGoodsList" :id="'p'+selectedGoods.ptypeid">
                         <td style="vertical-align: middle">{{ selectedGoods.pfullname }}</td>
-                        <td style="vertical-align: middle">等待生成</td>
-                        <td style="vertical-align: middle">等待生成</td>
-                        <td style="vertical-align: middle">等待生成</td>
-                        <td style="vertical-align: middle">等待生成</td>
+                        <td style="vertical-align: middle">{{ unitMaps[selectedGoods.ptypeid].baseUnit }}</td>
+                        <td style="vertical-align: middle"><input :id="'qty'+selectedGoods.ptypeid"
+                                                                  style="width: 80px" type="number"></td>
+                        <td style="vertical-align: middle"><input :id="'dePrice'+selectedGoods.ptypeid"
+                                                                  style="width: 80px" type="number"></td>
+                        <td style="vertical-align: middle"><input :id="'coPrice'+selectedGoods.ptypeid"
+                                                                  style="width: 80px" type="number"></td>
+                        <td style="vertical-align: middle" :id="'suPrice'+selectedGoods.ptypeid">等待生成</td>
                         <td>
                             <button data-toggle="modal" data-target="#salesAtPrices" type="button"
-                                    class="btn btn-default" v-on:click="viewSalesAtPrices(selectedGoods)">售价分布图
+                                    class="btn btn-block btn-info" v-on:click="viewSalesAtPrices(selectedGoods)">售价分布图
                             </button>
+                            <button type="button" class="btn btn-block btn-primary" v-on:click="openData(selectedGoods.ptypeid)">销售数据</button>
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <button id="addCommodity" data-toggle="modal" data-target="#goodsSelect" type="button"
-                                    class="btn btn-primary" style="width: 100%;background-color: green;font-weight: bold">
-                                添加商品  <span class="glyphicon glyphicon-plus-sign"></span>
+                                    class="btn btn-primary"
+                                    style="width: 100%;background-color: green;font-weight: bold">
+                                添加商品 <span class="glyphicon glyphicon-plus-sign"></span>
+                            </button>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <!--赠品列表-->
+                <hr/>
+                <h2>组合赠品列表</h2>
+                <table class="table table-striped">
+
+                    <thead style="border-top: solid 3px black;border-bottom: solid 3px black">
+                    <tr>
+                        <th>名称</th>
+                        <th>单位</th>
+                        <th>数量</th>
+                        <th>拆卖单价</th>
+                        <th>组合单价</th>
+                        <th>组合面价</th>
+                        <th>参考</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr v-for="selectedGoods in freeGoodsList" :id="'fp'+selectedGoods.ptypeid">
+                        <td style="vertical-align: middle">{{ selectedGoods.pfullname }}</td>
+                        <td style="vertical-align: middle">{{ unitMaps[selectedGoods.ptypeid].baseUnit }}</td>
+                        <td style="vertical-align: middle"><input :id="'qtyFree'+selectedGoods.ptypeid"
+                                                                  style="width: 80px" type="number"></td>
+                        <td style="vertical-align: middle"><input :id="'dePriceFree'+selectedGoods.ptypeid"
+                                                                  style="width: 80px" type="number"></td>
+                        <td style="vertical-align: middle"><input :id="'coPriceFree'+selectedGoods.ptypeid"
+                                                                  style="width: 80px" type="number"></td>
+                        <td style="vertical-align: middle">0 (赠送)</td>
+                        <td>
+                            <button data-toggle="modal" data-target="#salesAtPrices" type="button"
+                                    class="btn btn-block btn-info" v-on:click="viewSalesAtPrices(selectedGoods)">售价分布图
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button id="addFreeCommodity" data-toggle="modal" data-target="#goodsSelect" type="button"
+                                    class="btn btn-primary" v-on:click="vSelectFree()"
+                                    style="width: 100%;background-color: green;font-weight: bold">
+                                添加赠送商品 <span class="glyphicon glyphicon-plus-sign"></span>
                             </button>
                         </td>
                         <td></td>
@@ -157,9 +310,9 @@
 
     <!--    模态框    -->
     <div th:replace="goodsSelect::goodsselect"></div>
-
+    <!--价格分布信息汇总模态框-->
     <div>
-        <div class="modal fade" id="salesAtPrices" tabindex="-1" role="dialog" aria-labelledby="goodsSelectLabel"
+        <div class="modal fade" id="salesAtPrices" tabindex="-1" role="dialog" aria-labelledby=""
              aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -168,27 +321,61 @@
                                 class="glyphicon glyphicon-remove"></span></button>
                     </div>
 
-                    <div id="modalBody" class="modal-body">
-                        <div id="priceGraph" style="width: 100%;height: 50vh"></div>
+                    <div id="salesAtPricesBody" class="modal-body">
+                        <div id="priceGraph" style="width: 100%;height: 60vh"></div>
                     </div>
 
                     <div class="modal-footer">
-                        <a href="#modalBody" style="display: none">
-                            <span id="goodsSelectBackTop"></span>
-                        </a>
-                        <button id="goodsSelectBack" type="button" class="btn btn-info" v-on:click="backSpace()">
-                            返回
-                        </button>
-                        <button id="goodsSelectClose" type="button" class="btn btn-default" data-dismiss="modal">
+                        <!--                        <button id="goodsSelectBack" type="button" class="btn btn-info" v-on:click="backSpace()">-->
+                        <!--                            返回-->
+                        <!--                        </button>-->
+                        <button id="salesAtPricesClose" type="button" class="btn btn-default" data-dismiss="modal">
                             关闭
                         </button>
-                        <button id="goodsSelectConfirm" type="button" class="btn btn-primary">确认</button>
+                        <button id="salesAtPricesConfirm" type="button" class="btn btn-primary">确认</button>
                     </div>
                 </div><!-- /.modal-content -->
             </div><!-- /.modal -->
         </div>
     </div>
 
+    <div>
+        <div class="modal fade" id="groupSaveConfirmWindow" tabindex="-1" role="dialog" aria-labelledby=""
+             aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span
+                                class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+
+                    <div id="groupSaveBody" class="modal-body">
+
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button id="groupSaveBack" type="button" class="btn btn-info" v-on:click="backSpace()">
+                            返回
+                        </button>
+                        <button id="groupSaveClose" type="button" class="btn btn-default" data-dismiss="modal">
+                            关闭
+                        </button>
+                        <button id="groupSaveConfirm" type="button" class="btn btn-primary">确认</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+    </div>
+
+
+    <!--    载入动画    -->
+    <div id="loading" class="col-md-3 pull-right" style="height: 50px; padding: 20px 0 0 0;display: none;">
+        <!--        loading        -->
+        <span class="loading-small" id="loading-icon">
+                    <span></span><span></span><span></span><span></span><span></span>
+        </span>
+    </div>
 
     <script>
         var priceGraph;
@@ -198,43 +385,72 @@
             sessionStorage.setItem('goodsSelectFlagStatement', 'addOneCommodity(goods[0])')
         });
         $('#salesAtPrices').on('shown.bs.modal', function () {
-
+            console.log('resizing');
+            priceGraph.resize();
         });
 
         var goodsList = new Vue({
             el: '#goodsList',
             data: {
                 selectedGoodsList: [],
+                freeGoodsList: [],
                 conditions: {
-                    month: ''
-                }
+                    month: '',
+                    lastThreeMonth: false
+                },
+                // 单位映射表
+                unitMaps: {},
+                // 是否正在选择赠品
+                isSelectFree: false
             },
             methods: {
+                openData: function (ptypeid) {
+                    window.open('/universalData?ptypeid='.concat(ptypeid));
+                },
                 viewSalesAtPrices: function (commodity) {
                     priceGraph = echarts.init(document.getElementById('priceGraph'));
                     priceGraph.showLoading();
-                    $.post('/pricesData/getCommoditySalesAtPriceAll', {ptypeid: commodity.ptypeid}, function (res) {
+                    let SAPURL = '/pricesData/getCommoditySalesAtPriceAll';
+                    let SAPParams = {ptypeid: commodity.ptypeid};
+                    // 带月份筛选
+                    if(leftMenu.$data.withLastThreeMonth){
+                        SAPURL = '/pricesData/getCommoditySalesAtPriceLastThreeMonth';
+                    }
+                    else if(leftMenu.$data.withMonth){
+                        SAPURL = '/pricesData/getCommoditySalesAtPriceOneMonth';
+                        SAPParams['yearMonth'] = leftMenu.$data.selectedMonth;
+                    }
+                    $.post(SAPURL, SAPParams, function (res) {
                         console.log(res);
-                        let datar = res.data;
-                        let xaxis = [], yaxis = [], maxQty = 0;
-                        $.each(datar, function (k, v) {
-                            if (parseFloat(v['qty']) > maxQty) {
-                                maxQty = parseFloat(v['qty']);
-                            }
-                        });
-                        let threshold = maxQty / 100;
-                        $.each(datar, function (k, v) {
-                            if (threshold < parseFloat(v['qty'])) {
-                                xaxis.push([v['price'], v['qty']]);
-                                yaxis.push([v['price'], v['total']]);
-                            }
-                        });
-
-                        $.post('/basicInfo/getSingleCommodityUnitMap', {ptypeid: commodity.ptypeid}, function (res1) {
-                            let unitMap = res1.data;
-                            let option = {
+                        let option;
+                        if (res.data === undefined || res.data.length === 0) {
+                            option = {
                                 title: {
-                                    text: '售价分布图: ' + datar[0].pfullname + '    单位: ' + getUnitRelation(unitMap[commodity.ptypeid]),
+                                    text: '当前商品无销售数据',
+                                    y: 'top'
+                                }
+                            };
+                            priceGraph.resize();
+                        } else {
+                            let datar = res.data;
+                            let xaxis = [], yaxis = [], maxQty = 0;
+                            $.each(datar, function (k, v) {
+                                if (parseFloat(v['qty']) > maxQty) {
+                                    maxQty = parseFloat(v['qty']);
+                                }
+                            });
+                            let threshold = maxQty / 100;
+                            $.each(datar, function (k, v) {
+                                if (threshold < parseFloat(v['qty'])) {
+                                    xaxis.push([v['price'], v['qty'], v['profitrate']]);
+                                    yaxis.push([v['price'], v['total']]);
+                                }
+                            });
+
+                            let unitMap = goodsList.$data.unitMaps[commodity.ptypeid];
+                            option = {
+                                title: {
+                                    text: '售价分布图: ' + datar[0].pfullname + '    单位: ' + getUnitRelation(unitMap),
                                     y: 'top'
                                 },
                                 tooltip: {
@@ -247,19 +463,21 @@
                                     data: ['销量', '销售额'],
                                     y: 'bottom'
                                 },
-                                xAxis: {
-                                    name: '售价',
-                                    type: 'value',
-                                    min: function (m) {
-                                        return m.min - (m.max - m.min) / 10;
-                                    },
-                                    max: function (m) {
-                                        return m.max + (m.max - m.min) / 10;
-                                    },
-                                    axisTick: {
-                                        alignWithLabel: true
+                                xAxis: [
+                                    {
+                                        name: '售价',
+                                        type: 'value',
+                                        min: function (m) {
+                                            return m.min - (m.max - m.min) / 10;
+                                        },
+                                        max: function (m) {
+                                            return m.max + (m.max - m.min) / 10;
+                                        },
+                                        axisTick: {
+                                            alignWithLabel: true
+                                        }
                                     }
-                                },
+                                ],
                                 yAxis: [
                                     {
                                         name: '销量',
@@ -267,7 +485,10 @@
                                     },
                                     {
                                         name: '销售额',
-                                        type: 'value'
+                                        type: 'value',
+                                        splitLine: {
+                                            show: false
+                                        }
                                     }
                                 ],
                                 series: [
@@ -280,51 +501,80 @@
                                                 opacity: 0.2
                                             }
                                         },
-                                        tooltip: {
-                                            valueFormatter: function (params) {
-                                                return fUnitFormat({qty: params.data}, unitMap[commodity.ptypeid])
-                                            }
+                                        label: {
+                                            show: true,
+                                            position: 'top',
+                                            formatter: function (params) {
+                                                return fUnitFormat({qty: params.data[1]}, unitMap) + '\n' + Math.round(params.data[2] * 1000) / 10 + '%';
+                                            },
+                                            align: 'left'
                                         },
                                         data: xaxis,
                                         barGap: 0
                                     },
-                                    // {
-                                    //     name: '销售额',
-                                    //     type: 'line',
-                                    //     lineStyle: {
-                                    //         width: 0
-                                    //     },
-                                    //     itemStyle: {
-                                    //         opacity: 0.3
-                                    //     },
-                                    //     areaStyle: {
-                                    //         normal: {
-                                    //             opacity: 0.2
-                                    //         }
-                                    //     },
-                                    //     yAxisIndex: 1,
-                                    //     tooltip: {
-                                    //         valueFormatter: function (value) {
-                                    //             return value + ' 元';
-                                    //         }
-                                    //     },
-                                    //     data: yaxis
-                                    // }
+                                    {
+                                        name: '销售额',
+                                        type: 'line',
+                                        lineStyle: {
+                                            width: 0
+                                        },
+                                        itemStyle: {
+                                            opacity: 0
+                                        },
+                                        areaStyle: {
+                                            normal: {
+                                                opacity: 0.1
+                                            }
+                                        },
+
+                                        yAxisIndex: 1,
+                                        tooltip: {
+                                            valueFormatter: function (value) {
+                                                return value + ' 元';
+                                            }
+                                        },
+                                        data: yaxis
+                                    }
                                 ]
                             };
-                            console.log("ready to setOption ................");
-                            priceGraph.setOption(option);
-                            priceGraph.hideLoading();
-                            priceGraph.resize();
-                        });
+                        }
+
+                        console.log("ready to setOption ................");
+                        priceGraph.setOption(option);
+                        priceGraph.hideLoading();
                     });
 
+                },
+                vGetUnitRelation: function (unitMap) {
+                    getUnitRelation(unitMap);
+                },
+                vUnitFormat: function (commodity, unitMap) {
+                    fUnitFormat(commodity, unitMap)
+                },
+                vSelectFree: function () {
+                    goodsList.$data.isSelectFree = true;
                 }
             }
         });
 
-        function addOneCommodity(goodsInfo) {
-            goodsList.$data.selectedGoodsList.push(goodsInfo);
+        async function addOneCommodity(goodsInfo, isFree=false) {
+            loading(true, 'loading', 'rightBody');
+            // 获取商品的单位映射
+            $.post('/basicInfo/getSingleCommodityUnitMap', {ptypeid: goodsInfo.ptypeid}, function (res1) {
+                goodsList.$data.unitMaps[goodsInfo.ptypeid] = res1.data[goodsInfo.ptypeid];
+                if(goodsList.$data.isSelectFree || isFree){
+                    goodsList.$data.freeGoodsList.push(goodsInfo);
+                    goodsList.$data.isSelectFree = false;
+                } else{
+                    goodsList.$data.selectedGoodsList.push(goodsInfo);
+                }
+                loading(false, 'loading', 'rightBody');
+            });
+        }
+
+        function clearAllCommodity() {
+            goodsList.$data.selectedGoodsList = [];
+            goodsList.$data.freeGoodsList = [];
         }
 
 

@@ -6,7 +6,7 @@ import com.yu.arksys.bean.raw.CommodityBrief;
 import com.yu.arksys.bean.raw.StockAlert;
 import com.yu.arksys.bean.response.CommodityBriefWithSalePricesResponse;
 import com.yu.arksys.grasp.dao.CommodityDao;
-import com.yu.arksys.grasp.service.CommodityService;
+import com.yu.arksys.grasp.service.commodity.CommodityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

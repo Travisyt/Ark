@@ -1,118 +1,406 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="utf-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <meta http-equiv="X-UA-Compatible" content="ie=edge">-->
+<!--    <title>客户地址地图</title>-->
+<!--    <link href="bootstrap/bootstrap.min.css" rel="stylesheet"/>-->
+<!--    <link href="css/elements.css" rel="stylesheet">-->
+<!--    <script src="js/jquery-3.4.1.min.js"></script>-->
+<!--    <script src="bootstrap/bootstrap.min.js"></script>-->
+<!--    <script type="text/javascript" src="js/echarts.js"></script>-->
+<!--    <script type="text/javascript" src="js/vue.js"></script>-->
+<!--</head>-->
+<!--<script charset="utf-8" src="https://map.qq.com/api/gljs?v=1.exp&key=OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77"></script>-->
+<!--<style type="text/css">-->
+<!--    html,-->
+<!--    body {-->
+<!--        height: 100%;-->
+<!--        margin: 0;-->
+<!--        padding: 0;-->
+<!--    }-->
+
+<!--    #container {-->
+<!--        width: 100%;-->
+<!--        height: 100%;-->
+<!--    }-->
+<!--</style>-->
+
+<!--<body>-->
+<!--<div id="mapNavi" class="navbar navbar-fixed-top">-->
+<!--    <div id="mapLogo" class="nav navbar-nav navbar-left"-->
+<!--         style="display: inline-bloc k;background-color: #d4d4d4;width: 120px;height: 100%;padding-top: 11px;padding-left: 20px;box-shadow: 0 0 5px #555555;">-->
+<!--        单位地址图-->
+<!--    </div>-->
+<!--    <button id="showBtypeSales" class="nav navbar-nav navbar-left navbar-btn">-->
+<!--        单位热度颜色显示-->
+<!--    </button>-->
+
+<!--</div>-->
+<!--<div id="container"></div>-->
+
+<!--<script>-->
+
+<!--    $(window).ready(function () {-->
+<!--        refreshMap();-->
+<!--    });-->
+
+<!--    let center = new TMap.LatLng(32.217778026264256, 120.0503263015747); //设置中心点坐标-->
+<!--    let mapContainer = document.getElementById('container');-->
+<!--    //初始化地图-->
+<!--    var map = new TMap.Map(mapContainer, {-->
+<!--        center: center,-->
+<!--    });-->
+
+<!--    var markerCluster = new TMap.MarkerCluster({-->
+<!--        id: 'cluster',-->
+<!--        map: map,-->
+<!--        enableDefaultStyle: true,-->
+<!--        minimumClusterSize: 2,-->
+<!--        styles: {-->
+<!--            "myStyle": new TMap.MarkerStyle({-->
+<!--                'color': 'green'-->
+<!--            })-->
+<!--        },-->
+<!--        geometries: [-->
+<!--            {-->
+<!--                'id': 'label',-->
+<!--                'styleId': 'myStyle',-->
+<!--                'position': new TMap.LatLng(32.217778026264256, 120.0503263015747),-->
+<!--                'content': '仓库'-->
+<!--            },-->
+<!--            {-->
+<!--                'id': 'label1',-->
+<!--                'styleId': 'myStyle',-->
+<!--                'position': new TMap.LatLng(32.19539486838813, 120.02495431721658),-->
+<!--                'content': '门店'-->
+<!--            }-->
+<!--        ],-->
+<!--        zoomOnClick: false,-->
+<!--        gridSize: 1,-->
+<!--        averageCenter: false,-->
+<!--        maxZoom: 16-->
+<!--    });-->
+
+<!--    //初始化infoWindow-->
+<!--    var infoWindow = new TMap.InfoWindow({-->
+<!--        map: map,-->
+<!--        position: new TMap.LatLng(32.19539486838813, 120.02495431721658),-->
+<!--        offset: { x: 0, y: -32 } //设置信息窗相对position偏移像素，为了使其显示在Marker的上方-->
+<!--    });-->
+<!--    infoWindow.close();//初始关闭信息窗关闭-->
+<!--    //监听标注点击事件-->
+<!--    markerCluster.on("click", function (evt) {-->
+<!--        //设置infoWindow-->
+<!--        infoWindow.open(); //打开信息窗-->
+<!--        infoWindow.setPosition(evt.cluster.geometries[0].position);//设置信息窗位置-->
+<!--        let showText = '';-->
+<!--        for(let i = 0; i < evt.cluster.geometries.length; i++){-->
+<!--            showText = showText.concat(evt.cluster.geometries[i].content).concat(', ')-->
+<!--        }-->
+<!--        showText = showText.substring(0, showText.length-2);-->
+<!--        infoWindow.setContent(showText);//设置信息窗内容-->
+<!--    });-->
+<!--    markerCluster.on("mouseout", function (evt) {-->
+<!--        //设置infoWindow-->
+<!--        infoWindow.close();-->
+<!--    });-->
+
+<!--    let getSalesData = function(btypeid, callback){-->
+<!--        $.post('dataview/getCustomerCommoditySalesTotal', {btypeid: btypeid}, function(res){-->
+<!--            callback(res.data);-->
+<!--        });-->
+<!--    };-->
+<!--    let refreshMap = function () {-->
+<!--        $.post('/basicInfo/getBusinessAddress', function (res) {-->
+<!--            let addrList = res.data;-->
+<!--            // for(let i = 0; i < addrList.length; i++){-->
+<!--            //     let v = addrList[i];-->
+<!--            //     gList.push({-->
+<!--            //         'id': 'label',-->
+<!--            //         'styleId': 'label',-->
+<!--            //         'position': new TMap.LatLng(Number(v.latitude), Number(v.longitude)),-->
+<!--            //         'content': v.bfullname,-->
+<!--            //     })-->
+<!--            // }-->
+<!--            $.each(addrList, function (k, v) {-->
+<!--                console.log(v);-->
+<!--                markerCluster.add({-->
+<!--                    'id': v.btypeid.toString(),-->
+<!--                    'styleId': 'label',-->
+<!--                    'position': new TMap.LatLng(Number(v.latitude), Number(v.longitude)),-->
+<!--                    'content': v.bfullname,-->
+<!--                });-->
+<!--            })-->
+<!--        });-->
+<!--    }-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
+
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>客户地址地图</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>热力图示例</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <style type="text/css">
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        #container {
+            height: 100%;
+        }
+    </style>
     <link href="bootstrap/bootstrap.min.css" rel="stylesheet"/>
     <link href="css/elements.css" rel="stylesheet">
     <script src="js/jquery-3.4.1.min.js"></script>
     <script src="bootstrap/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/echarts.js"></script>
     <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript" src="js/utils.js"></script>
+    <script type="text/javascript" src="js/commodityUtils.js"></script>
+    <script charset="utf-8"
+            src="https://map.qq.com/api/js?v=2.exp&libraries=visualization&key=OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77"></script>
+    <script>
+        let allMarker = [];
+        let allLabel = [];
+        window.onload = function () {
+            $('#goodsSelect').on('shown.bs.modal', function () {
+                refreshCommodityList({openFlag: true});
+                sessionStorage.setItem('goodsSelectFlagStatement', 'selectedGood()');
+            });
+            // 创建地图
+            window.map = new qq.maps.Map(document.getElementById("container"), {
+                center: new qq.maps.LatLng(32.217778026264256, 120.0503263015747),
+                zoom: 10
+            });
+
+            window.markers = new qq.maps.MVCArray();
+            window.markerCluster = [];
+
+            window.infoWin = new qq.maps.InfoWindow({
+                map: map
+            });
+
+            window.createCluster = function(data) {
+                for (let i = 0; i < data.length; i++) {
+                    let latLng = new qq.maps.LatLng(data[i][0], data[i][1]);
+                    let decoration = new qq.maps.MarkerDecoration(i, new qq.maps.Point(0, -5));
+                    let marker = new qq.maps.Marker({
+                        'position': latLng,
+                        map: map
+                    });
+                    markers.push(marker);
+                }
+
+                markerCluster = new qq.maps.MarkerCluster({
+                    map: map,
+                    minimumClusterSize: 3, //默认2
+                    markers: markers,
+                    zoomOnClick: false, //默认为true
+                    gridSize: 1, //默认60
+                    averageCenter: true, //默认false
+                    maxZoom: 18, //默认18
+                });
+                qq.maps.event.addListener(markerCluster, 'clusterclick', function(evt) {
+                    infoWin.setPosition(evt.latLng);
+                    let temp = '';
+                    $.each(evt.markers, function (k, v) {
+                        temp = temp.concat(v.title).concat(', ');
+                    });
+                    temp = temp.substring(0, temp.length - 2);
+                    infoWin.setContent('<div style="text-align:center;white-space:nowrap;' +
+                        'margin:10px;">' + temp + '</div>');
+                    infoWin.open();
+                });
+            };
+            createCluster([]);
+            window.addMarker = function(params) {
+                let decoration = new qq.maps.MarkerDecoration('1', new qq.maps.Point(0, -5));
+                let marker_add = new qq.maps.Marker({
+                    position: params.position,
+                    decoration: decoration,
+                    map: map,
+                    title: params.content
+                });
+                let label = new qq.maps.Label({
+                    position: params.position,
+                    map: map,
+                    content: params.content,
+                    style: {
+                        opacity: 0.6
+                    }
+                });
+                allLabel.push(label);
+                markers.push(marker_add);
+                allMarker.push(marker_add);
+                markerCluster.addMarker(marker_add);
+                qq.maps.event.addListener(marker_add, 'click', function(evt) {
+                    infoWin.setPosition(marker_add.getPosition());
+                    infoWin.setContent('<div style="text-align:center;white-space:nowrap;' +
+                        'margin:10px;">' + params.content + '</div>');
+                    infoWin.open();
+                });
+            };
+
+
+            // 创建热力图对象
+            window.heat = new qq.maps.visualization.Heat({
+                map: map, // 必填参数，指定显示热力图的地图对象
+                radius: 30, // 辐射半径，默认为20
+            });
+
+
+            window.resetAll = function(){
+                markerCluster.clearMarkers();
+                // window.heat.setMap(null);
+                // window.heat = new qq.maps.visualization.Heat({
+                //     map: map, // 必填参数，指定显示热力图的地图对象
+                //     radius: 30, // 辐射半径，默认为20
+                // });
+                $.each(allLabel, function (k, v) {
+                    v.setMap(null);
+                });
+                allLabel = [];
+                $.each(allMarker, function (k, v) {
+                    v.setMap(null);
+                });
+                allMarker = [];
+            };
+
+            refreshMap(addMarker, heat);
+        };
+
+        let refreshMap = function (addfun, heatObj, withCommodity=false, commodity=[]) {
+            resetAll();
+            $.ajaxSetup({ async: false });
+            $.post('/basicInfo/getBusinessAddress', function (res) {
+                let addrList = res.data;
+                let heatData = {
+                    max: -1,
+                    min: -1,
+                    data: []
+                };
+                $.each(addrList, function (k, v) {
+                    addfun({
+                        'id': v.btypeid.toString(),
+                        'styleId': 'label',
+                        'position': new qq.maps.LatLng(Number(v.latitude), Number(v.longitude)),
+                        'content': v.bfullname,
+                    });
+
+                    getSalesData(v.btypeid, function (data) {
+                        let total = 0, qty = 0;
+                        $.each(data, function (k1, v1) {
+                            if(withCommodity){
+                                if(v1.ptypeid === commodity.ptypeid){
+                                    total = total + v1.total;
+                                    qty = qty + v1.qty;
+                                }
+                            }
+                            else {
+                                total = total + v1.total;
+                                qty = qty + v1.qty;
+                            }
+                        });
+                        // console.log('total\t'+total);
+                        // console.log('heatData.max\t'+heatData.max);
+                        if (total > heatData.max) {
+                            heatData.max = total;
+                        }
+                        if (total < heatData.min || heatData.min === -1) {
+                            heatData.min = total;
+                        }
+                        heatData.data.push({
+                            lat: Number(v.latitude),
+                            lng: Number(v.longitude),
+                            value: total
+                        })
+                    })
+                });
+                $.ajaxSetup({ async: true });
+                console.log(heatData);
+                heatObj.setData(heatData);
+            });
+        };
+
+        let getSalesData = function (btypeid, callback) {
+            $.post('dataview/getCustomerCommoditySalesTotal', {btypeid: btypeid}, function (res) {
+                callback(res.data);
+            });
+        };
+
+        let selectedGood = function(){
+            console.log('\'selectedGood\' Function Invoked.');
+            let commodity = JSON.parse(sessionStorage.getItem('selectedGoodsList'))[0];
+            console.log('commodity: ');
+            console.log(commodity);
+            refreshMap(addMarker, heat, true, commodity);
+            $('#selectedCommodity')[0].innerHTML = commodity.pfullname;
+        };
+        let unselectGood = function(){
+            console.log('\'unselectGood\' Function Invoked.');
+            $('#selectedCommodity')[0].innerHTML = '无商品';
+            refreshMap(addMarker, heat, false, []);
+        };
+
+        let bNameDisplayState = true;
+        let changeBNameDisplay = function(){
+            bNameDisplayState = !bNameDisplayState;
+            $.each(allLabel, function (k, v) {
+                v.setVisible(bNameDisplayState);
+            });
+        };
+        let markerDisplayState = true;
+        let changeMarkerDisplay = function(){
+            markerDisplayState = !markerDisplayState;
+            $.each(allMarker, function (k, v) {
+                v.setVisible(markerDisplayState);
+            });
+        };
+
+
+
+    </script>
 </head>
-<script charset="utf-8" src="https://map.qq.com/api/gljs?v=1.exp&key=OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77"></script>
-<style type="text/css">
-    html,
-    body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-    }
-
-    #container {
-        width: 100%;
-        height: 100%;
-    }
-</style>
-
 <body>
-<div id="mapNavi" style="position: absolute;top: 0;width: 100%;height: 40px;z-index: 200;">
-    <div id="mapLogo" style="display: inline-block;background-color: #d4d4d4;width: 120px;height: 100%;padding-top: 11px;padding-left: 20px;border-radius: 0 0 20px 0;box-shadow: 0 0 5px #555555;">
-        单位地址图
-    </div>
+<div id="mapNavi" class="navbar navbar-fixed-bottom">
+    <button class="nav navbar-nav navbar-left navbar-btn btn-md btn-primary"
+        style="padding: 5px" onclick="">
+        单位热度颜色显示
+    </button>
+    <button class="nav navbar-nav navbar-left navbar-btn btn-md btn-primary"
+            style="padding: 5px" onclick="changeMarkerDisplay()">
+        单位图钉显示
+    </button>
+    <button class="nav navbar-nav navbar-left navbar-btn btn-md btn-primary"
+            style="padding: 5px" onclick="changeBNameDisplay()">
+        单位名称标签显示
+    </button>
+    <button id="showCommoditySales" data-toggle="modal" data-target="#goodsSelect"
+            class="nav navbar-nav navbar-left navbar-btn btn-md btn-primary"
+            style="padding: 5px">
+        商品热度颜色显示
+    </button>
+    <button  id="selectedCommodity" class="nav navbar-nav navbar-left navbar-btn btn-md btn-info"
+            style="padding: 2px" onclick="unselectGood()">
+        无商品
+    </button>
+
 </div>
 <div id="container"></div>
-
-<script>
-    $(window).ready(function () {
-        this.geometries = [];
-        let date = sessionStorage.getItem('businessMapDate');
-        let currentEmployee = JSON.parse(sessionStorage.getItem('currentEmployee'));
-
-    });
-
-    var center = new TMap.LatLng(32.217778026264256, 120.0503263015747); //设置中心点坐标
-    //初始化地图
-    var map = new TMap.Map("container", {
-        center: center
-    });
-
-    label = new TMap.MultiLabel({
-        id: 'label-layer',
-        map: map,
-        styles: {
-            'label': new TMap.LabelStyle({
-                'color': '#333', //颜色属性,
-                'size': 22, //文字大小属性
-                'offset': {
-                    x: 0,
-                    y: 0
-                }, //文字偏移属性单位为像素
-                'angle': 0, //文字旋转属性
-                'alignment': 'center', //文字水平对齐属性
-                'verticalAlignment': 'middle' //文字垂直对齐属性
-            })
-        },
-        geometries: [{
-            'id': 'label',
-            'styleId': 'label',
-            'position': center,
-            'content': '总仓库',
-        },
-            {
-                'id': 'label1',
-                'styleId': 'label',
-                'position': new TMap.LatLng(32.19539486838813, 120.02495431721658),
-                'content': '门市',
-            }
-        ]
-    });
-
-    //初始化marker
-    var marker = new TMap.MultiMarker({
-        id: "marker-layer", //图层id
-        map: map,
-        styles: { //点标注的相关样式
-            "marker": new TMap.MarkerStyle({
-                "width": 25,
-                "height": 35,
-                "anchor": {
-                    x: 16,
-                    y: 32
-                },
-                "src": "https://mapapi.qq.com/web/lbs/javascriptGL/demo/img/markerDefault.png"
-            })
-        },
-        geometries: [{ //点标注数据数组
-            "id": "demo",
-            "styleId": "marker",
-            "position": new TMap.LatLng(39.984104, 116.307503),
-            "properties": {
-                "title": "marker"
-            }
-        },
-            {
-                "id": "demo1",
-                "styleId": "marker",
-                "position": new TMap.LatLng(39.986104, 116.309503),
-                "properties": {
-                    "title": "marker1"
-                }
-            }
-        ]
-    });
-</script>
+<!--    模态框    -->
+<div th:replace="goodsSelect::goodsselect"></div>
 </body>
 </html>

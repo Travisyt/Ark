@@ -68,7 +68,7 @@ public class MainController {
      */
     @RequestMapping("/main")
     public ModelAndView index(@RequestParam(name = "page", required = false) String page, @RequestParam(name = "content", required = false) String content) {
-        System.out.println("请求: page: " + page + ";    " + "content: " + content);
+        System.out.println("请  求: page: " + page + ";    " + "content: " + content);
         System.out.println("page: " + page + ";    " + "content: " + content);
         String page_ = "dataView", content_ = "dataView";
         if (page != null && !page.equals("") && content != null && !content.equals("")) {

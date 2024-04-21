@@ -7,7 +7,7 @@ import com.yu.arksys.bean.result.CommodityUnit;
 import com.yu.arksys.grasp.dao.CommodityDao;
 import com.yu.arksys.grasp.dao.CommodityUnitDao;
 import com.yu.arksys.grasp.service.BeanMappingService;
-import com.yu.arksys.grasp.service.CommodityService;
+import com.yu.arksys.grasp.service.commodity.CommodityService;
 import com.yu.arksys.utils.DataInfo;
 import com.yu.arksys.utils.SQLUtils;
 import org.springframework.beans.factory.annotation.Autowired;

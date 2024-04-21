@@ -1,7 +1,9 @@
-package com.yu.arksys.grasp.dao;
+package com.yu.arksys.grasp.dao.customer;
 
 import com.yu.arksys.bean.raw.BusinessAddress;
 import com.yu.arksys.bean.raw.BusinessRelatedUnit;
+import com.yu.arksys.bean.result.customer.CommodityCustomerSalesRecord;
+import com.yu.arksys.bean.result.customer.CustomerCommoditySalesTotalRecord;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -32,4 +34,24 @@ public interface BusinessRelatedUnitDao {
     @Select("select btypeid,bfullname,longitude,latitude,mapname,entryemployee,updatetime from btypeaddress where btypeid='${btypeid}'")
     BusinessAddress getBusinessAddressById(@Param("btypeid") String btypeid);
 
+
+
+    // 销售相关
+
+    /**
+     * 购买某商品的客户列表
+     */
+    @Select("SELECT btypeid=MAX(t.btypeid),bfullname=(SELECT bfullname FROM btype b WHERE b.btypeid=MAX(t.btypeid)),parid=(SELECT b1.parid FROM btype b1 WHERE b1.btypeid=MAX(t.btypeid)),parfullname=(SELECT b2.bfullname FROM btype b2 WHERE b2.btypeid=(SELECT b1.parid FROM btype b1 WHERE b1.btypeid=MAX(t.btypeid))),qty=-SUM(t.Qty),total=-SUM(t.total),profit=SUM(t.costtotal)-SUM(t.total) FROM DlySale t WHERE t.PtypeId = '${ptypeid}' GROUP BY t.btypeid ORDER BY total DESC")
+    List<CommodityCustomerSalesRecord> getCommodityCustomerSalesData(@Param("ptypeid") String ptypeid);
+    /**
+     * 购买某类商品的客户列表
+     */
+    @Select("SELECT btypeid =MAX(t.btypeid),bfullname =(SELECT bfullname FROM btype b WHERE b.btypeid=MAX(t.btypeid)),parid =(SELECT b1.parid FROM btype b1 WHERE b1.btypeid=MAX(t.btypeid)),parfullname =(SELECT b2.bfullname FROM btype b2 WHERE b2.btypeid=(SELECT b1.parid FROM btype b1 WHERE b1.btypeid=MAX(t.btypeid))),qty =-SUM(t.Qty),total =-SUM(t.total),profit =SUM(t.costtotal)-SUM(t.total) FROM DlySale t WHERE (SELECT p.parid FROM ptype p WHERE p.ptypeid=t.PtypeId)='${parid}' GROUP BY t.btypeid ORDER BY total DESC")
+    List<CommodityCustomerSalesRecord> getCommodityCatalogCustomerSales(@Param("parid") String parid);
+
+    /**
+     * 客户累计购买的商品列表
+     */
+    @Select("SELECT ptypeid =MAX(t.PtypeId),pfullname =(SELECT p1.pfullname FROM ptype p1 WHERE p1.ptypeid=MAX(t.PtypeId)),qty =-SUM(t.Qty),total =-SUM(t.total),profit =SUM(t.costtotal)-SUM(t.total) FROM DlySale t WHERE t.btypeid='${btypeid}' GROUP BY t.PtypeId ORDER BY total DESC")
+    List<CustomerCommoditySalesTotalRecord> getCustomerCommoditySalesTotalData(@Param("btypeid") String btypeid);
 }
