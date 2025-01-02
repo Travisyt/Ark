@@ -10,23 +10,45 @@
     <script type="text/javascript" src="js/echarts.js"></script>
     <script type="text/javascript" src="js/vue.js"></script>
     <script type="text/javascript" src="js/commodityUtils.js"></script>
+    <script src="https://mapapi.qq.com/web/mapComponents/geoLocation/v/geolocation.min.js"></script>
 </head>
 <body style="background-color: #f5f5f5">
+<div class="alert alert-success" style="position: fixed;z-index: 100;width: 100%;display: none">
+    <strong>成功!</strong>
+</div>
 
 <div class="container-fluid">
     <div class="row" style="height: 100px;background-color: #f5f5f5"></div>
-    <div class="row" style="height: 330px;background-color: #f5f5f5">
+    <div class="row" style="background-color: #f5f5f5">
         <div class="col-md-3" style="height: 100%;background-color: #f5f5f5"></div>
         <div class="col-md-6" id="businessMapForm"
              style="height: 100%;background-color: #cccccc;border-radius: 50px 50px 50px 50px;box-shadow: 0 0 8px #333333;padding: 30px 30px 30px 50px">
             <h2 style="padding-left: 50px">
-                客户地址地图
+                客户地址录入
             </h2>
             <div style="margin-top: 40px;padding-left: 50px">
-                <label>
-                    选择日期:&emsp;
-                    <input id="date" type="date" v-model="date" style="width: 200px">
-                </label>
+                <span>{{ currentPositionInfo }}</span>
+                <button type="button" class="btn btn-info" v-on:click="getCurrentPosition()">获取当前位置</button>
+            </div>
+            <hr>
+            <div style="margin-top: 20px;padding-left: 50px">
+                <label>搜索关键词:</label>
+                <input v-model="keyWords">
+                <br>
+                <label>选择客户:&emsp;</label>
+                <span class="dropdown">
+                    <button id="btype" type="button" class="btn dropdown-toggle" data-toggle="dropdown"
+                            @click="getBtype()" style="width: 200px">
+                        {{ currentBtype.bfullname }}&emsp;  <span class="caret"
+                                                                style="position:absolute;right: 20px"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="btype"
+                        style="max-height: 400px;overflow-y: scroll;overscroll-behavior: contain">
+                        <li role="presentation" v-for="btype in btypeList">
+                            <a @click="changeBtype(btype)">{{ btype.bfullname }}</a>
+                        </li>
+                    </ul>
+                </span>
             </div>
             <div style="margin-top: 20px;padding-left: 50px">
                 <label>选择经手人:&emsp;</label>
@@ -45,10 +67,11 @@
                 </span>
             </div>
             <div style="margin-top: 50px">
-                <button class="btn btn-primary" type="button" style="width: 100%;font-size: large" v-on:click="redirect()">确定</button>
+                <button class="btn btn-primary" type="button" style="width: 100%;font-size: large" v-on:click="confirm()">确定</button>
             </div>
         </div>
     </div>
+    <div class="row" style="height: 100px;background-color: #f5f5f5"></div>
 </div>
 <script>
     $(window).ready(function () {
@@ -56,12 +79,18 @@
         this.dateString = date.getFullYear().toString().concat('-').concat((date.getMonth() + 1).toString()).concat('-').concat(date.getDate().toString());
         businessMapForm.$data.date = this.dateString;
     });
+    window.geolocation = new qq.maps.Geolocation("EFUBZ-FN2W6-FIASH-M6HDB-DS2RZ-UZBQC", "cusMana");
+
     var businessMapForm = new Vue({
         el: '#businessMapForm',
         data: {
-            date: '',
+            keyWords: '',
+            btypeList: {},
+            currentBtype: {},
             currentEmployee: {name: '选择经手人...'},
-            employees: []
+            employees: [],
+            currentPositionInfo: '',
+            currentPositionParams: {}
         },
         methods: {
             getEmployees: function () {
@@ -78,32 +107,53 @@
                     this.currentEmployee = employee;
                 }
             },
-            redirect: function () {
+            getCurrentPosition: function() {
+                geolocation.getLocation(function (res) {
+                    businessMapForm.$data.currentPositionInfo = res['nation'] + ' ' + res['province'] + ' ' + res['city'] + ', ' + res['lat']+';'+res['lng'];
+                    businessMapForm.$data.currentPositionParams = res;
+                })
+            },
+            getBtype: function() {
+                if(businessMapForm.$data.keyWords ===''){
+                    $.post('/getBusinessRelatedUnits', {parid: '00000'}, function (res) {
+                        businessMapForm.$data.btypeList = res.data;
+                    });
+                } else {
+                    $.post('/searchBusinessRelatedUnits', {keyWords: businessMapForm.$data.keyWords}, function (res) {
+                        businessMapForm.$data.btypeList = res.data;
+                    });
+                }
+            },
+            changeBtype: function(btype) {
+                businessMapForm.$data.currentBtype = btype;
+            },
+            confirm: function () {
                 // if (businessMapForm.$data.currentEmployee.id !== undefined) {
                 //     StandardPost('/businessMap', {date: businessMapForm.$data.date, currentEmployee: businessMapForm.$data.currentEmployee})
                 // }
                 sessionStorage.setItem('businessMapDate', businessMapForm.$data.date);
                 sessionStorage.setItem('currentEmployee', JSON.stringify(businessMapForm.$data.currentEmployee));
-                window.location.href = '/businessMap';
+                let param = {
+                    btypeid: businessMapForm.$data.currentBtype.btypeid,
+                    mapname: businessMapForm.$data.currentBtype.bfullname,
+                    entryemployee: 'web',
+                    longitude: businessMapForm.$data.currentPositionParams.lng,
+                    latitude: businessMapForm.$data.currentPositionParams.lat
+                };
+                $.post('/saveBusinessAddress', param, function (res) {
+                    if(res.status === '200'){
+                        $('.alert').css('display', 'block');
+                        setTimeout(function () {
+                            $('.alert').css('display', 'none');
+                        }, 2000)
+                    } else {
+                        alert('添加失败');
+                    }
+                });
             }
         }
     });
 
-    function StandardPost(url, args) {
-        let body = $(document.body),
-            form = $("<form method='post'></form>"),
-            input;
-        form.attr({"action": url});
-        $.each(args, function (key, value) {
-            input = $("<input type='hidden'>");
-            input.attr({"name": key});
-            input.val(value);
-            form.append(input);
-        });
-        form.appendTo(document.body);
-        form.submit();
-        document.body.removeChild(form[0]);
-    }
 </script>
 
 </body>

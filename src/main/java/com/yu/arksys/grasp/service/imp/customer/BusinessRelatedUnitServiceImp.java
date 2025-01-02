@@ -45,6 +45,21 @@ public class BusinessRelatedUnitServiceImp implements BusinessRelatedUnitService
         }
     }
 
+    @Override
+    public Map<String, Object> searchBusinessList(String keyWords) {
+        Map<String, Object> res = new HashMap<>();
+        try {
+            List<BusinessRelatedUnit> businessRelatedUnits = businessRelatedUnitDao.searchBusiness(keyWords);
+            res.put("data", businessRelatedUnits);
+            res.put("status", "200");
+            return res;
+        } catch (Exception e) {
+            e.printStackTrace();
+            res.put("status", "0");
+            return res;
+        }
+    }
+
     public List<BusinessAddress> getBusinessAddress() {
         return businessRelatedUnitDao.getBusinessAddress();
     }

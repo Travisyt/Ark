@@ -14,6 +14,8 @@ public interface BusinessRelatedUnitService {
 
     Map<String, Object> getBusinessList(String parid);
 
+    Map<String, Object> searchBusinessList(String keyWords);
+
     List<BusinessAddress> getBusinessAddress();
 
     List<BusinessAddress> getBusinessAddress(String btypeid) throws IncompleteParamException;

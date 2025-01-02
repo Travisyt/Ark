@@ -1,6 +1,9 @@
 -- checkedSaleDraft
 -- btypeaddress
+-- stockAlerts
 
+
+--// =================== checkedSaleDraft ==================== //
 
 /*
  Navicat Premium Data Transfer
@@ -71,6 +74,8 @@ ON [dbo].[checkedSaleDraft] (
 GO
 
 
+--// ================== btypeaddress ================== //
+
 /*
  Navicat Premium Data Transfer
 
@@ -124,4 +129,55 @@ GO
 ALTER TABLE [dbo].[btypeaddress] ADD CONSTRAINT [PK__btypeaddress__15067949] PRIMARY KEY CLUSTERED ([btypeid])
 ON [PRIMARY]
 GO
+
+
+--// =================== stockAlerts ==================== //
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : 管家婆
+ Source Server Type    : SQL Server
+ Source Server Version : 8002039
+ Source Host           : 192.168.1.19:1433
+ Source Catalog        : HGWJ
+ Source Schema         : dbo
+
+ Target Server Type    : SQL Server
+ Target Server Version : 8002039
+ File Encoding         : 65001
+
+ Date: 28/12/2024 11:42:54
+*/
+
+
+-- ----------------------------
+-- Table structure for stockAlerts
+-- ----------------------------
+IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[stockAlerts]') AND type IN ('U'))
+	DROP TABLE [dbo].[stockAlerts]
+GO
+
+CREATE TABLE [dbo].[stockAlerts] (
+  [ptypeid] varchar(255) COLLATE Chinese_PRC_CI_AS  NULL,
+  [ktypeid] varchar(255) COLLATE Chinese_PRC_CI_AS  NULL,
+  [minimum] int  NULL
+)
+GO
+
+
+-- ----------------------------
+-- Indexes structure for table stockAlerts
+-- ----------------------------
+CREATE NONCLUSTERED INDEX [_WA_Sys_ptypeid_58BC8518]
+ON [dbo].[stockAlerts] (
+  [ptypeid] ASC
+)
+GO
+
+CREATE NONCLUSTERED INDEX [_WA_Sys_ktypeid_58BC8518]
+ON [dbo].[stockAlerts] (
+  [ktypeid] ASC
+)
+GO
+
 

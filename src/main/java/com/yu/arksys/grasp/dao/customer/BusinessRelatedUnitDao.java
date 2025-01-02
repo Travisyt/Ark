@@ -22,6 +22,9 @@ public interface BusinessRelatedUnitDao {
     @Select("select btypeid,parid,leveal,soncount,bfullname,Person from btype where deleted = '0' and parid = '${parid}'")
     List<BusinessRelatedUnit> getBusinessList(@Param("parid") String parid);
 
+    @Select("select btypeid,parid,leveal,soncount,bfullname,Person from btype where deleted = '0' and bfullname like '%${keyWords}%'")
+    List<BusinessRelatedUnit> searchBusiness(@Param("keyWords") String keyWords);
+
     @Update("insert into btypeaddress(btypeid,bfullname,longitude,latitude,mapname,entryemployee) values('${btypeid}','${bfullname}','${longitude}','${latitude}','${mapname}','${entryemployee}')")
     void insertBusinessAddress(@Param("btypeid") String btypeid, @Param("bfullname") String bfullname, @Param("longitude") String longitude, @Param("latitude") String latitude, @Param("mapname") String mapname, @Param("entryemployee") String entryemployee);
 

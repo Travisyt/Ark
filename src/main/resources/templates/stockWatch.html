@@ -254,7 +254,7 @@
                 goodsSelect.$data.actionStack.push([param.ParId, param.pfullname]);
             }
         }
-        param.ktypeid = "00005";
+        param.ktypeid = "";
         $('.container-fluid').addClass("depth-of-focus");
         $.post('/basicInfo/getCommodityUnitMap', param, function (res) {
             goodsSelect.$data.commodityUnitMap = res.data;

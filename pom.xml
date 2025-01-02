@@ -104,6 +104,7 @@
             </exclusions>
         </dependency>
 
+
     </dependencies>
 
 
@@ -115,6 +116,10 @@
         <repository>
             <id>clojars</id>
             <url>http://clojars.org/repo/</url>
+        </repository>
+        <repository>
+            <id>jena</id>
+            <url>https://bio.informatik.uni-jena.de/repository/libs-release-oss/</url>
         </repository>
     </repositories>
 

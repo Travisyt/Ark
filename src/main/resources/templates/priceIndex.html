@@ -324,6 +324,28 @@
                     <div id="salesAtPricesBody" class="modal-body">
                         <div id="priceGraph" style="width: 100%;height: 60vh"></div>
                     </div>
+                    <div>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>firstPrice</th>
+                                    <th>secondPrice</th>
+                                    <th>lastPurchasePrice</th>
+                                    <th>stockAveragePrice</th>
+                                    <th>DynamicStockAveragePrice</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td id="firstPrice"></td>
+                                    <td id="secondPrice"></td>
+                                    <td id="lastPurchasePrice"></td>
+                                    <td id="stockAveragePrice"></td>
+                                    <td id="DynamicStockAveragePrice"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
                     <div class="modal-footer">
                         <!--                        <button id="goodsSelectBack" type="button" class="btn btn-info" v-on:click="backSpace()">-->
@@ -538,7 +560,14 @@
                                 ]
                             };
                         }
+                        $.post('/getPrice', SAPParams, function (res) {
+                            $('#firstPrice').html(parseFloat(res.firstPrice).toFixed(3));
+                            $('#secondPrice').html(parseFloat(res.secondPrice).toFixed(3));
+                            $('#lastPurchasePrice').html(parseFloat(res.lastPurchasePrice).toFixed(3));
+                            $('#stockAveragePrice').html(parseFloat(res.stockAveragePrice).toFixed(3));
+                            $('#DynamicStockAveragePrice').html(parseFloat(res.DynamicStockAveragePrice).toFixed(3));
 
+                        });
                         console.log("ready to setOption ................");
                         priceGraph.setOption(option);
                         priceGraph.hideLoading();

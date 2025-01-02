@@ -124,32 +124,32 @@ public class CommodityServiceImp implements
     //==================== 价格查询 =======================//
     @Override
     public String getFirstPriceByPtypeid(String ptypeid) {
-        return commodityDao.getPricesByPtypeid(ptypeid).get(0);
-    }
-
-    @Override
-    public String getSecondPriceByPtypeid(String ptypeid) {
         return commodityDao.getPricesByPtypeid(ptypeid).get(1);
     }
 
     @Override
-    public String getLastPurchasePriceByPtypeid(String ptypeid) {
+    public String getSecondPriceByPtypeid(String ptypeid) {
         return commodityDao.getPricesByPtypeid(ptypeid).get(2);
     }
 
     @Override
+    public String getLastPurchasePriceByPtypeid(String ptypeid) {
+        return commodityDao.getPricesByPtypeid(ptypeid).get(10);
+    }
+
+    @Override
     public String getLastPurchasePriceByPusercode(String pusercode) {
-        return commodityDao.getPricesByPusercode(pusercode).get(2);
+        return commodityDao.getPricesByPusercode(pusercode).get(10);
     }
 
     @Override
     public String getFirstPriceByPusercode(String pusercode) {
-        return commodityDao.getPricesByPusercode(pusercode).get(0);
+        return commodityDao.getPricesByPusercode(pusercode).get(1);
     }
 
     @Override
     public String getSecondPriceByPusercode(String pusercode) {
-        return commodityDao.getPricesByPusercode(pusercode).get(1);
+        return commodityDao.getPricesByPusercode(pusercode).get(2);
     }
 
     @Override

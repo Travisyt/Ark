@@ -1,11 +1,8 @@
 package com.yu.arksys.controller;
 
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class MainController {
@@ -40,52 +37,41 @@ public class MainController {
         return new ModelAndView("universalData");
     }
 
+    /**
+     * 库存监控
+     * @return 库存监控页面
+     */
     @RequestMapping("/stockWatch")
     public ModelAndView stockWatch() {
         return new ModelAndView("stockWatch");
     }
 
-
+    /**
+     * 主页
+     * @return 主页
+     */
     @RequestMapping("/home")
     public ModelAndView home() {
         return new ModelAndView("home");
     }
 
-    /**
-     * 旧记账系统
-     * @return 旧记账系统页面
-     */
-    @RequestMapping("/accounts")
-    public ModelAndView accounts() {
-        return new ModelAndView("accounts");
-    }
-
-    /**
-     * 主页面
-     * @param page 嵌入式页面
-     * @param content 内容
-     * @return 主页面
-     */
-    @RequestMapping("/main")
-    public ModelAndView index(@RequestParam(name = "page", required = false) String page, @RequestParam(name = "content", required = false) String content) {
-        System.out.println("请  求: page: " + page + ";    " + "content: " + content);
-        System.out.println("page: " + page + ";    " + "content: " + content);
-        String page_ = "dataView", content_ = "dataView";
-        if (page != null && !page.equals("") && content != null && !content.equals("")) {
-            page_ = page;
-            content_ = content;
-        }
-        return new ModelAndView("main").addObject("page", page_).addObject("content", content_);
-    }
-
-    /**
-     * 月销售数据
-     * @return 月销售数据视图
-     */
-    @RequestMapping("/dataView")
-    public ModelAndView dataView() {
-        return new ModelAndView("dataview");
-    }
+//    /**
+//     * 主页面
+//     * @param page 嵌入式页面
+//     * @param content 内容
+//     * @return 主页面
+//     */
+//    @RequestMapping("/main")
+//    public ModelAndView index(@RequestParam(name = "page", required = false) String page, @RequestParam(name = "content", required = false) String content) {
+//        System.out.println("请  求: page: " + page + ";    " + "content: " + content);
+//        System.out.println("page: " + page + ";    " + "content: " + content);
+//        String page_ = "dataView", content_ = "dataView";
+//        if (page != null && !page.equals("") && content != null && !content.equals("")) {
+//            page_ = page;
+//            content_ = content;
+//        }
+//        return new ModelAndView("main").addObject("page", page_).addObject("content", content_);
+//    }
 
     /**
      * 商品选择（模态框）
@@ -106,8 +92,8 @@ public class MainController {
     }
 
     /**
-     * 客户单位地图
-     * @return 客户单位地图视图
+     * 客户位置地图
+     * @return 客户位置地图视图
      */
     @RequestMapping("/businessMap")
     public ModelAndView businessMap() {
@@ -115,8 +101,8 @@ public class MainController {
     }
 
     /**
-     * 客户单位地图
-     * @return 客户单位地图视图
+     * 客户定位录入表格
+     * @return 客户定位录入表格视图
      */
     @RequestMapping("/businessMapForm")
     public ModelAndView businessMapForm() {

@@ -2,8 +2,10 @@ package com.yu.arksys.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.yu.arksys.bean.OrderRecord;
+import com.yu.arksys.bean.result.prices.StockAveragePrice;
 import com.yu.arksys.grasp.dao.customer.BusinessRelatedUnitDao;
 import com.yu.arksys.grasp.dao.CommodityDao;
+import com.yu.arksys.grasp.dao.prices.PricesDao;
 import com.yu.arksys.grasp.service.*;
 import com.yu.arksys.grasp.service.commodity.CommodityService;
 import com.yu.arksys.grasp.service.customer.BusinessRelatedUnitService;
@@ -175,23 +177,67 @@ public class DataController {
     @Autowired
     CommodityService commodityService;
 
-    @RequestMapping("/getPtypeInfos")
+//    @RequestMapping("/getPtypeInfos")
+//    @ResponseBody
+//    public Map<String, String> getPtypeName(String pusercode) {
+//        System.out.println("=======================数据请求======================");
+//        System.out.println("/getPtypeNameByCode parameters:");
+//        System.out.println("pusercode: " + pusercode);
+//        System.out.println("=======================请求结束======================");
+//        Map<String, String> map = new HashMap<>();
+//        map.put("name", commodityDao.findFullNameByCode(pusercode).get(0));
+//        map.put("firstPrice", commodityService.getFirstPriceByPusercode(pusercode));
+//        map.put("secondPrice", commodityService.getSecondPriceByPusercode(pusercode));
+//        map.put("lastPurchasePrice", commodityService.getLastPurchasePriceByPusercode(pusercode));
+//        return map;
+//    }
+
+    @Autowired
+    PricesDao pricesDao;
+
+    @RequestMapping("/getPrice")
     @ResponseBody
-    public Map<String, String> getPtypeName(String pusercode) {
+    public Map<String, String> getPrice(String ptypeid) {
         System.out.println("=======================数据请求======================");
-        System.out.println("/getPtypeNameByCode parameters:");
-        System.out.println("pusercode: " + pusercode);
+        System.out.println("/getPrice parameters:");
+        System.out.println("ptypeid: " + ptypeid);
         System.out.println("=======================请求结束======================");
         Map<String, String> map = new HashMap<>();
-        map.put("name", commodityDao.findFullNameByCode(pusercode).get(0));
-        map.put("firstPrice", commodityService.getFirstPriceByPusercode(pusercode));
-        map.put("secondPrice", commodityService.getSecondPriceByPusercode(pusercode));
-        map.put("lastPurchasePrice", commodityService.getLastPurchasePriceByPusercode(pusercode));
+        map.put("name", commodityDao.findFullNameById(ptypeid).get(0));
+        map.put("firstPrice", commodityService.getFirstPriceByPtypeid(ptypeid));
+        map.put("secondPrice", commodityService.getSecondPriceByPtypeid(ptypeid));
+        map.put("lastPurchasePrice", commodityService.getLastPurchasePriceByPtypeid(ptypeid));
+        StockAveragePrice stockAveragePrice;
+        try {
+            stockAveragePrice = pricesDao.getAveragePriceById(ptypeid, "00005");
+            map.put("stockAveragePrice", Float.toString(stockAveragePrice.getStockAveragePrice()));
+            map.put("DynamicStockAveragePrice", Float.toString(stockAveragePrice.getDynamicStockAveragePrice()));
+        } catch (Exception e) {
+            stockAveragePrice = new StockAveragePrice(ptypeid, "00005", 0.0f, 0.0f);
+            map.put("stockAveragePrice", Float.toString(stockAveragePrice.getStockAveragePrice()));
+            map.put("DynamicStockAveragePrice", Float.toString(stockAveragePrice.getDynamicStockAveragePrice()));
+            e.printStackTrace();
+        }
+
+
         return map;
     }
 
     @Autowired
     BusinessRelatedUnitService businessRelatedUnitService;
+
+    @RequestMapping("/searchBusinessRelatedUnits")
+    @ResponseBody
+    public Map<String, Object> searchBusinessList(String keyWords){
+        System.out.println("=======================数据请求======================");
+        System.out.println("/searchBusinessRelatedUnits parameters:");
+        System.out.println("keyWords: " + keyWords);
+        System.out.println("=======================请求结束======================");
+        if (keyWords == null) {
+            keyWords = "";
+        }
+        return businessRelatedUnitService.searchBusinessList(keyWords);
+    };
 
     @RequestMapping("/getBusinessRelatedUnits")
     @ResponseBody

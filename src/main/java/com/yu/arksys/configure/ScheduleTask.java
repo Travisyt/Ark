@@ -28,20 +28,22 @@ public class ScheduleTask {
     }
 
 
-    // 本机IP接口
-    public static String ThisIPRequestURL = "https://ipapi.co/json";
-    //当前本机IP
-    private String currentIP = "";
+    // =========== Old DDNS =========== //
 
-    @Value("${tencentcloud.dnspod.secretid}")
-    private String secretID;
-    @Value("${tencentcloud.dnspod.password}")
-    private String password;
-    private String domainName = "hgwj.ltd";
-    private String subDomainName = "current";
-
-    @Autowired
-    private RestTemplate restTemplate;
+//    // 本机IP接口
+//    public static String ThisIPRequestURL = "https://ipapi.co/json";
+//    //当前本机IP
+//    private String currentIP = "";
+//
+//    @Value("${tencentcloud.dnspod.secretid}")
+//    private String secretID;
+//    @Value("${tencentcloud.dnspod.password}")
+//    private String password;
+//    private String domainName = "hgwj.ltd";
+//    private String subDomainName = "current";
+//
+//    @Autowired
+//    private RestTemplate restTemplate;
 
     // 动态域名解析更新 每5分钟检查一次
 //    @Scheduled(cron = "0 0/5 * * * ?")

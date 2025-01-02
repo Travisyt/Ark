@@ -41,19 +41,22 @@ public interface CommodityDao {
     @Select("select pfullname from ptype where pusercode = '${pusercode}'")
     List<String> findFullNameByCode(@Param("pusercode") String pusercode);
 
+    @Select("select pfullname from ptype where ptypeid = '${ptypeid}'")
+    List<String> findFullNameById(@Param("ptypeid") String ptypeid);
+
     @Select("select psonnum from ptype where ptypeid='${ptypeid}'")
     Integer ptypeSonnum(@Param("ptypeid") String ptypeid);
 
 
     // ============= 价格 =============== //
-    @Select("select Price from xw_P_PtypePrice where PTypeId = '${ptypeid}' and PRTypeId in ('0002','0003','0101')")
+    //@Select("select Price from xw_P_PtypePrice where PTypeId = '${ptypeid}' and PRTypeId in ('0002','0003','0101')")
+    @Select("select Price=(select p1.Price from xw_P_PtypePrice p1 where p1.PTypeId='${ptypeid}' and p1.PRTypeId=pt.PRTypeId and p1.UnitID='0') from xw_P_PriceType pt")
     List<String> getPricesByPtypeid(@Param("ptypeid") String ptypeid);
 
-    @Select("select Price from xw_P_PtypePrice where PTypeId = (select top 1 ptypeid from ptype where pusercode =" +
-            " '${pusercode}') and PRTypeId in ('0010','0002','0003','0101')")
+    @Select("select Price=(select p1.Price from xw_P_PtypePrice p1 where p1.PTypeId=(select p2.ptypeid from ptype p2 where p2.pusercode='${pusercode}') and p1.PRTypeId=pt.PRTypeId and p1.UnitID='0') from xw_P_PriceType pt")
     List<String> getPricesByPusercode(@Param("pusercode") String pusercode);
 
-    @Select("SELECT t.ptypeid,t.ParId,t.pusercode,t.pfullname,t.RowIndex,t.psonnum,p.PRTypeId,p.Price FROM ptype t LEFT JOIN xw_P_PtypePrice p ON t.ptypeid = p.PTypeId\n" +
+    @Select("SELECT t.ptypeid,t.ParId,t.pusercode,t.pfullname,t.RowIndex,t.psonnum,p.PRTypeId,p.Price FROM ptype t LEFT JOIN xw_P_PtypePrice p ON t.ptypeid = p.PTypeId" +
             "WHERE t.ParId='${ParId}' AND t.isStop='0' AND t.deleted='0'")
     List<CommodityBriefWithSalePricesRaw> getCommodityBriefWithPricesRaw(@Param("ParId") String ParId);
 
